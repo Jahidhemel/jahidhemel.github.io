@@ -363,7 +363,92 @@
     transition: opacity .6s ease-out, transform .6s ease-out;
   }
   .reveal.in { opacity: 1; transform: translateY(0); }
-</style>
+
+  /* Selected Work */
+  #work {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 110px 32px 0;
+  }
+  .work-intro {
+    color: var(--muted);
+    margin: 12px 0 36px;
+    max-width: 640px;
+  }
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .work-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+  .work-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(96, 165, 250, 0.4);
+    background: rgba(255,255,255,0.04);
+  }
+  .work-card__tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .work-card h3 {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+  .work-card p {
+    color: var(--muted);
+    margin: 0 0 18px;
+    line-height: 1.55;
+    font-size: 0.95rem;
+  }
+  .work-card__links {
+    display: flex;
+    gap: 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+  .work-card__links a {
+    color: #60a5fa;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .work-card__links a:hover {
+    color: #93c5fd;
+  }
+  /* Footer social row */
+  .footer-social {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 0.9rem;
+  }
+  .footer-social a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .footer-social a:hover { color: #60a5fa; }
+  .footer-social .dot { color: var(--muted); opacity: 0.5; }
+  @media (max-width: 720px) {
+    .work-grid { grid-template-columns: 1fr; }
+    #work { padding: 80px 20px 0; }
+  }
+  </style>
 </head>
 <body>
 
@@ -374,6 +459,7 @@
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#experience">Experience</a>
+      <a href="#work">Work</a>
       <a href="#contact">Contact</a>
     </div>
   </div>
@@ -496,6 +582,50 @@
   </div>
 </section>
 
+<section id="work" class="reveal">
+  <div class="section-label">Selected work</div>
+  <h2 class="section-title">A few things I've built recently.</h2>
+  <p class="work-intro">Small frontend demos I've shipped while sharpening my Tailwind, Bootstrap, and Sass skills — each one is live with the code on GitHub.</p>
+  <div class="work-grid">
+    <article class="work-card">
+      <div class="work-card__tag">Sass</div>
+      <h3>Legal Solutions</h3>
+      <p>Boutique law-firm landing page — design tokens via Sass maps, mixins, BEM nesting, working testimonial slider and FAQ accordion.</p>
+      <div class="work-card__links">
+        <a href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">Live demo →</a>
+        <a href="https://github.com/Jahidhemel/legal-solutions" target="_blank" rel="noopener">Code</a>
+      </div>
+    </article>
+    <article class="work-card">
+      <div class="work-card__tag">Tailwind</div>
+      <h3>Fruit Basket</h3>
+      <p>Organic fruit-shop landing page with a real-time countdown timer, mobile-friendly nav, and a bento-grid feature section.</p>
+      <div class="work-card__links">
+        <a href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">Live demo →</a>
+        <a href="https://github.com/Jahidhemel/fruit-basket" target="_blank" rel="noopener">Code</a>
+      </div>
+    </article>
+    <article class="work-card">
+      <div class="work-card__tag">Bootstrap 5</div>
+      <h3>Summer Sale</h3>
+      <p>E-commerce shopping page with a real working cart (Map state), coupon validation (SELL200), category tabs, and a hero carousel.</p>
+      <div class="work-card__links">
+        <a href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">Live demo →</a>
+        <a href="https://github.com/Jahidhemel/Summer-sale" target="_blank" rel="noopener">Code</a>
+      </div>
+    </article>
+    <article class="work-card">
+      <div class="work-card__tag">HTML / CSS / JS</div>
+      <h3>Hero Travel</h3>
+      <p>Travel-agency landing page with sticky translucent header, destination cards, deal pricing, and a working mobile hamburger menu.</p>
+      <div class="work-card__links">
+        <a href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">Live demo →</a>
+        <a href="https://github.com/Jahidhemel/Travel-Website" target="_blank" rel="noopener">Code</a>
+      </div>
+    </article>
+  </div>
+</section>
+
 <section id="contact" class="reveal">
   <div class="contact-card">
     <div class="section-label" style="margin-bottom:8px;">Contact</div>
@@ -504,12 +634,20 @@
     <div class="contact-links">
       <a href="mailto:jahidhemel@gmail.com" class="btn btn-primary">✉ jahidhemel@gmail.com</a>
       <a href="tel:+8801731290737" class="btn btn-ghost">📞 +880 1731 290737</a>
+      <a href="Md.%20Jahidul%20Islam%20Hemel_CV.pdf" class="btn btn-ghost" download>📄 Download CV</a>
     </div>
   </div>
 </section>
 
 <footer>
-  © <span id="year"></span> Md. Jahidul Islam Hemel. Built with care in Dhaka.
+  <div>© <span id="year"></span> Md. Jahidul Islam Hemel. Built with care in Dhaka.</div>
+  <div class="footer-social">
+    <a href="https://github.com/Jahidhemel" target="_blank" rel="noopener">GitHub</a>
+    <span class="dot">·</span>
+    <a href="https://www.linkedin.com/in/md-jahidul-islam-hemel" target="_blank" rel="noopener">LinkedIn</a>
+    <span class="dot">·</span>
+    <a href="mailto:jahidhemel@gmail.com">Email</a>
+  </div>
 </footer>
 
 <script>
