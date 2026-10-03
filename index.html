@@ -167,6 +167,20 @@
   .footcta p{color:var(--muted); margin-bottom:22px}
   .footline{height:2px; background:linear-gradient(90deg,transparent,var(--a1),var(--a2),transparent); background-size:200% 100%; animation:slide 4s linear infinite}
   @keyframes slide{to{background-position:200% 0}}
+  /* education */
+  .edu{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px}
+  @media(max-width:640px){.edu{grid-template-columns:1fr}}
+  .edu .card h3{font-size:17px; margin-bottom:4px}
+  .edu .card .meta{font-size:13px; color:var(--a2); margin-bottom:6px}
+  .edu .card p{font-size:14px; color:var(--muted)}
+  /* gallery */
+  .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px}
+  @media(max-width:820px){.gallery{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.gallery{grid-template-columns:1fr}}
+  .gcard{position:relative; border-radius:14px; overflow:hidden; aspect-ratio:4/5; border:1px solid var(--line)}
+  .gcard img{width:100%; height:100%; object-fit:cover; transition:transform .6s ease; display:block}
+  .gcard:hover img{transform:scale(1.07)}
+  .gcard .cap{position:absolute; left:0; right:0; bottom:0; padding:16px 14px 12px; font-size:14px; font-weight:500; color:#fff; background:linear-gradient(transparent,rgba(5,8,16,.9))}
 
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease}
   .reveal.in{opacity:1; transform:none}
@@ -299,6 +313,17 @@
   </div>
 </section>
 
+<!-- EDUCATION -->
+<section id="education">
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">Background</div><h2 class="title">Education</h2></div>
+    <div class="edu reveal">
+      <div class="card"><h3>B.Sc. in Electronics &amp; Telecommunication Engineering</h3><div class="meta">2015 - 2019</div><p>Daffodil International University, Dhaka · CGPA 3.56 / 4.00</p></div>
+      <div class="card"><h3>Higher Secondary Certificate (HSC)</h3><div class="meta">2011 - 2013</div><p>Amritalal Dey College, Barishal · CGPA 4.20 / 5.00</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- RECOMMENDATIONS -->
 <section id="recommendations">
   <div class="wrap">
@@ -346,6 +371,23 @@
       <div class="proj reveal"><span class="tag2">Tailwind</span><h3>Fruit Basket</h3><p>Organic fruit-shop landing page with a real-time countdown, mobile nav, and a bento-grid feature section.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/fruit-basket/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/fruit-basket">Code</a></div></div>
       <div class="proj reveal"><span class="tag2">Bootstrap 5</span><h3>Summer Sale</h3><p>E-commerce page with a working cart, coupon validation, category tabs, and a hero carousel.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/Summer-sale/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/Summer-sale">Code</a></div></div>
       <div class="proj reveal"><span class="tag2">HTML · CSS · JS</span><h3>Hero Travel</h3><p>Travel-agency landing page with a sticky translucent header, destination cards, and a working mobile menu.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/Travel-Website/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/Travel-Website">Code</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BEYOND WORK -->
+<section id="life">
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">Off the clock</div><h2 class="title">Beyond work</h2>
+      <p class="sub">When I'm not solving tickets, I'm usually travelling, riding, or chasing a good view. I also play cricket (at divisional, district, and school level).</p>
+    </div>
+    <div class="gallery reveal">
+      <div class="gcard"><img src="beyond1.jpg" alt="Working from a hammock" loading="lazy"><div class="cap">Works from anywhere</div></div>
+      <div class="gcard"><img src="beyond2.jpg" alt="Skiing in the snow" loading="lazy"><div class="cap">On the slopes</div></div>
+      <div class="gcard"><img src="beyond3.jpg" alt="Motorcycles at night" loading="lazy"><div class="cap">On two wheels</div></div>
+      <div class="gcard"><img src="beyond4.jpg" alt="At a waterfall" loading="lazy"><div class="cap">Chasing waterfalls</div></div>
+      <div class="gcard"><img src="beyond5.jpg" alt="In the mountains" loading="lazy"><div class="cap">In the mountains</div></div>
+      <div class="gcard"><img src="beyond6.jpg" alt="A good view" loading="lazy"><div class="cap">A good view</div></div>
     </div>
   </div>
 </section>
@@ -443,15 +485,17 @@
     skills:"Here's what he does best, support, success, and the technical side.",
     ai:"This is my favourite part, how he actually builds workflows with AI.",
     experience:"His journey so far, three roles and counting.",
-    recommendations:"Don't take his word for it, here's what a teammate said.",
+    education:"Where it all started, his education.",
+    recommendations:"Don't take his word for it, here's what his teammates said.",
     work:"Things he has built, including tools like me.",
+    life:"And here's Hemel off the clock, travelling and riding.",
     contact:"Like what you see? This is where you say hello."
   };
   var gb=document.getElementById("guideBubble");
   var gtObs=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && tips[e.target.id]){
     gb.style.opacity=0; setTimeout(function(){ gb.textContent=tips[e.target.id]; gb.style.opacity=1; },180);
   }});},{threshold:.4});
-  ["top","about","skills","ai","experience","recommendations","work","contact"].forEach(function(id){ var el=document.getElementById(id); if(el) gtObs.observe(el); });
+  ["top","about","skills","ai","experience","education","recommendations","work","life","contact"].forEach(function(id){ var el=document.getElementById(id); if(el) gtObs.observe(el); });
   document.getElementById("guideClose").addEventListener("click",function(ev){ ev.stopPropagation(); document.getElementById("guide").classList.add("hide"); });
   document.getElementById("guideBot").addEventListener("click",function(){ location.hash="#contact"; });
 
