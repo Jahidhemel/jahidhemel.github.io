@@ -3,6 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { mountCodeBg } from './codebg';
 import { mountGuide } from './guide';
+import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,7 +48,8 @@ burger?.addEventListener('click', () => {
 ScrollTrigger.create({ start: 40, onUpdate: (st) => nav?.classList.toggle('is-scrolled', st.scroll() > 40) });
 
 /* ---------------- guide + section tracking ---------------- */
-const guide = mountGuide($('#guideRoot')!, { reduced });
+const intro = shouldRunIntro(reduced);
+const guide = mountGuide($('#guideRoot')!, { reduced, intro });
 $$('[data-section]').forEach((sec) => {
   const id = sec.dataset.section!;
   ScrollTrigger.create({
@@ -64,9 +66,29 @@ function activate(id: string) {
 }
 if (lenis) lenis.on('scroll', ({ velocity }) => guide.setVelocity(velocity));
 
+/* ---------------- intro gate ---------------- */
+// Things that type/count in the hero wait until Ping has delivered the hero
+// (or immediately when the intro doesn't run).
+const heroReadyQueue: Array<() => void> = [];
+let heroReady = false;
+function onHeroReady(fn: () => void) { heroReady ? fn() : heroReadyQueue.push(fn); }
+function markHeroReady() {
+  if (heroReady) return;
+  heroReady = true;
+  document.documentElement.classList.remove('intro');
+  heroReadyQueue.splice(0).forEach((fn) => fn());
+}
+const deliverables = $$('[data-deliver]');
+if (intro) {
+  window.addEventListener('load', () => runIntro(guide, deliverables, markHeroReady), { once: true });
+} else {
+  revealHeroInstantly(deliverables);
+  markHeroReady();
+}
+
 /* ---------------- hero: split name ---------------- */
 const splits = $$('.hero__line .split');
-if (reduced) gsap.set(splits, { y: 0 });
+if (reduced || intro) gsap.set(splits, { y: 0 });
 else {
   gsap.set(splits, { yPercent: 110 });
   gsap.to(splits, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
@@ -93,7 +115,7 @@ if (tw) {
       else i += del ? -1 : 1;
       setTimeout(tick, wait);
     };
-    setTimeout(tick, 900);
+    onHeroReady(() => setTimeout(tick, 400));
   }
 }
 
@@ -151,7 +173,7 @@ if (codeEl) {
         setTimeout(() => { li = 0; ch = 0; heroTicketReset(); type(); }, 9000);
       }
     };
-    setTimeout(type, 1200);
+    onHeroReady(() => setTimeout(type, 600));
   }
 }
 
@@ -161,7 +183,8 @@ const ticketStatus = $('[data-status]');
 const ticketBar = $('.ticket__bar i');
 if (ticket && !reduced) {
   gsap.to(ticket, { y: -10, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-  gsap.from(ticket, { opacity: 0, x: 30, duration: 0.8, delay: 1.4, ease: 'power3.out' });
+  gsap.set(ticket, { opacity: 0 });
+  onHeroReady(() => gsap.fromTo(ticket, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.4, ease: 'power3.out' }));
 }
 function heroTicketResolve() {
   if (!ticketStatus || !ticketBar) return;
@@ -194,7 +217,7 @@ $$('.count').forEach((el) => {
   const to = Number(el.dataset.count || 0);
   if (reduced) { el.textContent = String(to); return; }
   const o = { v: 0 };
-  gsap.to(o, { v: to, duration: 1.6, ease: 'power2.out', delay: 0.6, onUpdate: () => (el.textContent = String(Math.round(o.v))) });
+  onHeroReady(() => gsap.to(o, { v: to, duration: 1.6, ease: 'power2.out', delay: 0.3, onUpdate: () => (el.textContent = String(Math.round(o.v))) }));
 });
 
 /* ---------------- cards: cursor spotlight ---------------- */
@@ -288,6 +311,28 @@ const heroCode = $<HTMLCanvasElement>('#heroCode');
 const aiCode = $<HTMLCanvasElement>('#aiCode');
 if (heroCode) mountCodeBg(heroCode, { density: 10, reduced });
 if (aiCode) mountCodeBg(aiCode, { density: 7, reduced });
+
+/* ---------------- scroll progress ---------------- */
+const progress = $('#progress');
+if (progress) {
+  const setP = (p: number) => progress.style.setProperty('--p', String(p));
+  if (lenis) lenis.on('scroll', ({ progress: p }) => setP(p));
+  else window.addEventListener('scroll', () => setP(window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight)), { passive: true });
+}
+
+/* ---------------- cursor ring ---------------- */
+const cursor = $('#cursor');
+if (cursor && !reduced && window.matchMedia('(pointer: fine)').matches) {
+  const cx = gsap.quickTo(cursor, 'x', { duration: 0.22, ease: 'power3.out' });
+  const cy = gsap.quickTo(cursor, 'y', { duration: 0.22, ease: 'power3.out' });
+  document.documentElement.classList.add('has-cursor');
+  window.addEventListener('pointermove', (e) => { cx(e.clientX); cy(e.clientY); cursor.classList.add('is-on'); }, { passive: true });
+  document.addEventListener('pointerleave', () => cursor.classList.remove('is-on'));
+  document.addEventListener('pointerover', (e) => {
+    const t = (e.target as Element).closest('a, button, [role="button"]');
+    cursor.classList.toggle('is-link', !!t);
+  });
+}
 
 /* ---------------- misc ---------------- */
 $('#year')!.textContent = String(new Date().getFullYear());

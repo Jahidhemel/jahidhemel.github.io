@@ -459,3 +459,22 @@ main { position: relative; z-index: 2; }
   .dash__feed li { opacity: 1; transform: none; }
   .dash__bars i { height: calc(var(--h) * 100%); }
 }
+
+/* ---------- intro / progress / cursor ---------- */
+html.intro [data-deliver] { opacity: 0; }
+.skipintro {
+  position: absolute; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 5;
+  font: 500 13px var(--body); color: var(--text); background: rgba(14,21,41,.7); border: 1px solid rgba(34,211,238,.45);
+  padding: 9px 16px; border-radius: 999px; cursor: pointer; backdrop-filter: blur(8px); transition: border-color .25s, background .25s;
+}
+.skipintro:hover { border-color: var(--a2); background: rgba(34,211,238,.12); }
+.skipintro[hidden] { display: none; }
+.progress { position: fixed; left: 0; top: 0; height: 2px; width: 100%; z-index: 60; background: var(--grad); transform-origin: left; transform: scaleX(var(--p, 0)); pointer-events: none; }
+.cursor {
+  position: fixed; left: 0; top: 0; z-index: 70; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+  border: 1.5px solid rgba(34,211,238,.7); pointer-events: none; opacity: 0;
+  transition: opacity .3s, width .25s var(--ease), height .25s var(--ease), margin .25s var(--ease), background .25s, border-color .25s;
+}
+.cursor.is-on { opacity: 1; }
+.cursor.is-link { width: 48px; height: 48px; margin: -24px 0 0 -24px; background: rgba(34,211,238,.1); border-color: rgba(34,211,238,.9); }
+@media (hover: none), (prefers-reduced-motion: reduce) { .cursor { display: none; } }

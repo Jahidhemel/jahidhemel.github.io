@@ -49,7 +49,7 @@ const SVG = `
         <g class="g-eye"><ellipse cx="70" cy="52" rx="5" ry="6" fill="#22D3EE"/><circle class="g-pupil" cx="71" cy="53" r="2.2" fill="#0B1020"/></g>
       </g>
       <path class="g-mouth" d="M54 62 Q60 66.5 66 62" fill="none" stroke="#22D3EE" stroke-width="2" stroke-linecap="round"/>
-      <rect x="54" y="76" width="12" height="4" rx="2" fill="url(#gAcc)" opacity=".85"/>
+      <rect class="g-chest" x="54" y="76" width="12" height="4" rx="2" fill="url(#gAcc)" opacity=".85"/>
       <rect x="48" y="84" width="24" height="3" rx="1.5" fill="#2b3a5c"/>
     </g>
   </g>
@@ -60,10 +60,21 @@ const RESTORE_SVG = `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="30" 
 export interface Guide {
   setSection(id: string): void;
   setVelocity(v: number): void;
+  /** Fly to a viewport point (top-left of Ping). Resolves when it arrives. */
+  flyTo(x: number, y: number, duration?: number): Promise<void>;
+  /** Flash the antenna + chest light — the "beam" moment. */
+  pulse(): void;
+  say(text: string, hold?: number): void;
+  wave(): void;
+  /** While locked, section changes don't move Ping (used by the intro). */
+  lock(on: boolean): void;
+  goHome(instant?: boolean): void;
+  readonly hidden: boolean;
+  readonly size: { w: number; h: number };
   destroy(): void;
 }
 
-export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide {
+export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: boolean }): Guide {
   const KEY = 'ping-dismissed';
   const el = document.createElement('div');
   el.className = 'guide';
@@ -86,18 +97,21 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide
   const closeBtn = el.querySelector<HTMLButtonElement>('.guide__close')!;
   const svg = el.querySelector<SVGSVGElement>('svg')!;
   const q = (s: string) => svg.querySelector<SVGGraphicsElement>(s)!;
-  const all = q('.g-all'), armR = q('.g-armR'), armL = q('.g-armL'), eyes = q('.g-eyes'), ant = q('.g-antdot'), thrust = q('.g-thrust'), mouth = q('.g-mouth');
+  const all = q('.g-all'), armR = q('.g-armR'), armL = q('.g-armL'), eyes = q('.g-eyes'), ant = q('.g-antdot'), thrust = q('.g-thrust'), mouth = q('.g-mouth'), chest = q('.g-chest');
   const pupils = Array.from(svg.querySelectorAll<SVGCircleElement>('.g-pupil'));
 
-  gsap.set(armR, { transformOrigin: '92px 66px' });
-  gsap.set(armL, { transformOrigin: '28px 66px' });
-  gsap.set(eyes, { transformOrigin: '60px 52px' });
-  gsap.set(all, { transformOrigin: '60px 60px' });
+  gsap.set(armR, { svgOrigin: '92 66' });
+  gsap.set(armL, { svgOrigin: '28 66' });
+  gsap.set(eyes, { svgOrigin: '60 52' });
+  gsap.set(all, { svgOrigin: '60 60' });
+  gsap.set(thrust, { svgOrigin: '60 110' });
+  gsap.set(ant, { svgOrigin: '60 8' });
 
   const reduced = opts.reduced;
   const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
   let current = 'hero';
   let hidden = false;
+  let locked = false;
   let bubbleTimer = 0;
   let dismissed = false;
   try { dismissed = sessionStorage.getItem(KEY) === '1'; } catch { /* storage may be unavailable */ }
@@ -148,7 +162,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide
   // ---- idle life ----
   if (!reduced) {
     gsap.to(all, { y: '+=5', duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    gsap.to(thrust, { scaleX: 1.25, opacity: 0.6, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '60px 110px' });
+    gsap.to(thrust, { opacity: 0.55, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
     gsap.to(ant, { opacity: 0.35, duration: 0.7, yoyo: true, repeat: -1, ease: 'sine.inOut' });
     const blink = () => {
       gsap.timeline({ onComplete: () => gsap.delayedCall(2.4 + Math.random() * 3, blink) })
@@ -187,7 +201,11 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide
   const pupilX = pupils.map((p) => gsap.quickTo(p, 'x', { duration: 0.25, ease: 'power2.out' }));
   const pupilY = pupils.map((p) => gsap.quickTo(p, 'y', { duration: 0.25, ease: 'power2.out' }));
   const headTilt = gsap.quickTo(all, 'rotation', { duration: 0.6, ease: 'power2.out' });
+  const flareX = gsap.quickTo(thrust, 'scaleX', { duration: 0.35, ease: 'power2.out' });
+  const flareY = gsap.quickTo(thrust, 'scaleY', { duration: 0.35, ease: 'power2.out' });
+  const flareA = gsap.quickTo(thrust, 'opacity', { duration: 0.35, ease: 'power2.out' });
   let lean = 0;
+  let flareTimer = 0;
   function onPointer(e: PointerEvent) {
     if (reduced || hidden) return;
     const r = body.getBoundingClientRect();
@@ -228,6 +246,10 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide
   // ---- entrance ----
   if (dismissed) {
     el.classList.add('is-hidden'); hidden = true; restore.classList.add('is-on');
+  } else if (opts.intro) {
+    // the intro module flies Ping in and hands back control
+    place('hero', true);
+    gsap.set(el, { opacity: 0 });
   } else {
     place('hero', true);
     gsap.set(el, { opacity: 0, scale: 0.4 });
@@ -241,7 +263,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide
     setSection(id) {
       if (id === current) return;
       current = id;
-      if (hidden) return;
+      if (hidden || locked) return;
       place(id);
       const spot = SPOTS[id];
       if (spot) gsap.delayedCall(0.5, () => say(spot.say));
@@ -251,7 +273,41 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean }): Guide
       if (reduced || hidden) return;
       lean = gsap.utils.clamp(-10, 10, v * 0.25);
       headTilt(lean);
+      // flying: the thruster flares with speed and the body squashes a touch
+      const k = Math.min(1, Math.abs(v) / 40);
+      flareX(1 + k * 1.1); flareY(1 + k * 1.6); flareA(0.55 + k * 0.45);
+      clearTimeout(flareTimer);
+      flareTimer = window.setTimeout(() => { flareX(1); flareY(1); flareA(0.55); }, 180);
     },
+    flyTo(x, y, duration = 0.9) {
+      pos.x = x; pos.y = y;
+      if (reduced) { gsap.set(el, { x, y }); return Promise.resolve(); }
+      const fromX = gsap.getProperty(el, 'x') as number;
+      const dir = x > fromX ? 1 : -1;
+      gsap.timeline()
+        .to(all, { rotation: dir * 12, duration: 0.3, ease: 'power2.out' })
+        .to(all, { rotation: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }, duration * 0.6);
+      flareX(2); flareY(2.4); flareA(1);
+      gsap.delayedCall(duration, () => { flareX(1); flareY(1); flareA(0.55); });
+      return new Promise((resolve) => {
+        gsap.to(el, { x, y, duration, ease: 'power3.inOut', onComplete: resolve });
+      });
+    },
+    pulse() {
+      if (reduced) return;
+      gsap.timeline()
+        .fromTo(ant, { scale: 1 }, { scale: 2.2, duration: 0.18, yoyo: true, repeat: 1, ease: 'power2.out' })
+        .fromTo(chest, { opacity: 0.85 }, { opacity: 0.2, duration: 0.1, yoyo: true, repeat: 3 }, 0)
+        .to(eyes, { scaleY: 1.25, scaleX: 1.15, duration: 0.15, yoyo: true, repeat: 1 }, 0)
+        .to(armL, { rotation: 55, duration: 0.25, ease: 'power2.out' }, 0)
+        .to(armL, { rotation: 0, duration: 0.5, ease: 'elastic.out(1, .5)' }, 0.3);
+    },
+    say,
+    wave,
+    lock(on) { locked = on; },
+    goHome(instant = false) { place(current, instant); },
+    get hidden() { return hidden; },
+    get size() { return { w: el.offsetWidth || 120, h: el.offsetHeight || 150 }; },
     destroy() {
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('resize', onResize);
