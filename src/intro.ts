@@ -61,7 +61,7 @@ export async function runIntro(guide: Guide, items: HTMLElement[], onDone: () =>
   await guide.flyTo(vw / 2 - gw / 2, vh * 0.42, 0.9);
   if (skipped) return;
   guide.wave();
-  guide.say("Hi! I'm Ping. Give me a second to set the page up for you.", 2200);
+  guide.say("Hi, I'm Ping. Give me a second, I'll set the page up.", 2200);
   await wait(1500);
 
   for (const item of items) {
@@ -108,7 +108,7 @@ export async function runIntro(guide: Guide, items: HTMLElement[], onDone: () =>
   try { sessionStorage.setItem(KEY, '1'); } catch { /* ignore */ }
   guide.lock(false);
   guide.goHome();
-  guide.say("All set. Scroll on — I'll follow you down. 👋", 5000);
+  guide.say("Done. Scroll down, I'll come with you. 👋", 5000);
   onDone();
 }
 

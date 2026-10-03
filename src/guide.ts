@@ -12,17 +12,45 @@ type Side = 'left' | 'right';
 interface Spot { side: Side; y: number; say: string }
 
 const SPOTS: Record<string, Spot> = {
-  hero:            { side: 'right', y: 0.98, say: "Hi! I'm Ping, Hemel's support bot. Scroll on — I'll show you around. 👋" },
-  about:           { side: 'left',  y: 0.92, say: 'Three years of making merchants leave better off than they arrived.' },
-  skills:          { side: 'right', y: 0.70, say: 'Support skills, plus enough engineering to actually fix things.' },
-  ai:              { side: 'left',  y: 0.58, say: "This is the good part — how he actually uses AI, every day. AI drafts, he decides." },
-  experience:      { side: 'right', y: 0.60, say: 'He leads both the Support and the QA team at Efoli.' },
-  education:       { side: 'right', y: 0.72, say: 'Telecom engineer by degree, support engineer by choice.' },
-  recommendations: { side: 'left',  y: 0.72, say: 'What his teammates say — real words from real people.' },
-  work:            { side: 'right', y: 0.72, say: 'Things he built to make support better. Try the live demos!' },
-  life:            { side: 'left',  y: 0.70, say: 'Off the clock: motorcycles, mountains, and cricket.' },
-  contact:         { side: 'right', y: 0.30, say: "That's the tour! Say hi — he replies fast. 👋" },
+  hero:            { side: 'right', y: 0.98, say: "Hi, I'm Ping. I work for Hemel. Scroll down and I'll tag along. 👋" },
+  about:           { side: 'left',  y: 0.92, say: 'Three years of this. He still likes it, somehow.' },
+  skills:          { side: 'right', y: 0.70, say: 'He can fix the thing, not just explain it.' },
+  ai:              { side: 'left',  y: 0.58, say: "My favourite bit. This is how he gets through 40 chats a day." },
+  experience:      { side: 'right', y: 0.60, say: 'Two teams, one boss. Rosters are the hard part, he says.' },
+  education:       { side: 'right', y: 0.72, say: 'Telecom engineer on paper. Support engineer in practice.' },
+  recommendations: { side: 'left',  y: 0.72, say: 'Real people wrote these. I checked.' },
+  work:            { side: 'right', y: 0.72, say: 'He built these on weekends. Click the live demos.' },
+  life:            { side: 'left',  y: 0.70, say: 'Bikes, mountains, cricket. Not much room for me.' },
+  contact:         { side: 'right', y: 0.30, say: "That's everything. Send him a note, he replies quickly. 👋" },
 };
+
+/**
+ * What Ping does in each section, beyond sitting in the gutter.
+ *  behind: hides behind an element and peeks over its top edge
+ *  edge:   leans in from the side of the viewport
+ *  walk:   crosses the viewport once, then settles in the gutter
+ */
+type Act =
+  | { kind: 'spot' }
+  | { kind: 'behind'; anchor: string; fx: number }
+  | { kind: 'edge'; side: Side; y: number }
+  | { kind: 'walk'; y: number; from: Side };
+
+const ACTS: Record<string, Act> = {
+  hero:            { kind: 'spot' },
+  about:           { kind: 'behind', anchor: '.about__frame', fx: 0.5 },
+  skills:          { kind: 'walk', y: 0.36, from: 'left' },
+  ai:              { kind: 'behind', anchor: '#dash', fx: 0.72 },
+  experience:      { kind: 'edge', side: 'right', y: 0.55 },
+  education:       { kind: 'behind', anchor: '#education .card:last-child', fx: 0.62 },
+  recommendations: { kind: 'behind', anchor: '.quote:nth-child(2)', fx: 0.5 },
+  work:            { kind: 'behind', anchor: '.card--featured', fx: 0.8 },
+  life:            { kind: 'behind', anchor: '.gallery li:nth-child(3) figure', fx: 0.5 },
+  contact:         { kind: 'walk', y: 0.3, from: 'right' },
+};
+
+const FOUND = ['Found me. 👀', 'Too quick. Again?', 'Okay, okay. Over here.', 'Nope, not there any more.', 'You are good at this.'];
+const GIVE_UP = 'Fine, you win. I will just float here.';
 
 const SVG = `
 <svg class="guide__svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
@@ -118,8 +146,6 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
 
   // ---- position ----
   const pos = { x: -200, y: -200 };
-  const xTo = gsap.quickTo(el, 'x', { duration: 1.1, ease: 'power3.inOut' });
-  const yTo = gsap.quickTo(el, 'y', { duration: 1.1, ease: 'power3.inOut' });
 
   // Ping travels only when the viewport has a gutter wide enough to hold it
   // beside the content column; otherwise it docks bottom-right like on mobile.
@@ -144,7 +170,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     pos.x = t.x; pos.y = t.y;
     if (instant || reduced) { gsap.set(el, { x: t.x, y: t.y }); return; }
     const goingRight = t.x > (gsap.getProperty(el, 'x') as number);
-    xTo(t.x); yTo(t.y);
+    gsap.to(el, { x: t.x, y: t.y, duration: 1.1, ease: 'power3.inOut', overwrite: 'auto' });
     // a little hop + lean in the direction of travel
     gsap.timeline()
       .to(all, { rotation: goingRight ? 10 : -10, y: -10, duration: 0.35, ease: 'power2.out' })
@@ -181,7 +207,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   }
 
   function react() {
-    if (reduced) { say('Beep! Scroll down to see the work, or jump to Contact.'); return; }
+    if (reduced) { say('Beep. Scroll down for the work, or jump to Contact.'); return; }
     const pick = Math.floor(Math.random() * 3);
     if (pick === 0) {
       gsap.timeline().to(all, { rotation: 360, duration: 0.7, ease: 'power2.inOut' }).set(all, { rotation: 0 });
@@ -193,9 +219,162 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
         .to([armL, armR], { rotation: 0, duration: 0.5, ease: 'elastic.out(1, .5)' });
     }
     gsap.timeline().to(mouth, { attr: { d: 'M53 61 Q60 70 67 61' }, duration: 0.2 }).to(mouth, { attr: { d: 'M54 62 Q60 66.5 66 62' }, duration: 0.4, delay: 0.8 });
-    const lines = ['Beep! Hemel builds things like me on weekends.', 'Fun fact: he handles 20–40 merchant chats a day.', 'Scroll on — or jump to Contact and say hi.', 'I run on SVG and GSAP. No API keys were harmed.'];
+    const lines = ['Beep. He built me on a weekend.', 'He does 20 to 40 merchant chats a day. I do none.', 'Keep scrolling, or jump to Contact and say hi.', 'I am just SVG and a bit of GSAP. No API keys in here.'];
     say(lines[Math.floor(Math.random() * lines.length)]);
   }
+
+  // ---- acts: peek / edge / walk ----
+  type Mode = { kind: 'spot' } | { kind: 'behind'; anchor: HTMLElement; fx: number } | { kind: 'edge'; side: Side; y: number } | { kind: 'walk' };
+  let mode: Mode = { kind: 'spot' };
+  const peek = { p: 0 };          // how many px of Ping are showing (behind/edge)
+  let ducking = false;
+  let finds = 0;
+  let seekTimer: gsap.core.Tween | null = null;
+  const bodyH = () => body.offsetHeight || 120;
+
+  function clip(px: number) {
+    body.style.clipPath = px >= bodyH() ? '' : `inset(0 0 ${Math.max(0, bodyH() - px)}px 0)`;
+  }
+
+  // Runs every frame while Ping is behind something: follow the element as the page scrolls.
+  function tick() {
+    if (mode.kind !== 'behind') return;
+    const r = mode.anchor.getBoundingClientRect();
+    const w = el.offsetWidth || 120;
+    const x = r.left + r.width * mode.fx - w / 2;
+    const y = r.top - peek.p + 2;
+    gsap.set(el, { x: gsap.utils.clamp(4, window.innerWidth - w - 4, x), y });
+    // Only show when the hiding place's top edge is comfortably on screen
+    // (not under the nav, not below the fold).
+    const inBand = r.top > 150 && r.top < window.innerHeight - 30;
+    clip(inBand ? peek.p : 0);
+    el.classList.toggle('is-left', x < window.innerWidth / 2);
+    el.classList.toggle('is-right', x >= window.innerWidth / 2);
+  }
+
+  function exitMode() {
+    gsap.ticker.remove(tick);
+    gsap.killTweensOf(peek);
+    seekTimer?.kill(); seekTimer = null;
+    clip(bodyH());
+    bubble.style.left = ''; bubble.style.right = '';
+    gsap.to(all, { rotation: 0, duration: 0.3 });
+    gsap.killTweensOf(el, 'x,y');
+    ducking = false;
+    mode = { kind: 'spot' };
+  }
+
+  function rise(to: number, dur = 0.55) {
+    return gsap.to(peek, { p: to, duration: dur, ease: 'back.out(1.6)', onUpdate: applyPeek });
+  }
+  function sink(dur = 0.3) {
+    return gsap.to(peek, { p: 0, duration: dur, ease: 'power2.in', onUpdate: applyPeek });
+  }
+  function applyPeek() {
+    if (mode.kind === 'behind') tick();
+    else if (mode.kind === 'edge') {
+      const w = el.offsetWidth || 120;
+      const x = mode.side === 'left' ? -w + peek.p : window.innerWidth - peek.p;
+      gsap.set(el, { x, y: mode.y * window.innerHeight - (el.offsetHeight || 150) / 2 });
+      gsap.set(all, { rotation: (mode.side === 'left' ? -1 : 1) * 16 * Math.min(1, peek.p / w) });
+      // keep the bubble inside the viewport while Ping is half off it
+      el.classList.toggle('is-left', mode.side === 'left'); el.classList.toggle('is-right', mode.side === 'right');
+      if (mode.side === 'left') { bubble.style.left = `${w - peek.p + 10}px`; bubble.style.right = ''; }
+      else { bubble.style.right = `${w - peek.p + 10}px`; bubble.style.left = ''; }
+    }
+  }
+
+  function enterBehind(anchorSel: string, fx: number, line: string) {
+    const anchor = document.querySelector<HTMLElement>(anchorSel);
+    if (!anchor) { place(current); return; }
+    mode = { kind: 'behind', anchor, fx };
+    peek.p = 0; finds = 0;
+    gsap.ticker.add(tick);
+    tick();
+    rise(bodyH() * 0.5).then(() => say(line, 3600));
+    scheduleReHide();
+  }
+  // Every few seconds Ping ducks and pops up somewhere else along the same element.
+  function scheduleReHide() {
+    seekTimer?.kill();
+    seekTimer = gsap.delayedCall(4.5 + Math.random() * 2.5, () => {
+      if (mode.kind !== 'behind' || ducking) return;
+      ducking = true;
+      sink().then(() => {
+        if (mode.kind !== 'behind') return;
+        mode.fx = gsap.utils.clamp(0.15, 0.85, mode.fx + (Math.random() > 0.5 ? 1 : -1) * (0.25 + Math.random() * 0.3));
+        gsap.delayedCall(0.7, () => { if (mode.kind !== 'behind') return; rise(bodyH() * 0.5).then(() => { ducking = false; scheduleReHide(); }); });
+      });
+    });
+  }
+  function enterEdge(side: Side, y: number, line: string) {
+    mode = { kind: 'edge', side, y };
+    peek.p = 0; finds = 0;
+    applyPeek();
+    rise((el.offsetWidth || 120) * 0.62, 0.7).then(() => say(line, 3600));
+  }
+  function enterWalk(y: number, from: Side, line: string) {
+    mode = { kind: 'walk' };
+    const w = el.offsetWidth || 120, vw = window.innerWidth;
+    const startX = from === 'left' ? -w : vw, endX = from === 'left' ? vw : -w;
+    const py = y * window.innerHeight - (el.offsetHeight || 150) / 2;
+    gsap.set(el, { x: startX, y: py });
+    el.classList.toggle('is-left', from === 'left'); el.classList.toggle('is-right', from === 'right');
+    flareX(2.2); flareY(2.6); flareA(1);
+    const swing = gsap.timeline({ repeat: -1, yoyo: true }).to([armL, armR], { rotation: 28, duration: 0.3, ease: 'sine.inOut' });
+    gsap.to(all, { rotation: from === 'left' ? 10 : -10, duration: 0.3 });
+    gsap.delayedCall(0.4, () => say(line, 2600));
+    gsap.to(el, { x: endX, duration: 3.2, ease: 'power1.inOut', onComplete: () => {
+      swing.kill(); gsap.to([armL, armR], { rotation: 0, duration: 0.4 });
+      flareX(1); flareY(1); flareA(0.55);
+      if (mode.kind !== 'walk') return;
+      mode = { kind: 'spot' };
+      // arrive from the far side into the gutter spot
+      gsap.set(el, { x: from === 'left' ? vw : -w });
+      place(current);
+      if (current === 'contact') gsap.delayedCall(1.0, wave);
+    } });
+  }
+  function enterAct(id: string) {
+    exitMode();
+    const act = ACTS[id] ?? { kind: 'spot' };
+    const line = SPOTS[id]?.say ?? '';
+    const roomy = !isMobile() && !reduced;
+    if (act.kind === 'behind') enterBehind(act.anchor, act.fx, line);
+    else if (act.kind === 'edge' && roomy) enterEdge(act.side, act.y, line);
+    else if (act.kind === 'walk' && roomy) enterWalk(act.y, act.from, line);
+    else { place(id); gsap.delayedCall(0.5, () => say(line)); if (id === 'contact') gsap.delayedCall(0.9, wave); }
+  }
+
+  // Hide and seek: the pointer getting close makes Ping duck and come back somewhere else.
+  function seek(e: PointerEvent) {
+    if (ducking || hidden || locked) return;
+    if (mode.kind !== 'behind' && mode.kind !== 'edge') return;
+    const r = body.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = mode.kind === 'behind' ? r.top + peek.p / 2 : r.top + r.height / 2;
+    if (Math.hypot(e.clientX - cx, e.clientY - cy) > 110) return;
+    ducking = true;
+    finds++;
+    bubble.classList.remove('is-on');
+    gsap.timeline().to(eyes, { scaleY: 1.3, scaleX: 1.2, duration: 0.1 }).to(eyes, { scaleY: 1, scaleX: 1, duration: 0.2 });
+    if (finds >= 4) {
+      // enough: come out properly and float in the gutter
+      const id = current;
+      sink(0.25).then(() => { exitMode(); place(id, true); gsap.fromTo(el, { scale: 0.5 }, { scale: 1, duration: 0.5, ease: 'back.out(1.8)' }); say(GIVE_UP, 4000); wave(); });
+      return;
+    }
+    const m = mode;
+    sink(0.22).then(() => {
+      gsap.delayedCall(0.8, () => {
+        if (mode !== m) return;
+        if (m.kind === 'behind') m.fx = gsap.utils.clamp(0.15, 0.85, m.fx + (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.3));
+        if (m.kind === 'edge') { m.side = m.side === 'left' ? 'right' : 'left'; m.y = gsap.utils.clamp(0.25, 0.8, m.y + (Math.random() - 0.5) * 0.4); }
+        const to = m.kind === 'behind' ? bodyH() * 0.5 : (el.offsetWidth || 120) * 0.62;
+        rise(to).then(() => { ducking = false; say(FOUND[Math.min(finds - 1, FOUND.length - 1)], 2200); if (m.kind === 'behind') scheduleReHide(); });
+      });
+    });
+  }
+  window.addEventListener('pointermove', seek, { passive: true });
 
   // ---- cursor tracking ----
   const pupilX = pupils.map((p) => gsap.quickTo(p, 'x', { duration: 0.25, ease: 'power2.out' }));
@@ -222,6 +401,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   // ---- hide / show ----
   function hide(remember = true) {
     hidden = true;
+    exitMode();
     bubble.classList.remove('is-on');
     gsap.to(el, { scale: 0.6, opacity: 0, duration: 0.3, ease: 'power2.in', onComplete: () => el.classList.add('is-hidden') });
     restore.classList.add('is-on');
@@ -232,6 +412,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     el.classList.remove('is-hidden');
     restore.classList.remove('is-on');
     try { sessionStorage.removeItem(KEY); } catch { /* ignore */ }
+    exitMode();
     place(current, true);
     gsap.fromTo(el, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' });
     wave();
@@ -241,7 +422,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   restore.addEventListener('click', show);
   body.addEventListener('click', react);
   body.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); react(); } });
-  body.addEventListener('pointerenter', () => { if (!bubble.classList.contains('is-on')) say(SPOTS[current]?.say ?? '', 3000); });
+  body.addEventListener('pointerenter', () => { if (mode.kind === 'spot' && !bubble.classList.contains('is-on')) say(SPOTS[current]?.say ?? '', 3000); });
 
   // ---- entrance ----
   if (dismissed) {
@@ -256,7 +437,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     gsap.to(el, { opacity: 1, scale: 1, duration: 0.7, delay: 1.1, ease: 'back.out(1.7)', onComplete: () => { wave(); say(SPOTS.hero.say, 6500); } });
   }
 
-  const onResize = () => { if (!hidden) place(current, true); };
+  const onResize = () => { if (hidden) return; if (mode.kind === 'spot') place(current, true); else applyPeek(); };
   window.addEventListener('resize', onResize, { passive: true });
 
   return {
@@ -264,10 +445,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
       if (id === current) return;
       current = id;
       if (hidden || locked) return;
-      place(id);
-      const spot = SPOTS[id];
-      if (spot) gsap.delayedCall(0.5, () => say(spot.say));
-      if (id === 'contact') gsap.delayedCall(0.9, wave);
+      enterAct(id);
     },
     setVelocity(v) {
       if (reduced || hidden) return;
@@ -305,12 +483,14 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     say,
     wave,
     lock(on) { locked = on; },
-    goHome(instant = false) { place(current, instant); },
+    goHome(instant = false) { exitMode(); place(current, instant); },
     get hidden() { return hidden; },
     get size() { return { w: el.offsetWidth || 120, h: el.offsetHeight || 150 }; },
     destroy() {
       window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('pointermove', seek);
       window.removeEventListener('resize', onResize);
+      exitMode();
       el.remove(); restore.remove();
     },
   };

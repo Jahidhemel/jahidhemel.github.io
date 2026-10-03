@@ -96,10 +96,10 @@ else {
 
 /* ---------------- typewriter ---------------- */
 const phrases = [
-  'I turn support tickets into happy customers.',
-  'I help SaaS merchants adopt and succeed.',
-  'I reproduce before I guess.',
-  'I lead the team that keeps customers happy.',
+  'I help Shopify merchants get what they came for.',
+  'I reproduce the problem before I touch anything.',
+  'I run the support and QA teams at Efoli.',
+  'I would rather fix it than explain why it broke.',
 ];
 const tw = $('#typewriter');
 if (tw) {
@@ -121,13 +121,13 @@ if (tw) {
 
 /* ---------------- hero: code window typing ---------------- */
 const CODE: Array<[string, string]> = [
-  ['c', '// support.ts — how a merchant conversation runs'],
+  ['c', '// support.ts: a merchant conversation, roughly'],
   ['', ''],
   ['', '<k>const</k> ticket = <k>await</k> <f>get</f>(id)'],
   ['', '<k>const</k> needs = <k>await</k> <f>discovery</f>(ticket.merchant)'],
   ['', ''],
   ['', '<k>if</k> (!<f>reproduce</f>(ticket)) {'],
-  ['', '  <k>throw</k> <k>new</k> <f>Error</f>(<s>"don\'t guess — reproduce"</s>)'],
+  ['', '  <k>throw</k> <k>new</k> <f>Error</f>(<s>"reproduce it first"</s>)'],
   ['', '}'],
   ['', ''],
   ['', '<k>const</k> fix = <f>scope</f>(needs, { <t>custom</t>: <n>true</n> })'],
@@ -251,7 +251,7 @@ if (journey) {
   const card = $('#journeyCard')!;
   const text = $('#journeyText')!;
   const who = $('b', card)!;
-  const msgs = ['"My discount isn\'t applying…"', 'Which plan, which theme, guest or signed in?', 'Reproduced on a test store. It\'s the guest checkout.', 'Fixed, documented, and followed up. ✓'];
+  const msgs = ['"My discount is not applying"', 'Which plan, which theme, guest or logged in?', 'Got it on a test store. Guest checkout.', 'Fixed, written up, followed up. ✓'];
   const whos = ['Merchant', 'Hemel', 'Hemel', 'Hemel'];
   const run = () => {
     stages.forEach((s) => s.classList.remove('is-done'));
