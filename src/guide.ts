@@ -256,6 +256,8 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   function exitMode() {
     gsap.ticker.remove(tick);
     gsap.killTweensOf(peek);
+    gsap.killTweensOf(mode);
+    token++;
     seekTimer?.kill(); seekTimer = null;
     clip(bodyH());
     bubble.style.left = ''; bubble.style.right = ''; bubble.style.visibility = '';
@@ -266,10 +268,10 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   }
 
   function rise(to: number, dur = 0.55) {
-    return gsap.to(peek, { p: to, duration: dur, ease: 'back.out(1.6)', onUpdate: applyPeek });
+    return gsap.to(peek, { p: to, duration: dur, ease: 'back.out(1.6)', onUpdate: applyPeek, overwrite: true });
   }
   function sink(dur = 0.3) {
-    return gsap.to(peek, { p: 0, duration: dur, ease: 'power2.in', onUpdate: applyPeek });
+    return gsap.to(peek, { p: 0, duration: dur, ease: 'power2.in', onUpdate: applyPeek, overwrite: true });
   }
   function applyPeek() {
     if (mode.kind === 'behind') tick();
@@ -277,7 +279,8 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
       const w = el.offsetWidth || 120;
       const x = mode.side === 'left' ? -w + peek.p : window.innerWidth - peek.p;
       gsap.set(el, { x, y: mode.y * window.innerHeight - (el.offsetHeight || 150) / 2 });
-      gsap.set(all, { rotation: (mode.side === 'left' ? -1 : 1) * 16 * Math.min(1, peek.p / w) });
+      const lean = peek.p <= w ? peek.p / w : Math.max(0, 1 - (peek.p - w) / 16);
+      gsap.set(all, { rotation: (mode.side === 'left' ? -1 : 1) * 16 * lean });
       // keep the bubble inside the viewport while Ping is half off it
       el.classList.toggle('is-left', mode.side === 'left'); el.classList.toggle('is-right', mode.side === 'right');
       if (mode.side === 'left') { bubble.style.left = `${w - peek.p + 10}px`; bubble.style.right = ''; }
@@ -285,6 +288,73 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     }
   }
 
+  // A routine is a loop of small moves: peek, come right out, do something,
+  // slide along the hiding place, drop back behind it, pop up somewhere else.
+  // `token` lets a mode change or a duck cancel a routine mid-way.
+  let token = 0;
+  const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+  const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+  const newFx = (fx: number) => gsap.utils.clamp(0.12, 0.88, fx + (Math.random() > 0.5 ? 1 : -1) * rnd(0.25, 0.5));
+  function hop() {
+    gsap.timeline().to(all, { y: -22, scaleY: 1.08, duration: 0.28, ease: 'power2.out' }).to(all, { y: 0, scaleY: 1, duration: 0.5, ease: 'bounce.out' });
+  }
+  function lookAround() {
+    gsap.timeline()
+      .to(pupils, { x: -3, duration: 0.25 }).to(all, { rotation: -8, duration: 0.25 }, '<')
+      .to(pupils, { x: 3, duration: 0.4, delay: 0.3 }).to(all, { rotation: 8, duration: 0.4 }, '<')
+      .to(pupils, { x: 0, duration: 0.3, delay: 0.3 }).to(all, { rotation: 0, duration: 0.3 }, '<');
+  }
+  function antic() {
+    const pick = Math.random();
+    if (pick < 0.4) wave(); else if (pick < 0.7) hop(); else lookAround();
+  }
+
+  async function behindRoutine(line?: string) {
+    const t = ++token;
+    const m = mode;
+    if (m.kind !== 'behind') return;
+    const ok = () => token === t && mode === m && !ducking && !hidden;
+    const H = bodyH();
+    await rise(H * 0.5); if (!ok()) return;                 // head over the edge
+    if (line) say(line, 3200);
+    await wait(rnd(1800, 2600)); if (!ok()) return;
+    await rise(H + 10, 0.6); if (!ok()) return;             // all the way out
+    antic();
+    await wait(rnd(1600, 2200)); if (!ok()) return;
+    // slide along the top edge to a new spot
+    const to = newFx(m.fx);
+    gsap.to(all, { rotation: to > m.fx ? 10 : -10, duration: 0.3 });
+    flareX(1.8); flareY(2); flareA(0.9);
+    await gsap.to(m, { fx: to, duration: 1.3, ease: 'power2.inOut', overwrite: true }); if (!ok()) return;
+    gsap.to(all, { rotation: 0, duration: 0.4 }); flareX(1); flareY(1); flareA(0.55);
+    await wait(rnd(500, 900)); if (!ok()) return;
+    await sink(0.35); if (!ok()) return;                    // drop back behind
+    await wait(rnd(900, 1800)); if (!ok()) return;
+    m.fx = newFx(m.fx);
+    behindRoutine();
+  }
+
+  async function edgeRoutine(line?: string) {
+    const t = ++token;
+    const m = mode;
+    if (m.kind !== 'edge') return;
+    const ok = () => token === t && mode === m && !ducking && !hidden;
+    const w = el.offsetWidth || 120;
+    await rise(w * 0.62, 0.7); if (!ok()) return;           // lean in
+    if (line) say(line, 3200);
+    await wait(rnd(1800, 2400)); if (!ok()) return;
+    await rise(w + 16, 0.6); if (!ok()) return;             // come right in
+    antic();
+    await wait(rnd(1600, 2200)); if (!ok()) return;
+    await sink(0.4); if (!ok()) return;                     // back out
+    await wait(rnd(800, 1400)); if (!ok()) return;
+    m.side = m.side === 'left' ? 'right' : 'left';
+    m.y = gsap.utils.clamp(0.25, 0.8, m.y + rnd(-0.25, 0.25));
+    edgeRoutine();
+  }
+
+  const continueBehind = () => { void wait(1500).then(() => { if (mode.kind === 'behind' && !ducking) behindRoutine(); }); };
+  const continueEdge = () => { void wait(1500).then(() => { if (mode.kind === 'edge' && !ducking) edgeRoutine(); }); };
   function enterBehind(anchorSel: string, fx: number, line: string) {
     const anchor = document.querySelector<HTMLElement>(anchorSel);
     if (!anchor) { place(current); return; }
@@ -292,27 +362,13 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     peek.p = 0; finds = 0;
     gsap.ticker.add(tick);
     tick();
-    rise(bodyH() * 0.5).then(() => say(line, 3600));
-    scheduleReHide();
-  }
-  // Every few seconds Ping ducks and pops up somewhere else along the same element.
-  function scheduleReHide() {
-    seekTimer?.kill();
-    seekTimer = gsap.delayedCall(4.5 + Math.random() * 2.5, () => {
-      if (mode.kind !== 'behind' || ducking) return;
-      ducking = true;
-      sink().then(() => {
-        if (mode.kind !== 'behind') return;
-        mode.fx = gsap.utils.clamp(0.15, 0.85, mode.fx + (Math.random() > 0.5 ? 1 : -1) * (0.25 + Math.random() * 0.3));
-        gsap.delayedCall(0.7, () => { if (mode.kind !== 'behind') return; rise(bodyH() * 0.5).then(() => { ducking = false; scheduleReHide(); }); });
-      });
-    });
+    behindRoutine(line);
   }
   function enterEdge(side: Side, y: number, line: string) {
     mode = { kind: 'edge', side, y };
     peek.p = 0; finds = 0;
     applyPeek();
-    rise((el.offsetWidth || 120) * 0.62, 0.7).then(() => say(line, 3600));
+    edgeRoutine(line);
   }
   function enterWalk(y: number, from: Side, line: string) {
     mode = { kind: 'walk' };
@@ -354,7 +410,8 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     const r = body.getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = mode.kind === 'behind' ? r.top + peek.p / 2 : r.top + r.height / 2;
     if (Math.hypot(e.clientX - cx, e.clientY - cy) > 110) return;
-    ducking = true;
+    ducking = true; token++;
+    gsap.killTweensOf(mode);
     finds++;
     bubble.classList.remove('is-on');
     gsap.timeline().to(eyes, { scaleY: 1.3, scaleX: 1.2, duration: 0.1 }).to(eyes, { scaleY: 1, scaleX: 1, duration: 0.2 });
@@ -371,7 +428,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
         if (m.kind === 'behind') m.fx = gsap.utils.clamp(0.15, 0.85, m.fx + (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.3));
         if (m.kind === 'edge') { m.side = m.side === 'left' ? 'right' : 'left'; m.y = gsap.utils.clamp(0.25, 0.8, m.y + (Math.random() - 0.5) * 0.4); }
         const to = m.kind === 'behind' ? bodyH() * 0.5 : (el.offsetWidth || 120) * 0.62;
-        rise(to).then(() => { ducking = false; say(FOUND[Math.min(finds - 1, FOUND.length - 1)], 2200); if (m.kind === 'behind') scheduleReHide(); });
+        rise(to).then(() => { ducking = false; say(FOUND[Math.min(finds - 1, FOUND.length - 1)], 2200); if (m.kind === 'behind') continueBehind(); else continueEdge(); });
       });
     });
   }
