@@ -32,20 +32,20 @@ const SPOTS: Record<string, Spot> = {
  */
 type Act =
   | { kind: 'spot' }
-  | { kind: 'behind'; anchor: string; fx: number }
+  | { kind: 'behind'; anchors: string[]; fx: number }
   | { kind: 'edge'; side: Side; y: number }
   | { kind: 'walk'; y: number; from: Side };
 
 const ACTS: Record<string, Act> = {
   hero:            { kind: 'spot' },
-  about:           { kind: 'behind', anchor: '.about__frame', fx: 0.5 },
-  skills:          { kind: 'walk', y: 0.36, from: 'left' },
-  ai:              { kind: 'behind', anchor: '#dash', fx: 0.72 },
+  about:           { kind: 'behind', anchors: ['.about__frame', '#journey'], fx: 0.5 },
+  skills:          { kind: 'behind', anchors: ['#skills .card:nth-child(1)', '#skills .card:nth-child(3)', '#skills .card:nth-child(4)', '#skills .card:nth-child(6)'], fx: 0.5 },
+  ai:              { kind: 'behind', anchors: ['#dash', '.step:nth-child(1)', '.step:nth-child(3)'], fx: 0.72 },
   experience:      { kind: 'edge', side: 'right', y: 0.55 },
-  education:       { kind: 'behind', anchor: '#education .card:last-child', fx: 0.62 },
-  recommendations: { kind: 'behind', anchor: '.quote:nth-child(2)', fx: 0.5 },
-  work:            { kind: 'behind', anchor: '.card--featured', fx: 0.8 },
-  life:            { kind: 'behind', anchor: '.gallery li:nth-child(3) figure', fx: 0.5 },
+  education:       { kind: 'behind', anchors: ['#education .card:last-child', '#education .card:first-child'], fx: 0.62 },
+  recommendations: { kind: 'behind', anchors: ['.quote:nth-child(2)', '.quote:nth-child(1)', '.quote:nth-child(3)'], fx: 0.5 },
+  work:            { kind: 'behind', anchors: ['.card--featured', '.projects .card:nth-child(3)', '.projects .card:nth-child(5)', '.projects .card:nth-child(7)'], fx: 0.8 },
+  life:            { kind: 'behind', anchors: ['.gallery li:nth-child(3) figure', '.gallery li:nth-child(1) figure', '.gallery li:nth-child(5) figure', '.gallery li:nth-child(8) figure', '.gallery li:nth-child(10) figure'], fx: 0.5 },
   contact:         { kind: 'walk', y: 0.3, from: 'right' },
 };
 
@@ -224,7 +224,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   }
 
   // ---- acts: peek / edge / walk ----
-  type Mode = { kind: 'spot' } | { kind: 'behind'; anchor: HTMLElement; fx: number } | { kind: 'edge'; side: Side; y: number } | { kind: 'walk' };
+  type Mode = { kind: 'spot' } | { kind: 'behind'; anchor: HTMLElement; anchors: HTMLElement[]; fx: number } | { kind: 'edge'; side: Side; y: number } | { kind: 'walk' };
   let mode: Mode = { kind: 'spot' };
   const peek = { p: 0 };          // how many px of Ping are showing (behind/edge)
   let ducking = false;
@@ -309,6 +309,40 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     if (pick < 0.4) wave(); else if (pick < 0.7) hop(); else lookAround();
   }
 
+  // Another hiding place in this section: on screen, and as far from the current one as possible.
+  function farAnchor(m: { anchor: HTMLElement; anchors: HTMLElement[] }): HTMLElement | null {
+    const vh = window.innerHeight;
+    const cur = m.anchor.getBoundingClientRect();
+    const cx = cur.left + cur.width / 2, cy = cur.top;
+    let best: HTMLElement | null = null, bestD = 0;
+    for (const a of m.anchors) {
+      if (a === m.anchor) continue;
+      const r = a.getBoundingClientRect();
+      if (r.top < 160 || r.top > vh - 60 || r.width < 60) continue;
+      const d = Math.hypot(r.left + r.width / 2 - cx, r.top - cy);
+      if (d > bestD) { bestD = d; best = a; }
+    }
+    return bestD > 180 ? best : null;
+  }
+  // Fly (visibly, fully out) from above the current hiding place to above another one, then take over tracking it.
+  async function flyToAnchor(m: { kind: 'behind'; anchor: HTMLElement; anchors: HTMLElement[]; fx: number }, target: HTMLElement) {
+    const w = el.offsetWidth || 120, H = bodyH();
+    const fx = rnd(0.25, 0.75);
+    const r = target.getBoundingClientRect();
+    const tx = gsap.utils.clamp(4, window.innerWidth - w - 4, r.left + r.width * fx - w / 2);
+    const ty = r.top - (H + 10) + 2;
+    const fromX = gsap.getProperty(el, 'x') as number;
+    gsap.ticker.remove(tick);
+    gsap.to(all, { rotation: tx > fromX ? 14 : -14, duration: 0.3 });
+    flareX(2.2); flareY(2.6); flareA(1);
+    const d = Math.hypot(tx - fromX, ty - (gsap.getProperty(el, 'y') as number));
+    await gsap.to(el, { x: tx, y: ty, duration: gsap.utils.clamp(0.7, 1.6, d / 700), ease: 'power2.inOut', overwrite: true });
+    gsap.to(all, { rotation: 0, duration: 0.4 }); flareX(1); flareY(1); flareA(0.55);
+    m.anchor = target; m.fx = fx;
+    gsap.ticker.add(tick);
+    tick();
+  }
+
   async function behindRoutine(line?: string) {
     const t = ++token;
     const m = mode;
@@ -321,16 +355,20 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     await rise(H + 10, 0.6); if (!ok()) return;             // all the way out
     antic();
     await wait(rnd(1600, 2200)); if (!ok()) return;
-    // slide along the top edge to a new spot
-    const to = newFx(m.fx);
-    gsap.to(all, { rotation: to > m.fx ? 10 : -10, duration: 0.3 });
-    flareX(1.8); flareY(2); flareA(0.9);
-    await gsap.to(m, { fx: to, duration: 1.3, ease: 'power2.inOut', overwrite: true }); if (!ok()) return;
-    gsap.to(all, { rotation: 0, duration: 0.4 }); flareX(1); flareY(1); flareA(0.55);
-    await wait(rnd(500, 900)); if (!ok()) return;
-    await sink(0.35); if (!ok()) return;                    // drop back behind
+    // fly off to another hiding place far away, or slide along this one if there is nothing else on screen
+    const far = farAnchor(m);
+    if (far) { await flyToAnchor(m, far); if (!ok()) return; }
+    else {
+      const to = newFx(m.fx);
+      gsap.to(all, { rotation: to > m.fx ? 10 : -10, duration: 0.3 });
+      flareX(1.8); flareY(2); flareA(0.9);
+      await gsap.to(m, { fx: to, duration: 1.3, ease: 'power2.inOut', overwrite: true }); if (!ok()) return;
+      gsap.to(all, { rotation: 0, duration: 0.4 }); flareX(1); flareY(1); flareA(0.55);
+    }
+    await wait(rnd(300, 600)); if (!ok()) return;
+    await sink(0.35); if (!ok()) return;                    // dive behind it
     await wait(rnd(900, 1800)); if (!ok()) return;
-    m.fx = newFx(m.fx);
+    if (!far) m.fx = newFx(m.fx);
     behindRoutine();
   }
 
@@ -355,10 +393,10 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
 
   const continueBehind = () => { void wait(1500).then(() => { if (mode.kind === 'behind' && !ducking) behindRoutine(); }); };
   const continueEdge = () => { void wait(1500).then(() => { if (mode.kind === 'edge' && !ducking) edgeRoutine(); }); };
-  function enterBehind(anchorSel: string, fx: number, line: string) {
-    const anchor = document.querySelector<HTMLElement>(anchorSel);
-    if (!anchor) { place(current); return; }
-    mode = { kind: 'behind', anchor, fx };
+  function enterBehind(sels: string[], fx: number, line: string) {
+    const anchors = sels.map((q) => document.querySelector<HTMLElement>(q)).filter((a): a is HTMLElement => !!a);
+    if (!anchors.length) { place(current); return; }
+    mode = { kind: 'behind', anchor: anchors[0], anchors, fx };
     peek.p = 0; finds = 0;
     gsap.ticker.add(tick);
     tick();
@@ -397,7 +435,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     const act = ACTS[id] ?? { kind: 'spot' };
     const line = SPOTS[id]?.say ?? '';
     const roomy = !isMobile() && !reduced;
-    if (act.kind === 'behind') enterBehind(act.anchor, act.fx, line);
+    if (act.kind === 'behind') enterBehind(act.anchors, act.fx, line);
     else if (act.kind === 'edge' && roomy) enterEdge(act.side, act.y, line);
     else if (act.kind === 'walk' && roomy) enterWalk(act.y, act.from, line);
     else { place(id); gsap.delayedCall(0.5, () => say(line)); if (id === 'contact') gsap.delayedCall(0.9, wave); }
@@ -425,7 +463,11 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     sink(0.22).then(() => {
       gsap.delayedCall(0.8, () => {
         if (mode !== m) return;
-        if (m.kind === 'behind') m.fx = gsap.utils.clamp(0.15, 0.85, m.fx + (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.3));
+        if (m.kind === 'behind') {
+          const far = farAnchor(m);
+          if (far) { m.anchor = far; m.fx = rnd(0.2, 0.8); tick(); }
+          else m.fx = gsap.utils.clamp(0.15, 0.85, m.fx + (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.3));
+        }
         if (m.kind === 'edge') { m.side = m.side === 'left' ? 'right' : 'left'; m.y = gsap.utils.clamp(0.25, 0.8, m.y + (Math.random() - 0.5) * 0.4); }
         const to = m.kind === 'behind' ? bodyH() * 0.5 : (el.offsetWidth || 120) * 0.62;
         rise(to).then(() => { ducking = false; say(FOUND[Math.min(finds - 1, FOUND.length - 1)], 2200); if (m.kind === 'behind') continueBehind(); else continueEdge(); });
