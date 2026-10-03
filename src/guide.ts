@@ -248,6 +248,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     // (not under the nav, not below the fold).
     const inBand = r.top > 150 && r.top < window.innerHeight - 30;
     clip(inBand ? peek.p : 0);
+    bubble.style.visibility = inBand ? '' : 'hidden';
     el.classList.toggle('is-left', x < window.innerWidth / 2);
     el.classList.toggle('is-right', x >= window.innerWidth / 2);
   }
@@ -257,7 +258,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     gsap.killTweensOf(peek);
     seekTimer?.kill(); seekTimer = null;
     clip(bodyH());
-    bubble.style.left = ''; bubble.style.right = '';
+    bubble.style.left = ''; bubble.style.right = ''; bubble.style.visibility = '';
     gsap.to(all, { rotation: 0, duration: 0.3 });
     gsap.killTweensOf(el, 'x,y');
     ducking = false;
