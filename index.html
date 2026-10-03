@@ -148,6 +148,26 @@
   footer .soc{display:flex; gap:22px; justify-content:center; margin-top:12px}
   footer a:hover{color:var(--a2)}
 
+  /* background orbs */
+  .orb{position:fixed; border-radius:50%; filter:blur(80px); z-index:0; pointer-events:none; opacity:.55}
+  .orb1{width:380px;height:380px;background:rgba(59,167,255,.20);top:-90px;left:-110px;animation:orbA 18s ease-in-out infinite}
+  .orb2{width:440px;height:440px;background:rgba(34,211,238,.14);bottom:-140px;right:-130px;animation:orbB 22s ease-in-out infinite}
+  @keyframes orbA{50%{transform:translate(70px,50px)}}
+  @keyframes orbB{50%{transform:translate(-60px,-40px)}}
+  /* guide mascot */
+  #guide{position:fixed; right:22px; bottom:22px; z-index:80; display:flex; flex-direction:column; align-items:flex-end; gap:8px; transition:.35s}
+  #guide.hide{opacity:0; transform:translateY(24px); pointer-events:none}
+  #guideBubble{max-width:235px; background:var(--panel); border:1px solid var(--line2); color:var(--soft); font-size:13px; padding:10px 13px; border-radius:14px 14px 4px 14px; box-shadow:0 14px 30px -16px rgba(0,0,0,.6); transition:opacity .3s}
+  #guideBot{position:relative; cursor:pointer; filter:drop-shadow(0 8px 16px rgba(34,211,238,.3)); animation:bob 3.4s ease-in-out infinite}
+  #guideClose{position:absolute; top:-6px; right:-6px; width:20px;height:20px;border-radius:50%;background:var(--panel);border:1px solid var(--line2);color:var(--muted);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  @media(max-width:620px){ #guide{right:12px;bottom:12px} #guideBubble{max-width:170px;font-size:12px} }
+  /* footer upgrade */
+  .footcta{background:linear-gradient(120deg,#0f2038,#101a2e); padding:52px 20px; text-align:center; border-top:1px solid var(--line)}
+  .footcta h3{font-size:30px; margin-bottom:10px}
+  .footcta p{color:var(--muted); margin-bottom:22px}
+  .footline{height:2px; background:linear-gradient(90deg,transparent,var(--a1),var(--a2),transparent); background-size:200% 100%; animation:slide 4s linear infinite}
+  @keyframes slide{to{background-position:200% 0}}
+
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease}
   .reveal.in{opacity:1; transform:none}
   @media(prefers-reduced-motion:reduce){ *{animation:none !important} .reveal{opacity:1; transform:none} html{scroll-behavior:auto} }
@@ -161,6 +181,7 @@
     <div class="navlinks">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
+      <a href="#ai">AI</a>
       <a href="#experience">Experience</a>
       <a href="#recommendations">Recommendations</a>
       <a href="#work">Work</a>
@@ -240,6 +261,22 @@
   </div>
 </section>
 
+<!-- AI -->
+<section id="ai">
+  <div class="codebg" id="codebg2"></div>
+  <div class="wrap" style="position:relative; z-index:1">
+    <div class="reveal"><div class="eyebrow">AI, my co-pilot</div><h2 class="title">I don't just use AI, <span class="grad">I build workflows with it.</span></h2>
+      <p class="sub">In a role where AI handles the repeatable, I use it every day to move faster and show up better prepared, while I keep judgment, review, and the customer relationship in my own hands.</p>
+    </div>
+    <div class="cards" style="margin-top:14px">
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div><h3>Vibe coding with Claude Code</h3><p>I build custom store designs, demo stores, and new-feature demos with Claude Code, then refine and ship them for merchants and internal use.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Trained AI threads for replies</h3><p>I keep Claude and ChatGPT threads loaded with our product knowledge. I paste a customer email or chat, they draft an accurate reply, and I review and send.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div><h3>AI-assisted issue reproduction</h3><p>I use AI to inspect merchant stores, reproduce reported issues faster, and surface practical fixes before escalating.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>MCP + automated QA</h3><p>I connected ClickUp, Google Drive, Figma, and a test store via MCP, with a Playwright and Chromium setup so AI runs most test cases. I then review, add manual and edge-case checks, and submit the report.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- EXPERIENCE -->
 <section id="experience">
   <div class="wrap">
@@ -292,6 +329,7 @@
         <p>An AI support chat that answers from real help docs, asks follow-up questions, and hands off to a human when it should. Built around the SaaS apps I support every day.</p>
         <div class="plinks"><a class="plink" href="https://jahidhemel.github.io/support-ticket-triage/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/support-ticket-triage">Code</a></div>
       </div>
+      <div class="proj reveal"><span class="tag2">AI · QA · Support</span><h3>QA Helper</h3><p>A support tool that turns a feature into a full set of test cases, and messy notes into a clean, dev-ready bug report. Built with AI (vibe coding) from my day-to-day QA and support work.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/qa-test-helper/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/qa-test-helper">Code</a></div></div>
       <div class="proj reveal"><span class="tag2">Sass</span><h3>Legal Solutions</h3><p>Boutique law-firm landing page with Sass maps, mixins, BEM, a testimonial slider, and an FAQ accordion.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/legal-solutions/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/legal-solutions">Code</a></div></div>
       <div class="proj reveal"><span class="tag2">Tailwind</span><h3>Fruit Basket</h3><p>Organic fruit-shop landing page with a real-time countdown, mobile nav, and a bento-grid feature section.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/fruit-basket/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/fruit-basket">Code</a></div></div>
       <div class="proj reveal"><span class="tag2">Bootstrap 5</span><h3>Summer Sale</h3><p>E-commerce page with a working cart, coupon validation, category tabs, and a hero carousel.</p><div class="plinks"><a class="plink" href="https://jahidhemel.github.io/Summer-sale/">Live demo →</a><a class="plink" href="https://github.com/Jahidhemel/Summer-sale">Code</a></div></div>
@@ -314,11 +352,35 @@
   </div>
 </section>
 
+<div class="footline"></div>
+<div class="footcta">
+  <h3 class="grad reveal">Let's build something good.</h3>
+  <p class="reveal">Open to Technical Support, Customer Success, and Team Lead roles, remote or hybrid.</p>
+  <a href="mailto:jahidhemel@gmail.com" class="btn btn-primary reveal">Say hello →</a>
+</div>
 <footer>
-  <div class="wrap">© <span id="yr"></span> Md. Jahidul Islam Hemel. Built in Dhaka.
+  <div class="wrap" style="padding:26px 0">© <span id="yr"></span> Md. Jahidul Islam Hemel. Built in Dhaka, with a little help from AI.
     <div class="soc"><a href="https://github.com/Jahidhemel">GitHub</a><a href="https://www.linkedin.com/in/md-jahidul-islam-hemel">LinkedIn</a><a href="mailto:jahidhemel@gmail.com">Email</a></div>
   </div>
 </footer>
+
+<div class="orb orb1"></div><div class="orb orb2"></div>
+
+<div id="guide">
+  <div id="guideBubble">Hi! I'm Hemel's little assistant. Scroll down and I'll show you around.</div>
+  <div id="guideBot">
+    <span id="guideClose" title="Hide">&times;</span>
+    <svg width="76" height="84" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="60" cy="122" rx="28" ry="5" fill="rgba(34,211,238,.18)"/>
+      <rect x="30" y="34" width="60" height="52" rx="16" fill="#152238" stroke="#2b3f63" stroke-width="2"/>
+      <circle cx="48" cy="60" r="7" fill="#22D3EE"/><circle cx="72" cy="60" r="7" fill="#22D3EE"/>
+      <path d="M46 74 q14 10 28 0" stroke="#3BA7FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <rect x="24" y="52" width="8" height="18" rx="4" fill="#2b3f63"/><rect x="88" y="52" width="8" height="18" rx="4" fill="#2b3f63"/>
+      <path d="M30 52 a30 30 0 0 1 60 0" fill="none" stroke="#3BA7FF" stroke-width="3"/>
+      <line x1="60" y1="22" x2="60" y2="34" stroke="#2b3f63" stroke-width="2"/><circle cx="60" cy="19" r="4" fill="#22D3EE"/>
+    </svg>
+  </div>
+</div>
 
 <script>
   document.getElementById("yr").textContent = new Date().getFullYear();
@@ -356,6 +418,30 @@
   if(bg){ for(var i=0;i<14;i++){ var s=document.createElement("span"); s.textContent=snips[i%snips.length];
     s.style.left=(Math.random()*100)+"%"; s.style.top=(Math.random()*100)+"%";
     s.style.animationDuration=(6+Math.random()*8)+"s"; s.style.opacity=(0.4+Math.random()*0.5); bg.appendChild(s);} }
+
+  var bg2=document.getElementById("codebg2");
+  if(bg2){ for(var j=0;j<12;j++){ var s2=document.createElement("span"); s2.textContent=snips[j%snips.length];
+    s2.style.left=(Math.random()*100)+"%"; s2.style.top=(Math.random()*100)+"%";
+    s2.style.animationDuration=(6+Math.random()*8)+"s"; s2.style.opacity=(0.4+Math.random()*0.5); bg2.appendChild(s2);} }
+
+  // guide mascot: contextual tips per section
+  var tips={
+    top:"Hi! I'm Hemel's little assistant. Scroll down and I'll show you around.",
+    about:"First, a bit about who Hemel is and how he works.",
+    skills:"Here's what he does best, support, success, and the technical side.",
+    ai:"This is my favourite part, how he actually builds workflows with AI.",
+    experience:"His journey so far, three roles and counting.",
+    recommendations:"Don't take his word for it, here's what a teammate said.",
+    work:"Things he has built, including tools like me.",
+    contact:"Like what you see? This is where you say hello."
+  };
+  var gb=document.getElementById("guideBubble");
+  var gtObs=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && tips[e.target.id]){
+    gb.style.opacity=0; setTimeout(function(){ gb.textContent=tips[e.target.id]; gb.style.opacity=1; },180);
+  }});},{threshold:.4});
+  ["top","about","skills","ai","experience","recommendations","work","contact"].forEach(function(id){ var el=document.getElementById(id); if(el) gtObs.observe(el); });
+  document.getElementById("guideClose").addEventListener("click",function(ev){ ev.stopPropagation(); document.getElementById("guide").classList.add("hide"); });
+  document.getElementById("guideBot").addEventListener("click",function(){ location.hash="#contact"; });
 
   document.getElementById("menuBtn").addEventListener("click",function(){
     var l=document.querySelector(".navlinks");
