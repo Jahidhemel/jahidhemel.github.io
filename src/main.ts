@@ -312,6 +312,18 @@ const aiCode = $<HTMLCanvasElement>('#aiCode');
 if (heroCode) mountCodeBg(heroCode, { density: 10, reduced });
 if (aiCode) mountCodeBg(aiCode, { density: 7, reduced });
 
+/* ---------------- touch: duck while the page moves ---------------- */
+// On a phone Ping sits on the bottom edge, which is exactly where a thumb
+// scrolls, so it drops out of the way until the page is still again.
+if (!reduced && window.matchMedia('(hover: none)').matches) {
+  let idle = 0;
+  window.addEventListener('scroll', () => {
+    guide.setScrolling(true);
+    clearTimeout(idle);
+    idle = window.setTimeout(() => guide.setScrolling(false), 240);
+  }, { passive: true });
+}
+
 /* ---------------- scroll progress ---------------- */
 const progress = $('#progress');
 if (progress) {

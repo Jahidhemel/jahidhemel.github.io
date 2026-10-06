@@ -178,6 +178,12 @@ main { position: relative; z-index: 2; }
 .hero__line--accent .split { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .08em; }
 .hero__roles { display: flex; flex-wrap: wrap; gap: 10px; font-family: var(--display); font-weight: 500; font-size: clamp(16px, 1.8vw, 20px); color: #c9d4e8; margin-bottom: 18px; }
 .hero__roles i { color: var(--a2); font-style: normal; }
+@media (max-width: 620px) {
+  /* keep the dot with the word that follows it, so a wrap never leaves one stranded */
+  .hero__roles { display: block; gap: 0; line-height: 1.5; }
+  .hero__roles i { display: none; }
+  .hero__roles span + span::before { content: "· "; color: var(--a2); }
+}
 .hero__tag { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); min-height: 1.7em; margin-bottom: 22px; }
 .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--a2); vertical-align: -0.2em; margin-left: 2px; animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
@@ -300,6 +306,7 @@ main { position: relative; z-index: 2; }
 
 /* ---------- AI ---------- */
 .section--ai { background: linear-gradient(180deg, transparent, rgba(18,26,46,.5) 20%, rgba(18,26,46,.5) 80%, transparent); overflow: hidden; }
+@media (max-width: 760px) { .codebg { opacity: .35; -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.1) 55%, rgba(0,0,0,.35)); mask-image: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.1) 55%, rgba(0,0,0,.35)); } }
 .codebg--ai { opacity: .5; -webkit-mask-image: linear-gradient(180deg, transparent, rgba(0,0,0,.6) 20%, rgba(0,0,0,.6) 80%, transparent); mask-image: linear-gradient(180deg, transparent, rgba(0,0,0,.6) 20%, rgba(0,0,0,.6) 80%, transparent); }
 .section--ai .wrap { position: relative; z-index: 1; }
 .ai { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; margin-top: 34px; align-items: start; }
@@ -447,11 +454,14 @@ main { position: relative; z-index: 2; }
 }
 .guide.is-hidden { display: none; }
 .guide__body { position: relative; width: 120px; height: 120px; pointer-events: auto; cursor: pointer; }
-.guide__svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 18px 24px rgba(0,0,0,.45)); }
+.guide__svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 18px 24px rgba(0,0,0,.45));
+  /* the artwork overflows its box, so it would sit on top of the close button:
+     taps belong to .guide__body and to the controls, never to the drawing */
+  pointer-events: none; }
 .guide__bubble {
   position: absolute; left: 50%; bottom: calc(100% + 4px); transform: translateX(-50%) translateY(6px); width: max-content; max-width: 210px;
   background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 14px; padding: 10px 14px; font-size: 13px; line-height: 1.45; color: var(--text);
-  box-shadow: 0 16px 40px rgba(0,0,0,.45); opacity: 0; transition: opacity .35s, transform .35s var(--ease); pointer-events: auto;
+  box-shadow: 0 16px 40px rgba(0,0,0,.45); opacity: 0; transition: opacity .35s, transform .35s var(--ease); pointer-events: none;
 }
 .guide__bubble.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
 .guide__bubble::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; transform: translateX(-50%) rotate(45deg); background: var(--panel-2); border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
@@ -462,10 +472,10 @@ main { position: relative; z-index: 2; }
 .guide.is-right .guide__bubble.is-on { transform: translateX(0) translateY(0); }
 .guide.is-right .guide__bubble::after { left: auto; right: 38px; transform: rotate(45deg); }
 .guide__close {
-  position: absolute; right: -4px; top: -4px; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--panel);
-  color: var(--muted); font-size: 14px; line-height: 1; display: grid; place-items: center; cursor: pointer; pointer-events: auto; opacity: 0; transition: opacity .25s, color .2s;
+  position: absolute; z-index: 3; right: -4px; top: -4px; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--panel);
+  color: var(--muted); font-size: 14px; line-height: 1; display: grid; place-items: center; cursor: pointer; pointer-events: none; opacity: 0; transition: opacity .25s, color .2s;
 }
-.guide:hover .guide__close, .guide__close:focus-visible { opacity: 1; }
+.guide:hover .guide__close, .guide__close:focus-visible { opacity: 1; pointer-events: auto; }
 .guide__close:hover { color: var(--text); }
 .guide__restore {
   position: fixed; right: 18px; bottom: 18px; z-index: 40; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line-2);
@@ -506,3 +516,39 @@ html.intro [data-deliver] { opacity: 0; }
 .cursor.is-on { opacity: 1; }
 .cursor.is-link { width: 48px; height: 48px; margin: -24px 0 0 -24px; background: rgba(34,211,238,.1); border-color: rgba(34,211,238,.9); }
 @media (hover: none), (prefers-reduced-motion: reduce) { .cursor { display: none; } }
+
+/* ---------- mobile: Ping on the bottom edge, bigger tap targets ---------- */
+@media (max-width: 760px) {
+  .guide { width: 84px; height: 104px; }
+  .guide.is-docked, .guide { width: 84px; height: 104px; }
+  .guide.is-docked .guide__body, .guide__body { width: 84px; height: 84px; }
+  .guide__bubble, .guide.is-docked .guide__bubble {
+    max-width: min(250px, calc(100vw - 28px)); font-size: 12.5px; padding: 9px 13px; line-height: 1.4;
+  }
+  /* the close control needs a real thumb target, and gets out of the way with Ping */
+  .guide__close, .guide.is-docked .guide__close { opacity: 1; width: 30px; height: 30px; font-size: 17px; right: -2px; top: -2px; }
+  .guide.is-ducked .guide__close { opacity: 0; pointer-events: none; }
+  /* out of the way means out of the way: a ducked Ping never takes a tap */
+  .guide.is-ducked .guide__body { pointer-events: none; }
+  .guide__restore { width: 54px; height: 54px; right: 14px; bottom: 14px; }
+  .guide__shadow { display: none; }
+}
+
+/* Touch devices get full-size targets on the small text links. */
+@media (hover: none) {
+  .project__links { gap: 10px 18px; }
+  .project__links .link, .internal .link, .center .link, .contact__list a {
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
+  .nav__brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .footer__row .link { display: inline-flex; align-items: center; min-height: 44px; }
+  /* no hover on touch, so the gallery captions and photos stay as they are at rest */
+  .gallery figcaption { opacity: 1; transform: none; }
+  .gallery figure::before { opacity: .18; }
+  .gallery img { filter: saturate(.92) brightness(.96) contrast(1.03); }
+}
+
+@media (max-width: 760px) {
+  .guide.is-docked .guide__close { pointer-events: auto; }
+  .guide.is-ducked .guide__close { pointer-events: none; }
+}

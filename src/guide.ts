@@ -96,6 +96,8 @@ export interface Guide {
   wave(): void;
   /** While locked, section changes don't move Ping (used by the intro). */
   lock(on: boolean): void;
+  /** Touch devices: Ping ducks below the bottom edge while the page is moving. */
+  setScrolling(active: boolean): void;
   goHome(instant?: boolean): void;
   readonly hidden: boolean;
   readonly size: { w: number; h: number };
@@ -224,7 +226,12 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   }
 
   // ---- acts: peek / edge / walk ----
-  type Mode = { kind: 'spot' } | { kind: 'behind'; anchor: HTMLElement; anchors: HTMLElement[]; fx: number } | { kind: 'edge'; side: Side; y: number } | { kind: 'walk' };
+  type Mode =
+    | { kind: 'spot' }
+    | { kind: 'behind'; anchor: HTMLElement; anchors: HTMLElement[]; fx: number }
+    | { kind: 'edge'; side: Side; y: number }
+    | { kind: 'walk' }
+    | { kind: 'dock'; side: Side };
   let mode: Mode = { kind: 'spot' };
   const peek = { p: 0 };          // how many px of Ping are showing (behind/edge)
   let ducking = false;
@@ -259,6 +266,8 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     gsap.killTweensOf(mode);
     token++;
     seekTimer?.kill(); seekTimer = null;
+    dockIdle?.kill(); dockIdle = null;
+    clearInterval(dockWatch); dockWatch = 0;
     clip(bodyH());
     bubble.style.left = ''; bubble.style.right = ''; bubble.style.visibility = '';
     gsap.to(all, { rotation: 0, duration: 0.3 });
@@ -275,6 +284,16 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   }
   function applyPeek() {
     if (mode.kind === 'behind') tick();
+    else if (mode.kind === 'dock') {
+      // Ping rides the bottom edge: peek.p is how many pixels of it are on screen.
+      el.classList.add('is-docked');
+      const w = el.offsetWidth || 88;
+      const x = mode.side === 'right' ? window.innerWidth - w - 10 : 10;
+      gsap.set(el, { x, y: window.innerHeight - peek.p });
+      el.classList.toggle('is-ducked', peek.p < dockUp() - 6);
+      el.classList.toggle('is-left', mode.side === 'left');
+      el.classList.toggle('is-right', mode.side === 'right');
+    }
     else if (mode.kind === 'edge') {
       const w = el.offsetWidth || 120;
       const x = mode.side === 'left' ? -w + peek.p : window.innerWidth - peek.p;
@@ -391,6 +410,115 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     edgeRoutine();
   }
 
+  // ---- mobile: ride the bottom edge ----
+  // Full height showing, with a small gap under the feet.
+  const dockUp = () => bodyH() + 10;
+  // Ducked: just the antenna and the top of the head, enough to tap.
+  const dockDown = () => 26;
+  let scrolling = false;
+  let dockIdle: gsap.core.Tween | null = null;
+  let pendingLine = '';
+  let dockWatch = 0;
+  // Say the current section's line once the page has settled, never mid-scroll.
+  function flushLine() {
+    if (!pendingLine || scrolling || hidden) return;
+    const line = pendingLine;
+    pendingLine = '';
+    say(line, 3400);
+  }
+
+  const dockAllowed = () => current !== 'hero';
+
+  // Ping must never sit on top of a link or a button, because on a phone its
+  // body takes the tap. Hit-test the corner before standing up on it.
+  function cornerBlocked(side: Side) {
+    const w = el.offsetWidth || 84, h = bodyH();
+    const left = side === 'right' ? window.innerWidth - w - 10 : 10;
+    const top = window.innerHeight - dockUp();
+    const prev = body.style.pointerEvents;
+    body.style.pointerEvents = 'none';
+    let blocked = false;
+    // sample the whole footprint, not just the middle: a link only has to clip
+    // a corner of Ping to become untappable
+    for (const fx of [0.12, 0.5, 0.88]) {
+      for (const fy of [0.12, 0.5, 0.88]) {
+        const hit = document.elementFromPoint(left + w * fx, top + h * fy);
+        if (hit && hit.closest('a, button, [role="button"], input, textarea, select')) { blocked = true; break; }
+      }
+      if (blocked) break;
+    }
+    body.style.pointerEvents = prev;
+    return blocked;
+  }
+
+  function dockRise(withWave = false) {
+    if (mode.kind !== 'dock' || !dockAllowed() || scrolling || hidden) return;
+    const m = mode;
+    if (cornerBlocked(m.side)) {
+      const other: Side = m.side === 'right' ? 'left' : 'right';
+      if (!cornerBlocked(other)) { m.side = other; applyPeek(); }
+      else { dockSink(dockDown(), 0.3); return; }   // both busy: wait it out down there
+    }
+    gsap.to(peek, { p: dockUp(), duration: 0.6, ease: 'back.out(1.6)', onUpdate: applyPeek, overwrite: true })
+      .then(() => { if (mode.kind === 'dock' && !scrolling) { flushLine(); if (withWave) wave(); } });
+  }
+  function dockSink(to: number, dur = 0.35) {
+    bubble.classList.remove('is-on');
+    return gsap.to(peek, { p: to, duration: dur, ease: 'power2.in', onUpdate: applyPeek, overwrite: true });
+  }
+
+  function enterDock(line: string) {
+    mode = { kind: 'dock', side: 'right' };
+    finds = 0;
+    peek.p = 0;
+    pendingLine = line;
+    applyPeek();
+    dockRise(true);
+    scheduleDockMove();
+    clearInterval(dockWatch);
+    dockWatch = window.setInterval(() => {
+      if (mode.kind !== 'dock' || scrolling || hidden || locked) return;
+      const up = peek.p > dockUp() - 2;
+      if (up && cornerBlocked(mode.side)) {
+        const other: Side = mode.side === 'right' ? 'left' : 'right';
+        if (!cornerBlocked(other)) { dockSink(0, 0.25).then(() => { if (mode.kind === 'dock') { mode.side = other; applyPeek(); dockRise(); } }); }
+        else dockSink(dockDown(), 0.3);
+      } else if (!up && peek.p <= dockDown() + 2 && dockAllowed()) {
+        dockRise();
+      }
+    }, 700);
+  }
+
+  // Every so often Ping drops off one corner and comes back up the other.
+  function scheduleDockMove() {
+    dockIdle?.kill();
+    dockIdle = gsap.delayedCall(rnd(7000, 12000) / 1000, () => {
+      if (mode.kind !== 'dock' || scrolling || hidden || locked || !dockAllowed()) { scheduleDockMove(); return; }
+      const m = mode;
+      bubble.classList.remove('is-on');
+      gsap.to(peek, { p: 0, duration: 0.3, ease: 'power2.in', onUpdate: applyPeek, overwrite: true }).then(() => {
+        if (mode !== m) return;
+        m.side = m.side === 'right' ? 'left' : 'right';
+        applyPeek();
+        gsap.delayedCall(rnd(400, 900) / 1000, () => {
+          if (mode !== m || scrolling) { scheduleDockMove(); return; }
+          dockRise();
+          gsap.delayedCall(0.7, () => { if (mode === m && !scrolling) antic(); scheduleDockMove(); });
+        });
+      });
+    });
+  }
+
+  function dockScroll(active: boolean) {
+    if (mode.kind !== 'dock' || hidden) return;
+    el.classList.toggle('is-ducked', active);
+    if (active) {
+      dockSink(dockAllowed() ? dockDown() : 0, 0.28);
+    } else {
+      dockRise();
+    }
+  }
+
   const continueBehind = () => { void wait(1500).then(() => { if (mode.kind === 'behind' && !ducking) behindRoutine(); }); };
   const continueEdge = () => { void wait(1500).then(() => { if (mode.kind === 'edge' && !ducking) edgeRoutine(); }); };
   function enterBehind(sels: string[], fx: number, line: string) {
@@ -431,10 +559,22 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     } });
   }
   function enterAct(id: string) {
-    exitMode();
     const act = ACTS[id] ?? { kind: 'spot' };
     const line = SPOTS[id]?.say ?? '';
     const roomy = !isMobile() && !reduced;
+    // On a phone there is no gutter to hide in and the cards fill the screen,
+    // so Ping rides the bottom edge instead of covering the content. Changing
+    // section must not restart that, or it bobs up and down the whole way down
+    // the page: keep the dock and just change the line.
+    if (isMobile() && !reduced) {
+      if (mode.kind !== 'dock') { exitMode(); enterDock(line); return; }
+      pendingLine = line;
+      if (!dockAllowed()) dockSink(0);
+      else if (peek.p < dockUp() - 1) dockRise();
+      else if (!scrolling) flushLine();
+      return;
+    }
+    exitMode();
     if (act.kind === 'behind') enterBehind(act.anchors, act.fx, line);
     else if (act.kind === 'edge' && roomy) enterEdge(act.side, act.y, line);
     else if (act.kind === 'walk' && roomy) enterWalk(act.y, act.from, line);
@@ -513,6 +653,8 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     restore.classList.remove('is-on');
     try { sessionStorage.removeItem(KEY); } catch { /* ignore */ }
     exitMode();
+    gsap.set(el, { scale: 1, opacity: 1 });
+    if (isMobile() && !reduced) { enterDock(SPOTS[current]?.say ?? SPOTS.hero.say); return; }
     place(current, true);
     gsap.fromTo(el, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' });
     wave();
@@ -531,6 +673,9 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     // the intro module flies Ping in and hands back control
     place('hero', true);
     gsap.set(el, { opacity: 0 });
+  } else if (isMobile() && !reduced) {
+    gsap.set(el, { opacity: 1 });
+    gsap.delayedCall(1.1, () => enterDock(SPOTS.hero.say));
   } else {
     place('hero', true);
     gsap.set(el, { opacity: 0, scale: 0.4 });
@@ -538,6 +683,7 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
   }
 
   const onResize = () => { if (hidden) return; if (mode.kind === 'spot') place(current, true); else applyPeek(); };
+  window.addEventListener('orientationchange', () => gsap.delayedCall(0.3, onResize));
   window.addEventListener('resize', onResize, { passive: true });
 
   return {
@@ -583,12 +729,18 @@ export function mountGuide(root: HTMLElement, opts: { reduced: boolean; intro?: 
     say,
     wave,
     lock(on) { locked = on; },
+    setScrolling(active) {
+      if (scrolling === active) return;
+      scrolling = active;
+      dockScroll(active);
+    },
     goHome(instant = false) { exitMode(); place(current, instant); },
     get hidden() { return hidden; },
     get size() { return { w: el.offsetWidth || 120, h: el.offsetHeight || 150 }; },
     destroy() {
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('pointermove', seek);
+      clearInterval(dockWatch);
       window.removeEventListener('resize', onResize);
       exitMode();
       el.remove(); restore.remove();
