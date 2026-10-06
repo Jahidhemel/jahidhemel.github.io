@@ -182,7 +182,9 @@ main { position: relative; z-index: 2; }
   /* keep the dot with the word that follows it, so a wrap never leaves one stranded */
   .hero__roles { display: block; gap: 0; line-height: 1.5; }
   .hero__roles i { display: none; }
-  .hero__roles span + span::before { content: "· "; color: var(--a2); }
+  /* the markup is <span>..</span><i>·</i><span>..</span>, so the dot has to be
+     attached to the span that follows the separator, not to an adjacent span */
+  .hero__roles i + span::before { content: "·"; margin: 0 .4em 0 .34em; color: var(--a2); }
 }
 .hero__tag { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); min-height: 1.7em; margin-bottom: 22px; }
 .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--a2); vertical-align: -0.2em; margin-left: 2px; animation: blink 1s steps(2) infinite; }
