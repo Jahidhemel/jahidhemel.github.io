@@ -207,8 +207,15 @@ main { position: relative; z-index: 2; }
 .codewin__bar span { width: 10px; height: 10px; border-radius: 50%; background: #2a3550; }
 .codewin__bar span:nth-child(1) { background: #ff5f57; } .codewin__bar span:nth-child(2) { background: #febc2e; } .codewin__bar span:nth-child(3) { background: #28c840; }
 .codewin__bar em { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); font-style: normal; }
-.codewin__body { font-family: var(--mono); font-size: 13.5px; line-height: 1.7; padding: 18px 20px 22px; min-height: 280px; color: #c9d4e8; white-space: pre-wrap; margin: 0; }
-.codewin__body .k { color: #c792ea; } .codewin__body .f { color: #82aaff; } .codewin__body .s { color: #c3e88d; } .codewin__body .c { color: #637391; font-style: italic; } .codewin__body .n { color: #f78c6c; } .codewin__body .t { color: var(--a2); }
+.codewin__body { font-family: var(--mono); font-size: 13.5px; line-height: 1.7; padding: 18px 20px 22px; min-height: 280px; color: #c9d4e8; white-space: pre-wrap; margin: 0; overflow: hidden; }
+/* the sample is marked up with short tag names, not classes; <s> also has to
+   lose the strikethrough the browser gives it by default */
+.codewin__body k { color: #c792ea; }
+.codewin__body f { color: #82aaff; }
+.codewin__body s { color: #c3e88d; text-decoration: none; }
+.codewin__body n { color: #f78c6c; }
+.codewin__body t { color: var(--a2); }
+.codewin__body .c { color: #637391; font-style: italic; }
 .codewin__body .ok { color: var(--ok); }
 
 .hero__ticket { position: absolute; left: -22px; bottom: -34px; width: 230px; }
@@ -237,6 +244,10 @@ main { position: relative; z-index: 2; }
   .hero__ticket { left: 0; }
 }
 @media (max-width: 640px) {
+  /* small enough that the longest line does not wrap: a wrapped line would make
+     the window taller than it needs to be once its height is reserved */
+  .codewin__body { font-size: 11px; line-height: 1.62; padding: 14px 14px 16px; min-height: 0; }
+  .codewin__bar { padding: 10px 12px; }
   .hero { padding-top: 110px; }
   .stats { gap: 24px; }
   .hero__ticket { display: none; }

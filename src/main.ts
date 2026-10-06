@@ -177,6 +177,45 @@ if (codeEl) {
   }
 }
 
+/* ---------------- reserve the space the typing needs ---------------- */
+// The tagline and the code window type themselves out, so their height changes
+// as they go: the tagline wraps onto a second line, the code window grows with
+// every line added. Both sit above everything else, so each change pushes the
+// rest of the page up or down while somebody is reading it. Measure the tallest
+// state each can reach and hold that much room from the start.
+function lockTypingHeights() {
+  if (tw) {
+    const holder = tw.closest<HTMLElement>('.hero__tag');
+    if (holder) {
+      const keep = tw.textContent;
+      holder.style.minHeight = '';
+      let tallest = 0;
+      for (const phrase of phrases) {
+        tw.textContent = phrase;
+        tallest = Math.max(tallest, holder.offsetHeight);
+      }
+      tw.textContent = keep;
+      holder.style.minHeight = `${tallest}px`;
+    }
+  }
+  if (codeEl) {
+    const keep = codeEl.innerHTML;
+    codeEl.style.height = '';
+    codeEl.innerHTML = renderCode(CODE.length - 1);
+    const tallest = codeEl.offsetHeight;
+    codeEl.innerHTML = keep;
+    codeEl.style.height = `${tallest}px`;
+  }
+}
+lockTypingHeights();
+// Fonts land after first paint and change how the text wraps, so measure again.
+if (document.fonts?.ready) document.fonts.ready.then(lockTypingHeights);
+let relock = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(relock);
+  relock = window.setTimeout(lockTypingHeights, 200);
+}, { passive: true });
+
 /* ---------------- hero: floating ticket ---------------- */
 const ticket = $('#heroTicket');
 const ticketStatus = $('[data-status]');
