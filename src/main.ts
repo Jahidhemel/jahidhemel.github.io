@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import { mountCodeBg } from './codebg';
 import { mountGuide } from './guide';
 import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
+import { mountRecs } from './recs';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -362,6 +363,9 @@ if (!reduced && window.matchMedia('(hover: none)').matches) {
     idle = window.setTimeout(() => guide.setScrolling(false), 240);
   }, { passive: true });
 }
+
+/* ---------------- recommendations marquee ---------------- */
+mountRecs(reduced);
 
 /* ---------------- scroll progress ---------------- */
 const progress = $('#progress');

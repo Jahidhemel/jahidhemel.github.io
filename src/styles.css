@@ -382,19 +382,83 @@ main { position: relative; z-index: 2; }
   .tl::before { left: 0; }
 }
 
-/* ---------- quotes ---------- */
-.quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 30px; }
-.quote { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 26px 24px; display: flex; flex-direction: column; gap: 18px; position: relative; transition: transform .4s var(--ease), border-color .4s; }
-.quote:hover { transform: translateY(-4px); border-color: var(--line-2); }
-.quote::before { content: "“"; position: absolute; top: 8px; right: 20px; font-family: var(--display); font-size: 80px; line-height: 1; color: rgba(34,211,238,.18); }
-.quote blockquote p { font-size: 14.5px; color: #c9d4e8; margin-bottom: 10px; }
+/* ---------- recommendations: a slow marquee you can stop ---------- */
+.recs { position: relative; margin-top: 30px; }
+.recs__track {
+  display: flex; gap: 18px; overflow-x: auto; overscroll-behavior-x: contain;
+  padding: 4px 2px 14px; scrollbar-width: none;
+}
+.recs__track::-webkit-scrollbar { display: none; }
+/* fade the ends so cards enter and leave rather than being chopped off */
+.recs::before, .recs::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 72px; z-index: 2; pointer-events: none;
+}
+.recs::before { left: -2px; width: 46px; background: linear-gradient(90deg, var(--bg) 35%, transparent); }
+.recs::after { right: -2px; width: 46px; background: linear-gradient(270deg, var(--bg) 35%, transparent); }
+
+.quote {
+  flex: 0 0 auto; width: min(420px, 84vw); height: 428px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 26px 24px; margin: 0; display: flex; flex-direction: column; gap: 16px; position: relative;
+  transition: border-color .4s, transform .4s var(--ease);
+}
+.quote:hover { border-color: var(--line-2); }
+.quote::before {
+  content: "\201C"; position: absolute; top: 6px; right: 20px; font-family: var(--display);
+  font-size: 76px; line-height: 1; color: rgba(34,211,238,.16);
+}
+.quote blockquote {
+  margin: 0; flex: 1 1 auto; min-height: 0; overflow: hidden;
+  /* the longer ones fade out instead of stopping mid-word */
+  -webkit-mask-image: linear-gradient(#000 78%, transparent);
+  mask-image: linear-gradient(#000 78%, transparent);
+}
+.quote blockquote p { font-size: 14px; line-height: 1.62; color: #c9d4e8; margin: 0 0 10px; }
+.quote blockquote p:last-child { margin-bottom: 0; }
 .quote figcaption { margin-top: auto; border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 2px; }
-.quote figcaption b { font-family: var(--display); } .quote figcaption span { font-size: 12.5px; color: var(--muted); } .quote figcaption em { font-size: 12px; color: var(--a2); font-style: normal; font-family: var(--mono); margin-top: 4px; }
-@media (max-width: 960px) { .quotes { grid-template-columns: 1fr; } }
+.quote figcaption b { font-family: var(--display); font-size: 14.5px; }
+.quote figcaption span { font-size: 12.5px; color: var(--muted); }
+.quote figcaption em { font-size: 11.5px; color: var(--a2); font-style: normal; font-family: var(--mono); margin-top: 4px; }
+
+/* arrows: a way through it that does not need a mouse wheel */
+.recs__btn {
+  position: absolute; top: 50%; z-index: 3; width: 42px; height: 42px; margin-top: -21px;
+  display: grid; place-items: center; cursor: pointer;
+  border-radius: 50%; border: 1px solid var(--line-2); background: rgba(18,26,46,.92);
+  color: var(--text); font-size: 22px; line-height: 1; backdrop-filter: blur(8px);
+  opacity: 0; transition: opacity .3s, border-color .25s, background .25s;
+}
+.recs:hover .recs__btn, .recs__btn:focus-visible { opacity: 1; }
+.recs__btn:hover { border-color: var(--a2); background: rgba(34,211,238,.14); }
+.recs__btn--prev { left: 6px; }
+.recs__btn--next { right: 6px; }
+@media (hover: none) { .recs__btn { display: none; } }
+@media (max-width: 640px) {
+  .recs::before, .recs::after { width: 22px; }
+  .quote { padding: 22px 20px; height: 400px; }
+  .quote blockquote p { font-size: 13.5px; }
+}
 
 /* ---------- projects ---------- */
 .projects { margin-top: 30px; }
 .card--featured { grid-column: span 2; background: linear-gradient(135deg, rgba(59,167,255,.12), var(--panel) 50%); border-color: rgba(59,167,255,.25); }
+.card--hero {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(59,167,255,.14), var(--panel) 46%, rgba(34,211,238,.07));
+  border-color: rgba(59,167,255,.3);
+}
+.hero-proj { display: grid; grid-template-columns: 1.15fr .85fr; gap: 32px; align-items: start; }
+.hero-proj__main h3 { font-size: 24px; margin-bottom: 10px; }
+.hero-proj__main p { max-width: 54ch; }
+.hero-proj__main .project__links { margin-top: 20px; }
+.hero-proj__points { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.hero-proj__points li {
+  display: grid; gap: 2px; padding: 12px 14px; border-radius: var(--r-s);
+  background: rgba(11,16,32,.42); border: 1px solid var(--line);
+}
+.hero-proj__points b { font-family: var(--display); font-size: 13.5px; font-weight: 600; }
+.hero-proj__points span { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+@media (max-width: 860px) { .hero-proj { grid-template-columns: 1fr; gap: 22px; } .hero-proj__main h3 { font-size: 21px; } }
 .project__tag { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--a2); margin-bottom: 12px; }
 .project__links { display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
 .project__links .link { font-size: 14px; }
@@ -564,4 +628,10 @@ html.intro [data-deliver] { opacity: 0; }
 @media (max-width: 760px) {
   .guide.is-docked .guide__close { pointer-events: auto; }
   .guide.is-ducked .guide__close { pointer-events: none; }
+}
+
+/* With no drift there is nothing for snapping to fight, so it helps there. */
+@media (prefers-reduced-motion: reduce) {
+  .recs__track { scroll-snap-type: x proximity; }
+  .quote { scroll-snap-align: center; }
 }
