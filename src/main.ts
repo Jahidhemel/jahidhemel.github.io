@@ -417,6 +417,56 @@ if (canTilt()) {
   if (frame && media) mountTilt(frame, { zone: media, max: 9, perspective: 800, lift: 0, scale: 1.02 });
 }
 
+/* ---------------- experience: the rail draws as you read ---------------- */
+// One scrubbed tween on a single element, plus a class toggle per role.
+const timeline = $('.timeline');
+if (timeline && !reduced) {
+  const rail = document.createElement('span');
+  rail.className = 'timeline__progress';
+  rail.setAttribute('aria-hidden', 'true');
+  timeline.appendChild(rail);
+  gsap.to(rail, {
+    scaleY: 1,
+    ease: 'none',
+    scrollTrigger: { trigger: timeline, start: 'top 72%', end: 'bottom 78%', scrub: 0.4 },
+  });
+  $$('.tl').forEach((role) => {
+    ScrollTrigger.create({
+      trigger: role,
+      start: 'top 74%',
+      onEnter: () => role.classList.add('is-reached'),
+      onLeaveBack: () => role.classList.remove('is-reached'),
+    });
+  });
+} else if (timeline) {
+  // Reduced motion still gets the finished state, not a dim grey track.
+  const rail = document.createElement('span');
+  rail.className = 'timeline__progress';
+  rail.setAttribute('aria-hidden', 'true');
+  rail.style.transform = 'scaleY(1)';
+  timeline.appendChild(rail);
+  $$('.tl').forEach((role) => role.classList.add('is-reached'));
+}
+
+/* ---------------- gallery: the photos drift inside their frames ---------------- */
+// Driven through a custom property so the hover scale is left alone, and
+// composited because only a transform changes.
+if (!reduced) {
+  $$('.gallery figure img').forEach((img) => {
+    const tile = img.closest('li');
+    if (!tile) return;
+    gsap.fromTo(
+      img,
+      { '--py': '-3.2%' },
+      {
+        '--py': '3.2%',
+        ease: 'none',
+        scrollTrigger: { trigger: tile, start: 'top bottom', end: 'bottom top', scrub: true },
+      },
+    );
+  });
+}
+
 /* ---------------- recommendations marquee ---------------- */
 mountRecs(reduced);
 
