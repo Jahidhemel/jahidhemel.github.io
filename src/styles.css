@@ -666,3 +666,18 @@ html.intro [data-deliver] { opacity: 0; }
   .hero__visual { perspective: none; transform-style: flat; }
   .tilt__sheen { display: none; }
 }
+
+/* ---------- hero ticket field (WebGL) ---------- */
+.codebg--field {
+  /* sits behind the hero copy, brighter on the right where it is emptier */
+  opacity: 1;
+  /* The mask follows the headline rather than the x axis, so the amber end of
+     the flow is still visible on the left instead of being dimmed away. */
+  --fx-hole: radial-gradient(ellipse 42% 46% at 26% 46%, transparent 18%, #000 78%);
+  --fx-edges: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-image: var(--fx-hole), var(--fx-edges);
+  mask-image: var(--fx-hole), var(--fx-edges);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+@media (max-width: 860px) { .codebg--field { display: none; } }

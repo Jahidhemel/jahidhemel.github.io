@@ -6,6 +6,7 @@ import { mountGuide } from './guide';
 import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
 import { mountRecs } from './recs';
 import { canTilt, mountTilt } from './tilt';
+import { mountTicketField } from './ticketfield';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -350,8 +351,28 @@ if (dash) {
 
 /* ---------------- code backgrounds ---------------- */
 const heroCode = $<HTMLCanvasElement>('#heroCode');
+const heroField = $<HTMLCanvasElement>('#heroField');
 const aiCode = $<HTMLCanvasElement>('#aiCode');
-if (heroCode) mountCodeBg(heroCode, { density: 10, reduced });
+
+// Which background the hero gets. The ticket field is the default on a
+// pointer device; phones keep the lighter 2D code canvas untouched.
+// ?fx=code forces the old one, ?fx=field forces the new one, for comparing.
+const fx = new URLSearchParams(location.search).get('fx');
+// Under reduced motion the stylesheet hides every .codebg, so there is no
+// point building a GL context nobody will see.
+const wantField = !reduced && (fx === 'field' || (fx !== 'code' && window.matchMedia('(min-width: 861px)').matches));
+
+let fieldOn = false;
+if (heroField && wantField) {
+  fieldOn = !!mountTicketField(heroField, { count: 1600 });
+}
+if (heroField && !fieldOn) heroField.style.display = 'none';
+
+// The code canvas stays as the fallback, and never runs underneath the field.
+if (heroCode) {
+  if (fieldOn) heroCode.style.display = 'none';
+  else mountCodeBg(heroCode, { density: 10, reduced });
+}
 if (aiCode) mountCodeBg(aiCode, { density: 7, reduced });
 
 /* ---------------- touch: duck while the page moves ---------------- */
