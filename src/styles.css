@@ -635,3 +635,34 @@ html.intro [data-deliver] { opacity: 0; }
   .recs__track { scroll-snap-type: x proximity; }
   .quote { scroll-snap-align: center; }
 }
+
+/* ---------- 3D tilt ---------- */
+/* The cards are driven frame by frame from JS, so a CSS transition on
+   transform would fight it. Keep the colour transitions, drop that one. */
+.card.is-tilt,
+.about__frame.is-tilt { transition: border-color .4s, box-shadow .4s; }
+
+.hero__visual { perspective: 1200px; transform-style: preserve-3d; }
+.is-tilt.is-tilting { will-change: transform; }
+
+/* a highlight that follows the cursor across the surface */
+.tilt__sheen {
+  position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity .45s var(--ease);
+  background: radial-gradient(420px circle at var(--sx, 50%) var(--sy, 50%), rgba(255, 255, 255, .085), transparent 46%);
+}
+.is-tilting > .tilt__sheen { opacity: 1; }
+
+/* Only two things lift off the card face. Pushing every child in Z looks
+   barely different and animates a dozen elements at once. */
+.project.is-tilt .project__tag,
+.project.is-tilt .project__top,
+.project.is-tilt .project__links { transition: transform .45s var(--ease); }
+.project.is-tilt.is-tilting .project__tag,
+.project.is-tilt.is-tilting .project__top { transform: translateZ(26px); }
+.project.is-tilt.is-tilting .project__links { transform: translateZ(34px); }
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .hero__visual { perspective: none; transform-style: flat; }
+  .tilt__sheen { display: none; }
+}

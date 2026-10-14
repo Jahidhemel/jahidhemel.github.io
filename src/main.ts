@@ -5,6 +5,7 @@ import { mountCodeBg } from './codebg';
 import { mountGuide } from './guide';
 import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
 import { mountRecs } from './recs';
+import { canTilt, mountTilt } from './tilt';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -222,9 +223,10 @@ const ticket = $('#heroTicket');
 const ticketStatus = $('[data-status]');
 const ticketBar = $('.ticket__bar i');
 if (ticket && !reduced) {
-  gsap.to(ticket, { y: -10, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  const ticketInner = $('.ticket');
+  gsap.to(ticketInner, { y: -10, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
   gsap.set(ticket, { opacity: 0 });
-  onHeroReady(() => gsap.fromTo(ticket, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.4, ease: 'power3.out' }));
+  onHeroReady(() => gsap.fromTo(ticket, { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.4, ease: 'power3.out' }));
 }
 function heroTicketResolve() {
   if (!ticketStatus || !ticketBar) return;
@@ -246,8 +248,8 @@ if (!reduced) {
     gsap.to(Array.from(grp.children), { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08, scrollTrigger: { trigger: grp, start: 'top 85%', once: true } });
   });
   // gentle parallax on the about photo + contact card
-  const frame = $('.about__frame');
-  if (frame) gsap.to(frame, { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: true } });
+  const media = $('.about__media');
+  if (media) gsap.to(media, { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: true } });
 } else {
   gsap.set(['[data-reveal]', '[data-stagger] > *'], { opacity: 1, y: 0 });
 }
@@ -362,6 +364,36 @@ if (!reduced && window.matchMedia('(hover: none)').matches) {
     clearTimeout(idle);
     idle = window.setTimeout(() => guide.setScrolling(false), 240);
   }, { passive: true });
+}
+
+/* ---------------- 3D tilt ---------------- */
+// Pointer-only, so a phone gets the flat version and loses nothing.
+if (canTilt()) {
+  const hero = $('.hero');
+  const codewin = $('#codewin');
+  const ticket = $('#heroTicket');
+  if (hero && codewin) {
+    // The hero tracks across the whole section, so the window leans towards
+    // you from wherever you are, and the ticket rides nearer the glass.
+    mountTilt(codewin, {
+      zone: hero,
+      max: 6,
+      perspective: 1200,
+      lift: 0,
+      scale: 1,
+      sheen: true,
+      layers: ticket ? [{ el: ticket, depth: 62 }] : [],
+    });
+  }
+
+  $$('.project').forEach((card) => {
+    const wide = card.getBoundingClientRect().width > 680;
+    mountTilt(card, { max: wide ? 3 : 7, perspective: wide ? 1600 : 900, lift: wide ? 4 : 6, sheen: true });
+  });
+
+  const frame = $('.about__frame');
+  const media = $('.about__media');
+  if (frame && media) mountTilt(frame, { zone: media, max: 9, perspective: 800, lift: 0, scale: 1.02 });
 }
 
 /* ---------------- recommendations marquee ---------------- */
