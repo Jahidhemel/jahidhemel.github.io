@@ -7,6 +7,7 @@ import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
 import { mountRecs } from './recs';
 import { canTilt, mountTilt } from './tilt';
 import { mountTicketField } from './ticketfield';
+import { mountLightbox } from './lightbox';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -414,7 +415,24 @@ if (canTilt()) {
 
   const frame = $('.about__frame');
   const media = $('.about__media');
-  if (frame && media) mountTilt(frame, { zone: media, max: 9, perspective: 800, lift: 0, scale: 1.02 });
+  const badge = $('.about__badge');
+  if (frame && media) {
+    mountTilt(frame, {
+      zone: media,
+      max: 9,
+      perspective: 800,
+      lift: 0,
+      scale: 1.02,
+      sheen: true,
+      layers: badge ? [{ el: badge, depth: 46 }] : [],
+    });
+  }
+
+  // The travel photos get a stronger tilt: small tiles need more angle
+  // before the depth reads at all.
+  $$('.gallery figure').forEach((fig) => {
+    mountTilt(fig, { max: 11, perspective: 620, lift: 4, scale: 1.03, sheen: true });
+  });
 }
 
 /* ---------------- experience: the rail draws as you read ---------------- */
@@ -466,6 +484,9 @@ if (!reduced) {
     );
   });
 }
+
+/* ---------------- the photo viewer ---------------- */
+mountLightbox(reduced);
 
 /* ---------------- recommendations marquee ---------------- */
 mountRecs(reduced);
