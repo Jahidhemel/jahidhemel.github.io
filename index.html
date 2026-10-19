@@ -491,6 +491,13 @@
                   <p class="probe__note">Zero properties. One group. That one line was the whole answer.</p>
                 </figure>
 
+                <figure class="diagram" id="story2Diagram" data-fallback="At checkout Shopify replaces the single bundle line, which carries all eleven answers, with seven component lines. The answers move to a line item group that packing-slip Liquid cannot read.">
+                  <figcaption class="diagram__cap">
+                    One cart line becomes seven at checkout, and the answers end up where the packing slip cannot reach.
+                    <button class="diagram__fix" type="button" id="story2Fix" aria-pressed="false">Apply the fix</button>
+                  </figcaption>
+                </figure>
+
                 <h4>The fix, in two layers</h4>
                 <ul class="result">
                   <li><b>Same day, for the merchant:</b> a packing-slip template that carries the answers through order-level cart attributes, which bundle expansion does not touch. The answers printed on the slip again.</li>
@@ -749,9 +756,7 @@
             <span class="project__tag">Practice builds · HTML · CSS · JS</span>
             <h3>Four landing pages</h3>
             <p>Earlier front-end practice, each one built to learn a different tool: Sass and BEM, Tailwind, Bootstrap, then plain CSS. All four are still live.</p>
-            <details class="pages">
-              <summary><span>See the four pages</span></summary>
-              <ul class="pages__grid">
+            <ul class="pages__grid">
                 <li>
                   <a href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
                     <img src="/img/pages/legal-960.webp" srcset="/img/pages/legal-480.webp 480w, /img/pages/legal-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Justice Legal Solutions landing page: a dark hero over a gavel photograph with a service search." width="960" height="507" loading="lazy" />
@@ -780,8 +785,7 @@
                   </a>
                   <a class="link pages__code" href="https://github.com/Jahidhemel/Travel-Website" target="_blank" rel="noopener">Code</a>
                 </li>
-              </ul>
-            </details>
+            </ul>
           </article>
         </div>
         <p class="internal reveal" data-reveal>

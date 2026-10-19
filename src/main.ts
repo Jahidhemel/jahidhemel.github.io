@@ -3,9 +3,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { mountCodeBg } from './codebg';
 import { mountGuide } from './guide';
+import { mountStory2 } from './story2';
 import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
 import { mountRecs } from './recs';
 import { canTilt, mountTilt } from './tilt';
+import './story2.css';
 import { mountTicketField } from './ticketfield';
 import { mountLightbox } from './lightbox';
 
@@ -243,11 +245,24 @@ if (reduced) { gsap.set(ticketBar, { width: '100%' }); ticketStatus!.textContent
 
 /* ---------------- reveals ---------------- */
 if (!reduced) {
+  // clearProps on arrival, not just y:0. GSAP leaves an identity transform
+  // behind, and an ancestor with any transform becomes the containing block
+  // for position:fixed. That is what stopped the pinned diagram in story two
+  // from pinning: it was being placed against its own card, off screen.
   $$('[data-reveal]').forEach((el) => {
-    gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+      onComplete: () => gsap.set(el, { clearProps: 'transform' }),
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    });
   });
   $$('[data-stagger]').forEach((grp) => {
-    gsap.to(Array.from(grp.children), { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08, scrollTrigger: { trigger: grp, start: 'top 85%', once: true } });
+    const kids = Array.from(grp.children);
+    gsap.to(kids, {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08,
+      onComplete: () => gsap.set(kids, { clearProps: 'transform' }),
+      scrollTrigger: { trigger: grp, start: 'top 85%', once: true },
+    });
   });
   // gentle parallax on the about photo + contact card
   const media = $('.about__media');
@@ -516,3 +531,33 @@ if (cursor && !reduced && window.matchMedia('(pointer: fine)').matches) {
 /* ---------------- misc ---------------- */
 $('#year')!.textContent = String(new Date().getFullYear());
 window.addEventListener('load', () => ScrollTrigger.refresh());
+
+
+/* ---------------- story two: the cart line that splits at checkout -------- */
+// The diagram pins itself while you scroll past it, and a pin is measured the
+// moment it is created. Built while its <details> was still closed it measured
+// zero, so the pin never took and the whole thing scrolled past with the right
+// half of the drawing still empty. It is built the first time the story is
+// actually opened instead. mountStory2 guards against running twice.
+const story2Details = document.querySelector<HTMLDetailsElement>('#story-2 details.story__full');
+
+function buildStory2() {
+  mountStory2();
+  // One frame later, so the newly laid out diagram is what gets measured.
+  requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+
+if (story2Details) {
+  if (story2Details.open) buildStory2();
+  story2Details.addEventListener('toggle', () => {
+    if (story2Details.open) buildStory2();
+    else ScrollTrigger.refresh();
+  });
+}
+
+// Opening or closing any other disclosure changes the page height, so every
+// trigger below it has to be recalculated.
+document.querySelectorAll('details.story__full').forEach((d) => {
+  if (d === story2Details) return;
+  d.addEventListener('toggle', () => ScrollTrigger.refresh());
+});

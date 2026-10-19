@@ -924,23 +924,9 @@ html.intro [data-deliver] { opacity: 0; }
 /* the wide featured card's screenshot fills its own column */
 .card--hero .project__shot { margin: 14px -24px 20px; }
 
-.pages { margin-top: 16px; }
-.pages > summary {
-  display: inline-flex; align-items: center; gap: 9px; cursor: pointer; list-style: none;
-  font-weight: 600; font-size: 14px; color: var(--text);
-  padding: 9px 16px; border-radius: 999px;
-  border: 1px solid var(--line-2); background: rgba(255,255,255,.02);
-  transition: border-color .25s var(--ease), background .25s;
-}
-.pages > summary::-webkit-details-marker { display: none; }
-.pages > summary::after { content: "↓"; transition: transform .3s var(--ease); }
-.pages[open] > summary::after { transform: rotate(180deg); }
-.pages > summary:hover { border-color: var(--a2); background: rgba(34,211,238,.06); }
-.pages > summary:focus-visible { outline: 2px solid var(--a2); outline-offset: 3px; }
-
 .pages__grid {
   list-style: none; margin: 18px 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
 }
 .pages__grid li { display: grid; gap: 6px; }
 .pages__grid > li > a:first-child { display: grid; gap: 6px; text-decoration: none; color: var(--text); }
@@ -958,3 +944,8 @@ html.intro [data-deliver] { opacity: 0; }
   .project__shot { margin: 12px -18px 16px; }
   .pages__grid { grid-template-columns: 1fr; }
 }
+
+/* Cards hug their own content. Stretching every card to the tallest in its
+   row left the short ones, the QA Helper and the landing pages, with a few
+   hundred pixels of empty panel underneath. */
+#work .cards { align-items: start; }

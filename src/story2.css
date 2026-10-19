@@ -1,0 +1,196 @@
+/* Ported from the v3 branch onto the live site's tokens: --accent became
+   --a2, --surface became --panel, the fluid type steps became fixed sizes.
+   The behaviour in story2.ts is unchanged. */
+:root { --s2-handfont: 'Bradley Hand', 'Segoe Script', cursive; }
+
+/* ===========================================================================
+   Story 02: the cart line that becomes seven at checkout.
+   The scene itself is built by src/story2.ts; everything here is scoped to
+   #story2Diagram so the other stories can style .diagram their own way.
+   =========================================================================== */
+
+#story2Diagram {
+  margin: clamp(2rem, 5vw, 3.25rem) 0 0;
+  padding: 0;
+}
+
+#story2Diagram .s2-stage {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: clamp(.6rem, 2vw, 1.1rem);
+}
+
+/* The sentence a screen reader gets, and the live region the fix button
+   updates. Both are read, never seen. */
+#story2Diagram .s2-alt {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   The caption and the fix button
+   --------------------------------------------------------------------------- */
+#story2Diagram .diagram__cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 1.5rem;
+  margin-top: 1rem;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: left;
+}
+
+#story2Diagram .diagram__fix {
+  flex: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  padding: .55rem 1rem;
+  cursor: pointer;
+  transition: transform .12s var(--ease), background-color .25s, border-color .25s, color .25s;
+}
+#story2Diagram .diagram__fix:hover { border-color: var(--text); }
+#story2Diagram .diagram__fix:active { transform: translateY(1px); }
+#story2Diagram .diagram__fix[aria-pressed='true'] {
+  background: var(--a2);
+  border-color: var(--a2);
+  color: #061020;
+}
+
+/* ---------------------------------------------------------------------------
+   The drawing. Sizes are in user units, which are px inside the viewBox, so
+   the two layouts carry their own scale.
+   --------------------------------------------------------------------------- */
+#story2Diagram .s2-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  --s2-label: 16px;
+  --s2-sub: 11.5px;
+  --s2-row: 13px;
+  --s2-tag: 13px;
+  --s2-mono: 11.5px;
+  --s2-probe: 17px;
+  --s2-cap: 11.5px;
+  --s2-slip: 12.5px;
+  --s2-hand: 18px;
+}
+#story2Diagram .s2-svg--narrow {
+  --s2-label: 17px;
+  --s2-sub: 12px;
+  --s2-row: 13.5px;
+  --s2-tag: 13px;
+  --s2-mono: 12px;
+  --s2-probe: 18px;
+  --s2-cap: 12px;
+  --s2-slip: 12.5px;
+  --s2-hand: 19px;
+}
+
+#story2Diagram .s2-svg text { font-family: var(--body); }
+
+/* --- shapes --- */
+#story2Diagram .s2-shape {
+  fill: var(--panel);
+  stroke: var(--line-2);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+#story2Diagram .s2-shape--group { fill: color-mix(in srgb, var(--a2) 7%, var(--panel)); }
+#story2Diagram .s2-shape--slip { fill: var(--panel); }
+
+#story2Diagram .s2-rule {
+  stroke: var(--line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* --- words --- */
+#story2Diagram .s2-label {
+  font-family: var(--display);
+  font-variation-settings: 'SOFT' 50, 'WONK' 1;
+  font-weight: 600;
+  font-size: var(--s2-label);
+  fill: var(--text);
+}
+#story2Diagram .s2-sub { font-size: var(--s2-sub); fill: var(--muted); }
+#story2Diagram .s2-sub--accent { fill: var(--a2); }
+#story2Diagram .s2-rowlabel { font-size: var(--s2-row); fill: var(--text); }
+#story2Diagram .s2-slipline { font-size: var(--s2-slip); fill: var(--text); }
+#story2Diagram .s2-cap {
+  font-family: var(--mono);
+  font-size: var(--s2-cap);
+  fill: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+#story2Diagram .s2-mono {
+  font-family: var(--mono);
+  font-size: var(--s2-mono);
+  fill: var(--muted);
+}
+#story2Diagram .s2-mono--on { fill: var(--a2); font-weight: 500; }
+#story2Diagram .s2-probe {
+  font-family: var(--mono);
+  font-size: var(--s2-probe);
+  fill: var(--text);
+  letter-spacing: .02em;
+}
+#story2Diagram .s2-probe__v { fill: var(--a2); font-weight: 500; }
+#story2Diagram .s2-hand {
+  font-family: var(--s2-handfont);
+  font-size: var(--s2-hand);
+  font-weight: 600;
+  fill: var(--a2);
+}
+
+/* --- the eleven answers --- */
+#story2Diagram .s2-tag__box {
+  fill: color-mix(in srgb, var(--a2) 13%, var(--panel));
+  stroke: color-mix(in srgb, var(--a2) 50%, var(--line));
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: fill .3s var(--ease), stroke .3s var(--ease);
+}
+#story2Diagram .s2-tag--on .s2-tag__box {
+  fill: color-mix(in srgb, var(--a2) 26%, var(--panel));
+  stroke: var(--a2);
+}
+#story2Diagram .s2-tag__t { font-size: var(--s2-tag); fill: var(--text); }
+
+/* --- sight lines --- */
+#story2Diagram .s2-sight {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+#story2Diagram .s2-sight--blocked {
+  stroke: var(--a2);
+  stroke-dasharray: 5 5;
+}
+#story2Diagram .s2-sight--fix { stroke: var(--a2); }
+#story2Diagram .s2-sight--hand { stroke: var(--a2); stroke-width: 1; }
+
+#story2Diagram .s2-headfill { fill: var(--line-2); stroke: none; }
+#story2Diagram .s2-headfill--accent { fill: var(--a2); }
+
+/* On a narrow screen the figure is a tall vertical strip, so give it a little
+   more room than the text column has. */
+@media (max-width: 759px) {
+  #story2Diagram .s2-stage { padding: .55rem; }
+  #story2Diagram .diagram__cap { gap: .9rem; }
+  #story2Diagram .diagram__fix { width: 100%; }
+}
