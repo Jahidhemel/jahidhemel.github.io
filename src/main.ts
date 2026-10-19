@@ -7,6 +7,7 @@ import { mountStory2 } from './story2';
 import { runIntro, shouldRunIntro, revealHeroInstantly } from './intro';
 import { mountRecs } from './recs';
 import { canTilt, mountTilt } from './tilt';
+import { mountSparkle } from './sparkle';
 import './story2.css';
 import { mountTicketField } from './ticketfield';
 import { mountLightbox } from './lightbox';
@@ -513,6 +514,9 @@ if (progress) {
   if (lenis) lenis.on('scroll', ({ progress: p }) => setP(p));
   else window.addEventListener('scroll', () => setP(window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight)), { passive: true });
 }
+
+/* ---------------- a sparkle trail behind the ring ---------------- */
+mountSparkle();
 
 /* ---------------- cursor ring ---------------- */
 const cursor = $('#cursor');

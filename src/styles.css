@@ -949,3 +949,28 @@ html.intro [data-deliver] { opacity: 0; }
    row left the short ones, the QA Helper and the landing pages, with a few
    hundred pixels of empty panel underneath. */
 #work .cards { align-items: start; }
+
+/* ---------- the sparkle trail behind the cursor ---------- */
+.sparkles {
+  position: fixed; inset: 0; z-index: 69; pointer-events: none;
+  /* one layer, so the page is not repainted for each sparkle */
+  contain: strict;
+}
+.sparkle {
+  position: absolute; left: 0; top: 0; display: block;
+  will-change: transform, opacity;
+  /* a four-point sparkle, drawn with a clip-path so there is no image to load */
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  background: radial-gradient(circle at 50% 50%, #fff 0%, var(--a2) 55%, rgba(34,211,238,0) 100%);
+}
+.sparkle--alt { background: radial-gradient(circle at 50% 50%, #fff 0%, var(--a1) 55%, rgba(59,167,255,0) 100%); }
+@media (hover: none), (prefers-reduced-motion: reduce) { .sparkles { display: none; } }
+
+/* ---------- Work: two columns that pack independently ---------------------
+   A row-based grid makes every row as tall as its tallest card, which left a
+   few hundred pixels of nothing under the two short cards. Each column packs
+   its own cards instead, so the only gap is at the foot of the shorter one. */
+.projects--cols { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; align-items: start; }
+.projects--cols > .card--hero { grid-column: 1 / -1; }
+.projects__col { display: grid; gap: 18px; align-content: start; }
+@media (max-width: 960px) { .projects--cols { grid-template-columns: 1fr; } }

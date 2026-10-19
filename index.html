@@ -687,7 +687,7 @@
       <div class="wrap">
         <p class="eyebrow reveal" data-reveal>Work</p>
         <h2 class="h2 reveal" data-reveal>Things I have <em>built</em>, mostly to make support easier.</h2>
-        <div class="grid grid--3 cards projects" data-stagger>
+        <div class="cards projects projects--cols" data-stagger>
           <article class="card card--hero project">
             <div class="hero-proj">
               <div class="hero-proj__main">
@@ -710,83 +710,85 @@
               </ul>
             </div>
           </article>
-          <article class="card card--featured project">
-            <div class="project__top">
-              <span class="project__tag">Featured · rule based · built with AI</span>
-            </div>
-            <figure class="project__shot">
-              <img src="/img/built/assistant-960.webp" srcset="/img/built/assistant-480.webp 480w, /img/built/assistant-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The eFoli Support Assistant: a merchant chat on the left, and the reasoning it used for each reply on the right." width="960" height="600" loading="lazy" />
-            </figure>
-            <h3>Efoli Support Assistant</h3>
-            <p>A support chat that works out which of our apps a merchant is asking about, answers from a sample knowledge base built from the public docs, asks a follow-up when it needs one, and hands off to the right person. Its reasoning and the JSON it produces sit beside the chat.</p>
-            <div class="project__links">
-              <a class="btn btn--small btn--primary magnetic" href="https://jahidhemel.github.io/support-ticket-triage/" target="_blank" rel="noopener">Live demo ↗</a>
-              <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/support-ticket-triage" target="_blank" rel="noopener">Code</a>
-            </div>
-          </article>
-          <article class="card project">
-            <span class="project__tag">Rule based · QA · support</span>
-            <figure class="project__shot">
-              <img src="/img/built/qahelper-960.webp" srcset="/img/built/qahelper-480.webp 480w, /img/built/qahelper-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The QA Helper: a feature description typed on the left, and the generated test cases on the right." width="960" height="600" loading="lazy" />
-            </figure>
-            <h3>QA Helper</h3>
-            <p>Give it a feature description and it writes a test plan. Give it messy notes and it turns them into a bug report with steps, severity and what to check.</p>
-            <div class="project__links">
-              <a class="link" href="https://jahidhemel.github.io/qa-test-helper/" target="_blank" rel="noopener">Live demo ↗</a>
-              <a class="link" href="https://github.com/Jahidhemel/qa-test-helper" target="_blank" rel="noopener">Code</a>
-            </div>
-          </article>
-          <article class="card card--featured project">
-            <div class="project__top">
-              <span class="project__tag">Featured · Liquid · 14 snippets from real tickets</span>
-            </div>
-            <figure class="project__shot">
-              <img src="/img/built/snippets-960.webp" srcset="/img/built/snippets-480.webp 480w, /img/built/snippets-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The shopify-liquid-snippets repository on GitHub." width="960" height="600" loading="lazy" />
-            </figure>
-            <h3>Shopify Liquid snippets</h3>
-            <p>Four plain theme fixes and ten customisations merchants asked for around MultiVariants, PushBundle and DiscountRay: conditional option fields, cart quantity guards on Dawn and Horizon, a volume pricing matrix, bundle thumbnails in the cart, discount tiers in the cart. Store details removed, settings pulled out, and each one comes with the ask, what breaks, and what to test before going live. About 4,800 lines in total.</p>
-            <div class="project__links">
-              <a class="btn btn--small btn--primary magnetic" href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener">Browse the snippets ↗</a>
-              <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/shopify-liquid-snippets/blob/main/PATTERNS.md" target="_blank" rel="noopener">What they taught me</a>
-            </div>
-          </article>
-          <!-- The practice landing pages live behind one card: they are four
-               of the same thing, and they were pushing the real tools down. -->
-          <article class="card project project--pages">
-            <span class="project__tag">Practice builds · HTML · CSS · JS</span>
-            <h3>Four landing pages</h3>
-            <p>Earlier front-end practice, each one built to learn a different tool: Sass and BEM, Tailwind, Bootstrap, then plain CSS. All four are still live.</p>
-            <ul class="pages__grid">
-                <li>
-                  <a href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
-                    <img src="/img/pages/legal-960.webp" srcset="/img/pages/legal-480.webp 480w, /img/pages/legal-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Justice Legal Solutions landing page: a dark hero over a gavel photograph with a service search." width="960" height="507" loading="lazy" />
-                    <b>Legal Solutions</b><span>Sass &middot; BEM</span>
-                  </a>
-                  <a class="link pages__code" href="https://github.com/Jahidhemel/legal-solutions" target="_blank" rel="noopener">Code</a>
-                </li>
-                <li>
-                  <a href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">
-                    <img src="/img/pages/fruit-960.webp" srcset="/img/pages/fruit-480.webp 480w, /img/pages/fruit-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Fruit Basket landing page." width="960" height="507" loading="lazy" />
-                    <b>Fruit Basket</b><span>Tailwind CSS</span>
-                  </a>
-                  <a class="link pages__code" href="https://github.com/Jahidhemel/fruit-basket" target="_blank" rel="noopener">Code</a>
-                </li>
-                <li>
-                  <a href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">
-                    <img src="/img/pages/summer-960.webp" srcset="/img/pages/summer-480.webp 480w, /img/pages/summer-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Summer Sale landing page." width="960" height="507" loading="lazy" />
-                    <b>Summer Sale</b><span>Bootstrap 5</span>
-                  </a>
-                  <a class="link pages__code" href="https://github.com/Jahidhemel/Summer-sale" target="_blank" rel="noopener">Code</a>
-                </li>
-                <li>
-                  <a href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">
-                    <img src="/img/pages/travel-960.webp" srcset="/img/pages/travel-480.webp 480w, /img/pages/travel-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Hero Travel landing page, with destinations and tour packages." width="960" height="507" loading="lazy" />
-                    <b>Hero Travel</b><span>HTML &middot; CSS &middot; JS</span>
-                  </a>
-                  <a class="link pages__code" href="https://github.com/Jahidhemel/Travel-Website" target="_blank" rel="noopener">Code</a>
-                </li>
-            </ul>
-          </article>
+          <div class="projects__col">
+            <article class="card card--featured project">
+              <div class="project__top">
+                <span class="project__tag">Featured · rule based · built with AI</span>
+              </div>
+              <figure class="project__shot">
+                <img src="/img/built/assistant-960.webp" srcset="/img/built/assistant-480.webp 480w, /img/built/assistant-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The eFoli Support Assistant: a merchant chat on the left, and the reasoning it used for each reply on the right." width="960" height="600" loading="lazy" />
+              </figure>
+              <h3>Efoli Support Assistant</h3>
+              <p>A support chat that works out which of our apps a merchant is asking about, answers from a sample knowledge base built from the public docs, asks a follow-up when it needs one, and hands off to the right person. Its reasoning and the JSON it produces sit beside the chat.</p>
+              <div class="project__links">
+                <a class="btn btn--small btn--primary magnetic" href="https://jahidhemel.github.io/support-ticket-triage/" target="_blank" rel="noopener">Live demo ↗</a>
+                <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/support-ticket-triage" target="_blank" rel="noopener">Code</a>
+              </div>
+            </article>
+            <article class="card card--featured project">
+              <div class="project__top">
+                <span class="project__tag">Featured · Liquid · 14 snippets from real tickets</span>
+              </div>
+              <figure class="project__shot">
+                <img src="/img/built/snippets-960.webp" srcset="/img/built/snippets-480.webp 480w, /img/built/snippets-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The shopify-liquid-snippets repository on GitHub." width="960" height="600" loading="lazy" />
+              </figure>
+              <h3>Shopify Liquid snippets</h3>
+              <p>Four plain theme fixes and ten customisations merchants asked for around MultiVariants, PushBundle and DiscountRay: conditional option fields, cart quantity guards on Dawn and Horizon, a volume pricing matrix, bundle thumbnails in the cart, discount tiers in the cart. Store details removed, settings pulled out, and each one comes with the ask, what breaks, and what to test before going live. About 4,800 lines in total.</p>
+              <div class="project__links">
+                <a class="btn btn--small btn--primary magnetic" href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener">Browse the snippets ↗</a>
+                <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/shopify-liquid-snippets/blob/main/PATTERNS.md" target="_blank" rel="noopener">What they taught me</a>
+              </div>
+            </article>
+          </div>
+          <div class="projects__col">
+            <article class="card project">
+              <span class="project__tag">Rule based · QA · support</span>
+              <figure class="project__shot">
+                <img src="/img/built/qahelper-960.webp" srcset="/img/built/qahelper-480.webp 480w, /img/built/qahelper-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The QA Helper: a feature description typed on the left, and the generated test cases on the right." width="960" height="600" loading="lazy" />
+              </figure>
+              <h3>QA Helper</h3>
+              <p>Give it a feature description and it writes a test plan. Give it messy notes and it turns them into a bug report with steps, severity and what to check.</p>
+              <div class="project__links">
+                <a class="link" href="https://jahidhemel.github.io/qa-test-helper/" target="_blank" rel="noopener">Live demo ↗</a>
+                <a class="link" href="https://github.com/Jahidhemel/qa-test-helper" target="_blank" rel="noopener">Code</a>
+              </div>
+            </article>
+            <article class="card project project--pages">
+              <span class="project__tag">Practice builds · HTML · CSS · JS</span>
+              <h3>Four landing pages</h3>
+              <p>Earlier front-end practice, each one built to learn a different tool: Sass and BEM, Tailwind, Bootstrap, then plain CSS. All four are still live.</p>
+              <ul class="pages__grid">
+                  <li>
+                    <a href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
+                      <img src="/img/pages/legal-960.webp" srcset="/img/pages/legal-480.webp 480w, /img/pages/legal-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Justice Legal Solutions landing page: a dark hero over a gavel photograph with a service search." width="960" height="507" loading="lazy" />
+                      <b>Legal Solutions</b><span>Sass &middot; BEM</span>
+                    </a>
+                    <a class="link pages__code" href="https://github.com/Jahidhemel/legal-solutions" target="_blank" rel="noopener">Code</a>
+                  </li>
+                  <li>
+                    <a href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">
+                      <img src="/img/pages/fruit-960.webp" srcset="/img/pages/fruit-480.webp 480w, /img/pages/fruit-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Fruit Basket landing page." width="960" height="507" loading="lazy" />
+                      <b>Fruit Basket</b><span>Tailwind CSS</span>
+                    </a>
+                    <a class="link pages__code" href="https://github.com/Jahidhemel/fruit-basket" target="_blank" rel="noopener">Code</a>
+                  </li>
+                  <li>
+                    <a href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">
+                      <img src="/img/pages/summer-960.webp" srcset="/img/pages/summer-480.webp 480w, /img/pages/summer-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Summer Sale landing page." width="960" height="507" loading="lazy" />
+                      <b>Summer Sale</b><span>Bootstrap 5</span>
+                    </a>
+                    <a class="link pages__code" href="https://github.com/Jahidhemel/Summer-sale" target="_blank" rel="noopener">Code</a>
+                  </li>
+                  <li>
+                    <a href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">
+                      <img src="/img/pages/travel-960.webp" srcset="/img/pages/travel-480.webp 480w, /img/pages/travel-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Hero Travel landing page, with destinations and tour packages." width="960" height="507" loading="lazy" />
+                      <b>Hero Travel</b><span>HTML &middot; CSS &middot; JS</span>
+                    </a>
+                    <a class="link pages__code" href="https://github.com/Jahidhemel/Travel-Website" target="_blank" rel="noopener">Code</a>
+                  </li>
+              </ul>
+            </article>
+          </div>
         </div>
         <p class="internal reveal" data-reveal>
           <b>Not public:</b> a team management web app we use every day, and the Playwright and MCP based QA setup that runs most of our release tests.
@@ -843,7 +845,6 @@
     <div class="footer__line" aria-hidden="true"></div>
     <div class="wrap footer__row">
       <span>© <span id="year"></span> Md. Jahidul Islam Hemel</span>
-      <span class="footer__mid">Made in Dhaka.</span>
       <a href="#top" class="link">Back to top ↑</a>
     </div>
   </footer>
