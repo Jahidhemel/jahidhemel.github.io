@@ -151,6 +151,9 @@ if (copy) {
 
 /* ------------------------------------------------------------ the card stack */
 const cards = $$('.card3');
+// Read once: these come from CSS and asking for them every frame is a forced
+// layout on every scroll.
+const pinnedTops = cards.map((c) => parseFloat(getComputedStyle(c).top) || 0);
 
 /* -------------------------------------------------- the experience rail ---- */
 const railList = $('.rail__list');
@@ -160,13 +163,53 @@ const roles = $$('.role');
 /* -------------------------------------- opening a story moves everything --- */
 // Positions are read from the layout on every frame, so a disclosure opening
 // needs no special handling beyond a repaint on the next scroll.
-$$('details.more').forEach((d) => d.addEventListener('toggle', () => onScroll()));
+$$('details.more').forEach((d) => d.addEventListener('toggle', () => frame(performance.now())));
+
+
+/* ----------------------------------------------------- the arriving edge -- */
+// Both edges are built as a polygon across the top of the card: a handful of
+// points along the top, then down the right side and back. Amplitude falls to
+// nothing as the card settles, so the shape is only there while it moves.
+const STEPS = 22;
+
+/** A travelling sine: the card comes in under water. */
+function wave(arrive: number, now: number): string {
+  const amp = (1 - arrive) * 58;
+  const phase = (now / 1000) * 1.7;
+  const pts: string[] = [];
+  for (let k = 0; k <= STEPS; k++) {
+    const u = k / STEPS;
+    // Two frequencies, so the crest is not a single clean hump.
+    const h = Math.sin(phase + u * Math.PI * 3) * 0.65 + Math.sin(phase * 1.4 + u * Math.PI * 5) * 0.35;
+    pts.push(`${(u * 100).toFixed(2)}% ${(amp * (0.55 + 0.45 * h)).toFixed(1)}px`);
+  }
+  return `polygon(${pts.join(',')},100% 100%,0% 100%)`;
+}
+
+/** Parts from the middle outwards, like something being unzipped. */
+function part(arrive: number, now: number): string {
+  const amp = (1 - arrive) * 120;
+  const phase = (now / 1000) * 1.3;
+  const open = arrive; // how much of the width has opened
+  const pts: string[] = [];
+  for (let k = 0; k <= STEPS; k++) {
+    const u = k / STEPS;
+    const fromCentre = Math.abs(u - 0.5) * 2; // 0 middle, 1 edges
+    // Closed beyond the opening, and eased rather than cut square.
+    const shut = Math.max(0, Math.min(1, (fromCentre - open) / 0.45));
+    const ripple = 0.85 + 0.15 * Math.sin(phase + u * Math.PI * 6);
+    pts.push(`${(u * 100).toFixed(2)}% ${(amp * shut * shut * ripple).toFixed(1)}px`);
+  }
+  return `polygon(${pts.join(',')},100% 100%,0% 100%)`;
+}
 
 /* ------------------------------------------------------------- one rAF loop */
-let ticking = false;
+// Continuous rather than scroll-triggered: the wave on an arriving card has
+// to keep moving while you are reading, not freeze the moment you stop
+// scrolling. It idles when the projects are off screen.
+let stackVisible = false;
 
-function frame() {
-  ticking = false;
+function frame(now: number) {
   const vh = window.innerHeight;
 
   // the paragraph, a character at a time
@@ -194,28 +237,58 @@ function frame() {
     }
   }
 
-  // the stack: each card shrinks as the ones after it arrive
-  if (cards.length && !reduced) {
+  // The stack. Each card shrinks as the ones after it arrive, and each
+  // arriving card comes in under a wave: its top edge is a moving sine that
+  // flattens as it settles, with a tilt out of the page that flattens with
+  // it. The last one parts from the middle outwards instead, so the three
+  // do not all do the same thing.
+  if (cards.length && !reduced && stackVisible) {
     for (let i = 0; i < cards.length; i++) {
-      const slot = cards[i].parentElement as HTMLElement;
+      const card = cards[i];
+      const slot = card.parentElement as HTMLElement;
       const r = slot.getBoundingClientRect();
+
       const target = 1 - (cards.length - 1 - i) * 0.03;
       // 0 while the card is still coming up, 1 once its slot has fully passed
       const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
-      cards[i].style.transform = `scale(${1 - (1 - target) * p})`;
+
+      // How far this card has travelled towards its pinned position.
+      const pinned = pinnedTops[i];
+      const arrive = Math.min(1, Math.max(0, (vh - r.top) / Math.max(1, vh - pinned)));
+      card.style.setProperty('--arrive', String(arrive));
+
+      const settled = arrive > 0.995;
+      const tilt = (1 - arrive) * 7;
+      card.style.transform =
+        `perspective(1600px) rotateX(${tilt}deg) scale(${1 - (1 - target) * p})`;
+
+      // The first card has nothing to arrive over, so it is never clipped.
+      if (i === 0 || settled) {
+        card.style.clipPath = '';
+        continue;
+      }
+      card.style.clipPath = i === cards.length - 1
+        ? part(arrive, now)
+        : wave(arrive, now);
     }
   }
 }
 
-function onScroll() {
-  if (ticking) return;
-  ticking = true;
-  requestAnimationFrame(frame);
+function loop(now: number) {
+  frame(now);
+  requestAnimationFrame(loop);
 }
 
-window.addEventListener('scroll', onScroll, { passive: true });
-window.addEventListener('resize', onScroll, { passive: true });
-frame();
+const stack = $('.stack');
+if (stack) {
+  new IntersectionObserver((entries) => {
+    stackVisible = entries.some((e) => e.isIntersecting);
+  }).observe(stack);
+}
+
+window.addEventListener('scroll', () => frame(performance.now()), { passive: true });
+window.addEventListener('resize', () => frame(performance.now()), { passive: true });
+requestAnimationFrame(loop);
 
 /* ---------------------------------------------------------------- nav links */
 $$('a[href^="#"]').forEach((a) => {
