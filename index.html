@@ -39,59 +39,6 @@
       </div>
     </header>
 
-    <!-- His photographs. Cut to their own shapes so the subject survives. -->
-    <section class="reel" id="reel" aria-labelledby="reel-h">
-      <p class="reel__eyebrow" id="reel-h">Away from the desk &mdash; hover to hold it, click to open one</p>
-      <div class="reel__row" data-dir="1">
-        <button class="reel__tile" type="button" data-full="/img/photos/ride-full.webp" aria-label="Open: On two wheels">
-          <img src="/img/photos/ride.webp" alt="Motorcycles at night" width="448" height="560" />
-          <span>On two wheels</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/boat-full.webp" aria-label="Open: Sunset from the shore">
-          <img src="/img/photos/boat.webp" alt="A fishing boat with flags at sunset" width="373" height="560" />
-          <span>Sunset from the shore</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/snow-full.webp" aria-label="Open: First snowfall">
-          <img src="/img/photos/snow.webp" alt="Standing in falling snow at night" width="420" height="560" />
-          <span>First snowfall</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/hammock-full.webp" aria-label="Open: Works from anywhere">
-          <img src="/img/photos/hammock.webp" alt="Working from a hammock" width="418" height="560" />
-          <span>Works from anywhere</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/ski-full.webp" aria-label="Open: On the slopes">
-          <img src="/img/photos/ski.webp" alt="On a ski slope" width="558" height="560" />
-          <span>On the slopes</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/hills-full.webp" aria-label="Open: A good view">
-          <img src="/img/photos/hills.webp" alt="A hillside viewpoint" width="420" height="560" />
-          <span>A good view</span>
-        </button>
-      </div>
-      <div class="reel__row" data-dir="-1">
-        <button class="reel__tile" type="button" data-full="/img/photos/falls-full.webp" aria-label="Open: Chasing waterfalls">
-          <img src="/img/photos/falls.webp" alt="At a waterfall" width="420" height="560" />
-          <span>Chasing waterfalls</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/beach-full.webp" aria-label="Open: Low tide">
-          <img src="/img/photos/beach.webp" alt="Walking along a rocky shoreline" width="458" height="560" />
-          <span>Low tide</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/moon-full.webp" aria-label="Open: Full moon">
-          <img src="/img/photos/moon.webp" alt="A palm tree under a full moon by the sea" width="420" height="560" />
-          <span>Full moon</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/seagull-full.webp" aria-label="Open: Out on the water">
-          <img src="/img/photos/seagull.webp" alt="A seagull over the sea with hills behind" width="840" height="560" />
-          <span>Out on the water</span>
-        </button>
-        <button class="reel__tile" type="button" data-full="/img/photos/peak-full.webp" aria-label="Open: In the mountains">
-          <img src="/img/photos/peak.webp" alt="In the mountains" width="747" height="560" />
-          <span>In the mountains</span>
-        </button>
-      </div>
-    </section>
-
     <!-- the six apps he answers for -->
     <section class="apps" aria-label="The apps I support">
       <div class="apps__track">
@@ -194,7 +141,7 @@
       <h2 class="grad fade" style="--fy:40px">Project</h2>
       <div class="stack">
         <div class="stack__slot">
-          <article class="card3">
+          <article class="card3" style="--i:0">
             <div class="card3__top">
               <span class="card3__n">01</span>
               <div>
@@ -213,7 +160,7 @@
           </article>
         </div>
         <div class="stack__slot">
-          <article class="card3">
+          <article class="card3" style="--i:1">
             <div class="card3__top">
               <span class="card3__n">02</span>
               <div>
@@ -232,7 +179,7 @@
           </article>
         </div>
         <div class="stack__slot">
-          <article class="card3">
+          <article class="card3" style="--i:2">
             <div class="card3__top">
               <span class="card3__n">03</span>
               <div>
@@ -253,47 +200,35 @@
       </div>
     </section>
 
-    <!-- Columns drift at different speeds as you pass them. -->
-    <section class="drift" id="pages">
+    <!-- One line, drifting the other way to the photographs further down. -->
+    <section class="reel reel--strip" id="pages" data-speed="20" aria-labelledby="pages-h">
       <h2 class="grad fade" style="--fy:40px">Snippets &amp; pages</h2>
-      <p class="drift__lede fade" style="--fd:.1s">
-        Fourteen Liquid snippets written for real merchant questions, and four landing
-        pages built to learn a different tool each time. All of them are still live.
-      </p>
-
-      <div class="drift__grid">
-        <div class="drift__col" data-drift="-0.06">
-          <a class="drift__card" href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener">
-            <img src="/img/marquee/snippets.webp" alt="The shopify-liquid-snippets repository on GitHub" width="420" height="270" loading="lazy" />
-            <b>Shopify Liquid snippets</b><span>14 snippets &middot; about 4,800 lines</span>
-          </a>
-          <a class="drift__card" href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
-            <img src="/img/pages/legal-960.webp" alt="The Justice Legal Solutions landing page" width="960" height="507" loading="lazy" />
-            <b>Legal Solutions</b><span>Sass &middot; BEM</span>
-          </a>
-        </div>
-
-        <div class="drift__col" data-drift="0.08">
-          <a class="drift__card" href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">
-            <img src="/img/pages/fruit-960.webp" alt="The Fruit Basket landing page" width="960" height="507" loading="lazy" />
-            <b>Fruit Basket</b><span>Tailwind CSS</span>
-          </a>
-          <a class="drift__card" href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">
-            <img src="/img/pages/summer-960.webp" alt="The Summer Sale landing page" width="960" height="507" loading="lazy" />
-            <b>Summer Sale</b><span>Bootstrap 5</span>
-          </a>
-        </div>
-
-        <div class="drift__col" data-drift="-0.1">
-          <a class="drift__card" href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">
-            <img src="/img/pages/travel-960.webp" alt="The Hero Travel landing page" width="960" height="507" loading="lazy" />
-            <b>Hero Travel</b><span>HTML &middot; CSS &middot; JS</span>
-          </a>
-          <a class="drift__card" href="https://github.com/Jahidhemel/shopify-liquid-snippets/blob/main/PATTERNS.md" target="_blank" rel="noopener">
-            <img src="/img/marquee/config.webp" alt="A product configurator built on a merchant's product page" width="420" height="270" loading="lazy" />
-            <b>What they taught me</b><span>Patterns from the tickets</span>
-          </a>
-        </div>
+      <p class="reel__eyebrow" id="pages-h">Fourteen Liquid snippets from real tickets, and four landing pages &mdash; hover to hold, click to open</p>
+      <div class="reel__row" data-dir="-1">
+        <a class="reel__tile" href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener">
+          <img src="/img/strip/snippets.webp" alt="The shopify-liquid-snippets repository on GitHub" width="896" height="560" loading="lazy" />
+          <span>Shopify Liquid snippets &middot; 14 snippets · ~4,800 lines</span>
+        </a>
+        <a class="reel__tile" href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
+          <img src="/img/strip/legal.webp" alt="The Justice Legal Solutions landing page" width="1060" height="560" loading="lazy" />
+          <span>Legal Solutions &middot; Sass · BEM</span>
+        </a>
+        <a class="reel__tile" href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">
+          <img src="/img/strip/fruit.webp" alt="The Fruit Basket landing page" width="1060" height="560" loading="lazy" />
+          <span>Fruit Basket &middot; Tailwind CSS</span>
+        </a>
+        <a class="reel__tile" href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">
+          <img src="/img/strip/summer.webp" alt="The Summer Sale landing page" width="1060" height="560" loading="lazy" />
+          <span>Summer Sale &middot; Bootstrap 5</span>
+        </a>
+        <a class="reel__tile" href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">
+          <img src="/img/strip/travel.webp" alt="The Hero Travel landing page" width="1060" height="560" loading="lazy" />
+          <span>Hero Travel &middot; HTML · CSS · JS</span>
+        </a>
+        <a class="reel__tile" href="https://github.com/Jahidhemel/shopify-liquid-snippets/blob/main/PATTERNS.md" target="_blank" rel="noopener">
+          <img src="/img/strip/config.webp" alt="A product configurator built on a merchant's product page" width="243" height="560" loading="lazy" />
+          <span>What they taught me &middot; Patterns from the tickets</span>
+        </a>
       </div>
     </section>
 
@@ -403,6 +338,60 @@
         </article>
       </div>
       <p class="words__more fade"><a class="btn-ghost" href="https://www.linkedin.com/in/md-jahidul-islam-hemel" target="_blank" rel="noopener">Read them on LinkedIn</a></p>
+    </section>
+
+    <!-- His photographs. Cut to their own shapes so the subject survives. -->
+    <section class="reel" id="reel" aria-labelledby="reel-h">
+      <h2 class="grad fade" style="--fy:40px">Beyond work</h2>
+      <p class="reel__eyebrow" id="reel-h">Bikes, roads and the odd cricket match &mdash; hover to hold, click to open one</p>
+      <div class="reel__row" data-dir="1">
+        <button class="reel__tile" type="button" data-full="/img/photos/ride-full.webp" aria-label="Open: On two wheels">
+          <img src="/img/photos/ride.webp" alt="Motorcycles at night" width="448" height="560" />
+          <span>On two wheels</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/boat-full.webp" aria-label="Open: Sunset from the shore">
+          <img src="/img/photos/boat.webp" alt="A fishing boat with flags at sunset" width="373" height="560" />
+          <span>Sunset from the shore</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/snow-full.webp" aria-label="Open: First snowfall">
+          <img src="/img/photos/snow.webp" alt="Standing in falling snow at night" width="420" height="560" />
+          <span>First snowfall</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/hammock-full.webp" aria-label="Open: Works from anywhere">
+          <img src="/img/photos/hammock.webp" alt="Working from a hammock" width="418" height="560" />
+          <span>Works from anywhere</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/ski-full.webp" aria-label="Open: On the slopes">
+          <img src="/img/photos/ski.webp" alt="On a ski slope" width="558" height="560" />
+          <span>On the slopes</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/hills-full.webp" aria-label="Open: A good view">
+          <img src="/img/photos/hills.webp" alt="A hillside viewpoint" width="420" height="560" />
+          <span>A good view</span>
+        </button>
+      </div>
+      <div class="reel__row" data-dir="-1">
+        <button class="reel__tile" type="button" data-full="/img/photos/falls-full.webp" aria-label="Open: Chasing waterfalls">
+          <img src="/img/photos/falls.webp" alt="At a waterfall" width="420" height="560" />
+          <span>Chasing waterfalls</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/beach-full.webp" aria-label="Open: Low tide">
+          <img src="/img/photos/beach.webp" alt="Walking along a rocky shoreline" width="458" height="560" />
+          <span>Low tide</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/moon-full.webp" aria-label="Open: Full moon">
+          <img src="/img/photos/moon.webp" alt="A palm tree under a full moon by the sea" width="420" height="560" />
+          <span>Full moon</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/seagull-full.webp" aria-label="Open: Out on the water">
+          <img src="/img/photos/seagull.webp" alt="A seagull over the sea with hills behind" width="840" height="560" />
+          <span>Out on the water</span>
+        </button>
+        <button class="reel__tile" type="button" data-full="/img/photos/peak-full.webp" aria-label="Open: In the mountains">
+          <img src="/img/photos/peak.webp" alt="In the mountains" width="747" height="560" />
+          <span>In the mountains</span>
+        </button>
+      </div>
     </section>
 
     <section class="say" id="say">

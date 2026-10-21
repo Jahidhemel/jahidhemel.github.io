@@ -136,9 +136,6 @@ if (copy) {
 /* ------------------------------------------------------------ the card stack */
 const cards = $$('.card3');
 
-/* ------------------------------------------- the drifting snippet columns -- */
-const driftCols = $$('[data-drift]');
-
 /* -------------------------------------------------- the experience rail ---- */
 const railList = $('.rail__list');
 const railFill = $('.rail__line i');
@@ -167,17 +164,6 @@ function frame() {
     const lit = progress * letters.length;
     for (let i = 0; i < letters.length; i++) {
       letters[i].style.opacity = String(i < lit ? 1 : 0.2);
-    }
-  }
-
-  // the snippet columns drift past each other
-  if (driftCols.length && !reduced) {
-    for (const col of driftCols) {
-      const rate = Number(col.dataset.drift) || 0;
-      const r = col.getBoundingClientRect();
-      // 0 when the column is entering, 1 once it has left the top
-      const seen = (vh - r.top) / (vh + r.height);
-      col.style.transform = `translate3d(0, ${(seen - 0.5) * rate * 420}px, 0)`;
     }
   }
 

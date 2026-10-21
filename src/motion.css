@@ -238,12 +238,16 @@ a { color: inherit; }
 
 .stack { max-width: 1200px; margin: 0 auto; }
 .stack__slot { height: 85vh; position: relative; }
+/* Each card pins a little lower than the one before, so the edges of the
+   stack stay visible underneath. Pinned at the same top they simply replace
+   each other and the whole effect is invisible. */
+.card3 { --i: 0; }
 .card3 {
-  position: sticky; top: 6rem;
+  position: sticky; top: calc(6rem + var(--i) * 16px);
   border: 2px solid var(--mist); border-radius: 40px; background: var(--ink);
   padding: 1rem; will-change: transform;
 }
-@media (min-width: 768px) { .card3 { top: 8rem; border-radius: 60px; padding: 2rem; } }
+@media (min-width: 768px) { .card3 { top: calc(8rem + var(--i) * 20px); border-radius: 60px; padding: 2rem; } }
 
 .card3__top {
   display: flex; flex-wrap: wrap; gap: 1rem 1.5rem;
@@ -355,25 +359,11 @@ a { color: inherit; }
 .edu__item span { font-weight: 300; font-size: .85rem; opacity: .6; }
 .edu__g { opacity: .85 !important; }
 
-/* ---------- snippets and pages, drifting at different speeds ------------- */
-.drift { padding: 5rem 1.25rem; }
-@media (min-width: 768px) { .drift { padding: 7rem 2.5rem; } }
+/* ---------- a shared lede, used under several headings ------------------- */
 .drift__lede {
   max-width: 54ch; margin: -1.25rem auto 3rem; text-align: center;
   font-weight: 300; line-height: 1.6; opacity: .7;
 }
-.drift__grid { max-width: 1200px; margin: 0 auto; display: grid; gap: 1.25rem; }
-@media (min-width: 860px) { .drift__grid { grid-template-columns: repeat(3, 1fr); align-items: start; } }
-.drift__col { display: grid; gap: 1.25rem; will-change: transform; }
-.drift__card {
-  display: grid; gap: .5rem; text-decoration: none; color: var(--mist);
-  border: 1px solid rgba(215,226,234,.16); border-radius: 24px; padding: .75rem .75rem 1.1rem;
-  transition: border-color .3s var(--ease), transform .3s var(--ease);
-}
-.drift__card:hover { border-color: var(--mist); transform: translateY(-4px); }
-.drift__card img { width: 100%; height: 170px; object-fit: cover; object-position: top; border-radius: 16px; }
-.drift__card b { font-weight: 500; font-size: 1rem; padding: 0 .35rem; }
-.drift__card span { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; opacity: .45; padding: 0 .35rem; }
 
 /* ---------- stories: the whole thing, behind a disclosure ---------------- */
 .more { margin-top: 1.25rem; }
@@ -497,3 +487,26 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .lb__veil { transition: none; opacity: 1; }
 }
+
+/* ---------- the snippets line ------------------------------------------- */
+/* A single row, drifting the opposite way to the photographs much further
+   down the page. Four sections sit between them on purpose: two bands of
+   moving images near each other is a lot to look at. */
+.reel--strip { padding-top: 6rem; }
+@media (min-width: 768px) { .reel--strip { padding-top: 9rem; } }
+.reel--strip h2, .reel h2 {
+  margin: 0 0 1rem; text-align: center; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -0.03em; line-height: .9; font-size: clamp(2.5rem, 9vw, 120px);
+  padding: 0 1.25rem;
+}
+.reel__eyebrow { text-align: center; max-width: 60ch; margin-inline: auto; }
+.reel--strip .reel__tile { cursor: pointer; }
+.reel--strip .reel__tile img { height: 300px; }
+@media (max-width: 640px) { .reel--strip .reel__tile img { height: 200px; } }
+/* Links say what they are without needing a hover, since one of them is the
+   only route to the snippets repository. */
+.reel--strip .reel__tile span { opacity: 1; font-size: .72rem; }
+
+/* ---------- room to breathe between the big moments ---------------------- */
+.reel { padding-bottom: 5rem; }
+@media (min-width: 768px) { .reel { padding-bottom: 7rem; } }

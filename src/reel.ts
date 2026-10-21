@@ -1,59 +1,77 @@
 /**
- * The photo reel.
+ * The scrolling bands: the snippets line, and the photo reel.
  *
- * Two rows that drift in opposite directions on their own, and are pushed
- * along by the page scroll on top of that. Holding the pointer over a row
- * stops its drift; moving away starts it again. Clicking a photograph opens
- * it large, and the drift holds while it is open.
+ * One implementation drives both. A row drifts on its own, is pushed along by
+ * the page scroll on top of that, and stops while the pointer is over it —
+ * which is not only a nice touch. A drifting target cannot be clicked, so
+ * without the hold nothing in either band is reachable.
  *
- * The open and close are one FLIP: the big image is laid out at its final
- * size, then transformed back onto the card it came from and released. Only
- * transform and opacity are animated. On the way back it measures the card
- * AGAIN rather than reusing the rect from the open, because the row has very
- * likely drifted — or been scrolled — in between, and animating to where the
- * card used to be is worse than not animating at all.
+ * Tiles come in two kinds. A <button> carrying data-full opens the picture
+ * large; an <a> is just a link and is left alone. The photo band uses the
+ * first, the snippets line the second.
+ *
+ * Opening and closing a picture is one FLIP with a rotateY sweep: the big
+ * image is laid out at its final size, transformed back onto the card it came
+ * from, and released. Closing measures the card AGAIN rather than reusing the
+ * rect from the open, because the row has drifted and very likely been
+ * scrolled since, and animating to where a card used to be looks worse than
+ * not animating at all.
  */
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
-const DRIFT = 26; // px per second
 
 interface Row {
   el: HTMLElement;
   dir: number;
+  speed: number;
   /** Width of one unbroken set of tiles, before the clones. */
   span: number;
   offset: number;
   held: boolean;
+  visible: boolean;
 }
 
 export function mountReel(reduced: boolean): void {
-  const section = document.querySelector<HTMLElement>('.reel');
-  if (!section) return;
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('.reel'));
+  if (!sections.length) return;
 
   const rows: Row[] = [];
 
-  for (const el of Array.from(section.querySelectorAll<HTMLElement>('.reel__row'))) {
-    const originals = Array.from(el.children) as HTMLElement[];
-    if (!originals.length) continue;
+  for (const section of sections) {
+    const speed = Number(section.dataset.speed) || 26; // px per second
+    const mine: Row[] = [];
 
-    // Enough copies that the row is always wider than the window, so the join
-    // never comes into view.
-    let span = 0;
-    for (const t of originals) span += t.getBoundingClientRect().width + 14;
-    const need = Math.ceil((window.innerWidth * 2) / Math.max(1, span)) + 1;
-    for (let i = 0; i < need; i++) {
-      for (const t of originals) {
-        const copy = t.cloneNode(true) as HTMLElement;
-        copy.setAttribute('aria-hidden', 'true');
-        copy.tabIndex = -1;
-        el.appendChild(copy);
+    for (const el of Array.from(section.querySelectorAll<HTMLElement>('.reel__row'))) {
+      const originals = Array.from(el.children) as HTMLElement[];
+      if (!originals.length) continue;
+
+      let span = 0;
+      for (const t of originals) span += t.getBoundingClientRect().width + 14;
+
+      // Enough copies that the row is always wider than the window, so the
+      // join never comes into view.
+      const need = Math.ceil((window.innerWidth * 2) / Math.max(1, span)) + 1;
+      for (let i = 0; i < need; i++) {
+        for (const t of originals) {
+          const copy = t.cloneNode(true) as HTMLElement;
+          copy.setAttribute('aria-hidden', 'true');
+          copy.tabIndex = -1;
+          el.appendChild(copy);
+        }
       }
+
+      const row: Row = { el, dir: Number(el.dataset.dir) || 1, speed, span, offset: 0, held: false, visible: true };
+      el.addEventListener('pointerenter', () => { row.held = true; });
+      el.addEventListener('pointerleave', () => { row.held = false; });
+      rows.push(row);
+      mine.push(row);
     }
 
-    const row: Row = { el, dir: Number(el.dataset.dir) || 1, span, offset: 0, held: false };
-    el.addEventListener('pointerenter', () => { row.held = true; });
-    el.addEventListener('pointerleave', () => { row.held = false; });
-    rows.push(row);
+    const io = new IntersectionObserver((entries) => {
+      const on = entries.some((e) => e.isIntersecting);
+      for (const r of mine) r.visible = on;
+    });
+    io.observe(section);
   }
 
   if (!rows.length) return;
@@ -61,10 +79,6 @@ export function mountReel(reduced: boolean): void {
   /* ------------------------------------------------------------- the lightbox */
 
   let open: { wrap: HTMLElement; img: HTMLImageElement; source: HTMLElement } | null = null;
-
-  function rectOf(el: HTMLElement) {
-    return el.getBoundingClientRect();
-  }
 
   /** The transform that puts an element laid out at `to` on top of `from`. */
   function flip(from: DOMRect, to: DOMRect, tilt: number) {
@@ -98,10 +112,9 @@ export function mountReel(reduced: boolean): void {
     wrap.appendChild(close);
 
     document.body.appendChild(wrap);
-    document.body.classList.add('has-lb');
 
-    const from = rectOf(sourceImg);
-    const to = rectOf(img);
+    const from = sourceImg.getBoundingClientRect();
+    const to = img.getBoundingClientRect();
 
     if (reduced) {
       wrap.classList.add('is-open');
@@ -128,7 +141,10 @@ export function mountReel(reduced: boolean): void {
 
     open = { wrap, img, source: sourceImg };
     close.addEventListener('click', closeTile);
-    wrap.addEventListener('click', (e) => { if (e.target === wrap || (e.target as HTMLElement).classList.contains('lb__veil')) closeTile(); });
+    wrap.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t === wrap || t.classList.contains('lb__veil')) closeTile();
+    });
     close.focus();
   }
 
@@ -136,15 +152,13 @@ export function mountReel(reduced: boolean): void {
     if (!open) return;
     const { wrap, img, source } = open;
     open = null;
-    document.body.classList.remove('has-lb');
 
-    const finish = () => { wrap.remove(); };
-
+    const finish = () => wrap.remove();
     if (reduced) { finish(); return; }
 
     // Measure the card now, not when it opened: the row has drifted since.
-    const from = rectOf(source);
-    const to = rectOf(img);
+    const from = source.getBoundingClientRect();
+    const to = img.getBoundingClientRect();
     wrap.classList.remove('is-open');
     img.style.transition = `transform .5s ${EASE}, opacity .4s linear`;
     img.style.transform = flip(from, to, 12);
@@ -152,10 +166,13 @@ export function mountReel(reduced: boolean): void {
     window.setTimeout(finish, 520);
   }
 
-  section.addEventListener('click', (e) => {
-    const tile = (e.target as HTMLElement).closest<HTMLElement>('.reel__tile');
-    if (tile) openTile(tile);
-  });
+  for (const section of sections) {
+    section.addEventListener('click', (e) => {
+      // Only buttons carrying a larger file open. Links are left to navigate.
+      const tile = (e.target as HTMLElement).closest<HTMLElement>('.reel__tile[data-full]');
+      if (tile) openTile(tile);
+    });
+  }
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) closeTile();
@@ -169,8 +186,6 @@ export function mountReel(reduced: boolean): void {
 
   let last = performance.now();
   let lastScroll = window.scrollY;
-  let visible = true;
-  let raf = 0;
 
   function frame(now: number) {
     const dt = Math.min(0.05, (now - last) / 1000);
@@ -181,10 +196,11 @@ export function mountReel(reduced: boolean): void {
     lastScroll = sy;
 
     for (const row of rows) {
+      if (!row.visible) continue;
       // The page scroll pushes every row whether or not it is held: that is
-      // the reader's own movement, not the reel's.
+      // the reader's own movement, not the band's.
       row.offset += pushed * 0.45 * row.dir;
-      if (!row.held && !open && !reduced) row.offset += DRIFT * dt * row.dir;
+      if (!row.held && !open && !reduced) row.offset += row.speed * dt * row.dir;
 
       // Wrap inside one set so the transform never grows without bound.
       if (row.span > 0) {
@@ -194,21 +210,8 @@ export function mountReel(reduced: boolean): void {
       row.el.style.transform = `translate3d(${row.offset}px,0,0)`;
     }
 
-    raf = requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
   }
 
-  const io = new IntersectionObserver((entries) => {
-    visible = entries.some((en) => en.isIntersecting);
-    if (visible && !raf) {
-      last = performance.now();
-      lastScroll = window.scrollY;
-      raf = requestAnimationFrame(frame);
-    } else if (!visible && raf) {
-      cancelAnimationFrame(raf);
-      raf = 0;
-    }
-  });
-  io.observe(section);
-
-  raf = requestAnimationFrame(frame);
+  requestAnimationFrame(frame);
 }
