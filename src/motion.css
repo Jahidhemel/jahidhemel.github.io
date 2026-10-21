@@ -248,10 +248,15 @@ a { color: inherit; }
    instead of pinning. A 40px probe in the same slot stuck perfectly — the
    card simply had no room. */
 .stack__slot { height: 150vh; position: relative; }
+/* The slots overlap. The slot stays tall so the card inside still has room
+   to pin, but each one starts well before the last has finished, so the
+   later card rides up ONTO the earlier one and its wave cuts across it
+   rather than meeting it edge to edge. */
+.stack__slot + .stack__slot { margin-top: -112vh; }
 /* Each card pins a little lower than the one before, so the edges of the
    stack stay visible underneath. Pinned at the same top they simply replace
    each other and the whole effect is invisible. */
-.card3 { --i: 0; }
+.card3 { --i: 0; z-index: calc(var(--i) + 1); }
 .card3 {
   position: sticky; top: calc(3.5rem + var(--i) * 14px);
   border: 2px solid var(--mist); border-radius: 40px; background: var(--ink);
