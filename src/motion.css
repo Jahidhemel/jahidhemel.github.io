@@ -26,7 +26,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.page { overflow-x: clip; }
+/* NOT on .page. Clipping one axis makes the other a scroll container, so
+   every sticky card inside was sticking to .page — which never scrolls —
+   instead of to the viewport, and the whole stack simply scrolled past.
+   On body the page still cannot be pushed sideways and sticky works. */
+.page { overflow-x: visible; }
+body { overflow-x: visible; }
 
 img { display: block; max-width: 100%; }
 
@@ -237,25 +242,30 @@ a { color: inherit; }
 .projects h2 { text-align: center; margin-bottom: 2rem; }
 
 .stack { max-width: 1200px; margin: 0 auto; }
-.stack__slot { height: 85vh; position: relative; }
+/* Real height, not padding. A sticky element is constrained to its parent's
+   CONTENT box, so padding-bottom buys it nothing: the card filled the content
+   box exactly and could never move, which is why the stack scrolled past
+   instead of pinning. A 40px probe in the same slot stuck perfectly — the
+   card simply had no room. */
+.stack__slot { height: 150vh; position: relative; }
 /* Each card pins a little lower than the one before, so the edges of the
    stack stay visible underneath. Pinned at the same top they simply replace
    each other and the whole effect is invisible. */
 .card3 { --i: 0; }
 .card3 {
-  position: sticky; top: calc(6rem + var(--i) * 16px);
+  position: sticky; top: calc(3.5rem + var(--i) * 14px);
   border: 2px solid var(--mist); border-radius: 40px; background: var(--ink);
   padding: 1rem; will-change: transform;
 }
-@media (min-width: 768px) { .card3 { top: calc(8rem + var(--i) * 20px); border-radius: 60px; padding: 2rem; } }
+@media (min-width: 768px) { .card3 { top: calc(5rem + var(--i) * 16px); border-radius: 60px; padding: 1.5rem; } }
 
 .card3__top {
-  display: flex; flex-wrap: wrap; gap: 1rem 1.5rem;
-  align-items: center; justify-content: space-between; padding: .5rem .75rem 1.25rem;
+  display: flex; flex-wrap: wrap; gap: .75rem 1.5rem;
+  align-items: center; justify-content: space-between; padding: .25rem .75rem .9rem;
 }
 .card3__n {
   font-weight: 900; line-height: .8; color: var(--mist); flex: none;
-  font-size: clamp(2.5rem, 8vw, 110px);
+  font-size: clamp(2.2rem, 6vw, 82px);
 }
 .card3__who { font-size: .75rem; text-transform: uppercase; letter-spacing: .14em; opacity: .6; margin: 0 0 .25rem; }
 .card3__name { margin: 0; font-weight: 500; text-transform: uppercase; font-size: clamp(1.1rem, 2.4vw, 2rem); line-height: 1.1; }
@@ -264,9 +274,9 @@ a { color: inherit; }
 .card3__col { display: grid; gap: 1rem; align-content: start; }
 .card3__grid img { width: 100%; object-fit: cover; border-radius: 28px; background: #15151a; }
 @media (min-width: 768px) { .card3__grid img { border-radius: 44px; } }
-.card3__a { height: clamp(130px, 16vw, 230px); }
-.card3__b { height: clamp(160px, 22vw, 340px); }
-.card3__tall { height: 100%; min-height: clamp(306px, 38vw, 586px); }
+.card3__a { height: clamp(110px, 12vw, 165px); }
+.card3__b { height: clamp(130px, 15vw, 215px); }
+.card3__tall { height: 100%; min-height: clamp(256px, 27vw, 396px); }
 @media (max-width: 640px) {
   .card3__grid { grid-template-columns: 1fr; }
   .card3__tall { min-height: 220px; }
@@ -533,3 +543,21 @@ a { color: inherit; }
 }
 @media (min-width: 768px) { .card3::before { border-radius: 60px 60px 0 0; } }
 .card3 { transform-style: preserve-3d; }
+
+/* ---------- the card going under -----------------------------------------
+   The one being covered does not slide away, it sinks: it dims, loses its
+   colour and takes on the cast of the water closing over it. Driven by how
+   far the NEXT card has arrived, so the two read as one movement. Tinted
+   veil rather than a blur, which on a card this size costs a repaint of the
+   whole thing every frame. */
+.card3 {
+  filter: saturate(calc(1 - var(--sink, 0) * 0.5)) brightness(calc(1 - var(--sink, 0) * 0.42));
+}
+.card3::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border-radius: 40px; opacity: var(--sink, 0);
+  background:
+    linear-gradient(to bottom, rgba(12, 28, 44, .30), rgba(8, 18, 30, .62)),
+    radial-gradient(120% 70% at 50% 0%, rgba(140, 190, 225, .14), transparent 60%);
+}
+@media (min-width: 768px) { .card3::after { border-radius: 60px; } }

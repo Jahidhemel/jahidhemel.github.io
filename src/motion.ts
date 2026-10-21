@@ -243,30 +243,39 @@ function frame(now: number) {
   // it. The last one parts from the middle outwards instead, so the three
   // do not all do the same thing.
   if (cards.length && !reduced && stackVisible) {
+    // Every card arrives under a wave, including the first.
+    //
+    // An earlier version measured arrival across the overlap only — the
+    // stretch where the previous card is still pinned. That is honest about
+    // the stacking but it is barely 250px, so the wave flashed past and was
+    // effectively gone. Measured across the card's whole approach it is
+    // visible for most of a screen, which is the point of it.
+    const arrived = cards.map((c, i) => {
+      const slot = (c.parentElement as HTMLElement).getBoundingClientRect();
+      return Math.min(1, Math.max(0, (vh - slot.top) / Math.max(1, vh - pinnedTops[i])));
+    });
+
     for (let i = 0; i < cards.length; i++) {
       const card = cards[i];
-      const slot = card.parentElement as HTMLElement;
-      const r = slot.getBoundingClientRect();
+      const arrive = arrived[i];
+      const sink = i + 1 < cards.length ? arrived[i + 1] : 0;
 
-      const target = 1 - (cards.length - 1 - i) * 0.03;
-      // 0 while the card is still coming up, 1 once its slot has fully passed
-      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
-
-      // How far this card has travelled towards its pinned position.
-      const pinned = pinnedTops[i];
-      const arrive = Math.min(1, Math.max(0, (vh - r.top) / Math.max(1, vh - pinned)));
       card.style.setProperty('--arrive', String(arrive));
+      card.style.setProperty('--sink', String(sink));
 
-      const settled = arrive > 0.995;
-      const tilt = (1 - arrive) * 7;
+      // It holds where it is pinned and goes down, rather than sliding away.
+      const tilt = (1 - arrive) * 7 - sink * 3;
+      const scale = 1 - sink * 0.055;
+      const drop = sink * 16;
       card.style.transform =
-        `perspective(1600px) rotateX(${tilt}deg) scale(${1 - (1 - target) * p})`;
+        `perspective(1600px) translateY(${drop.toFixed(1)}px) rotateX(${tilt.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
 
-      // The first card has nothing to arrive over, so it is never clipped.
-      if (i === 0 || settled) {
+      if (arrive > 0.995) {
         card.style.clipPath = '';
         continue;
       }
+      // The last one parts from the middle outwards, so the set does not all
+      // do the same thing.
       card.style.clipPath = i === cards.length - 1
         ? part(arrive, now)
         : wave(arrive, now);
