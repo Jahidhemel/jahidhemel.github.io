@@ -160,19 +160,7 @@ a { color: inherit; }
 }
 .btn-ghost:hover { background: rgba(215,226,234,.1); }
 
-/* ------------------------------------------------------------- 2. marquee */
-.marquee { background: var(--ink); padding: 6rem 0 2.5rem; overflow: hidden; }
-@media (min-width: 768px) { .marquee { padding: 10rem 0 2.5rem; } }
-.marquee__row { display: flex; gap: .75rem; will-change: transform; }
-.marquee__row + .marquee__row { margin-top: .75rem; }
-.marquee__row figure { margin: 0; flex: none; }
-.marquee__row img {
-  width: 420px; height: 270px; object-fit: cover; border-radius: 1rem;
-  background: #15151a;
-}
-@media (max-width: 640px) {
-  .marquee__row img { width: 260px; height: 170px; }
-}
+/* ---- 2. the photo reel lives in the block appended at the foot ---- */
 
 /* --------------------------------------------------------------- 3. about */
 .about {
@@ -309,22 +297,6 @@ a { color: inherit; }
   font-size: .8rem; opacity: .6;
 }
 
-/* ---------- the marquee says what each card is and goes somewhere --------- */
-.marquee__eyebrow {
-  margin: 0 0 1.25rem; padding: 0 1.5rem;
-  font-size: .75rem; text-transform: uppercase; letter-spacing: .18em; opacity: .5;
-}
-@media (min-width: 768px) { .marquee__eyebrow { padding: 0 2.5rem; } }
-.marquee__row a { text-decoration: none; display: block; }
-.marquee__row figcaption {
-  display: flex; flex-direction: column; gap: 1px; padding: .6rem .2rem 0;
-}
-.marquee__row figcaption b { font-weight: 500; font-size: .9rem; color: var(--mist); }
-.marquee__row figcaption span { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; opacity: .45; }
-.marquee__row a img { transition: transform .4s var(--ease), outline-color .3s; outline: 2px solid transparent; outline-offset: 2px; }
-.marquee__row a:hover img { transform: translateY(-4px); outline-color: var(--mist); }
-.marquee__row a:focus-visible img { outline-color: var(--mist); }
-
 /* ---------- the six apps, on a slow loop --------------------------------- */
 .apps { overflow: hidden; padding: 1.5rem 0 4rem; border-block: 1px solid rgba(215,226,234,.1); }
 .apps__track {
@@ -459,3 +431,69 @@ a { color: inherit; }
 .beyond__grid figure { margin: 0; }
 .beyond__grid img { width: 100%; height: 190px; object-fit: cover; border-radius: 20px; }
 .beyond__grid figcaption { padding-top: .5rem; font-size: .8rem; opacity: .5; }
+
+/* ===========================================================================
+   The photo reel, and the one photograph it opens.
+   =========================================================================== */
+.reel { padding: 5rem 0 3rem; overflow: hidden; }
+@media (min-width: 768px) { .reel { padding: 8rem 0 3rem; } }
+.reel__eyebrow {
+  margin: 0 0 1.5rem; padding: 0 1.5rem;
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .18em; opacity: .5;
+}
+@media (min-width: 768px) { .reel__eyebrow { padding: 0 2.5rem; } }
+
+.reel__row {
+  display: flex; gap: 14px; width: max-content; will-change: transform;
+}
+.reel__row + .reel__row { margin-top: 14px; }
+
+/* Each tile keeps the photograph's own shape: one height, whatever width. */
+.reel__tile {
+  flex: none; position: relative; display: block; padding: 0; border: 0;
+  background: none; cursor: zoom-in; font: inherit; color: inherit;
+  border-radius: 18px; overflow: hidden;
+}
+.reel__tile img {
+  display: block; height: 280px; width: auto; border-radius: 18px;
+  transition: transform .45s var(--ease), filter .45s var(--ease);
+}
+.reel__tile span {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 2.2rem .9rem .7rem; text-align: left;
+  font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+  color: #fff; opacity: 0; transition: opacity .35s var(--ease);
+  background: linear-gradient(to top, rgba(8,8,10,.85), transparent);
+  pointer-events: none;
+}
+.reel__tile:hover img, .reel__tile:focus-visible img { transform: scale(1.04); }
+.reel__tile:hover span, .reel__tile:focus-visible span { opacity: 1; }
+.reel__tile:focus-visible { outline: 2px solid var(--mist); outline-offset: 3px; }
+@media (max-width: 640px) { .reel__tile img { height: 190px; } }
+
+/* the opened photograph */
+.lb { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 4vmin; }
+.lb__veil {
+  position: absolute; inset: 0; background: rgba(6,6,8,.82);
+  backdrop-filter: blur(6px); opacity: 0; transition: opacity .45s var(--ease);
+}
+.lb.is-open .lb__veil { opacity: 1; }
+.lb__img {
+  position: relative; max-width: min(92vw, 1100px); max-height: 88vh;
+  width: auto; height: auto; border-radius: 20px;
+  box-shadow: 0 50px 120px rgba(0,0,0,.7);
+  transform-origin: center center; will-change: transform, opacity;
+}
+.lb__x {
+  position: absolute; top: 2vmin; right: 2vmin; z-index: 2;
+  width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  background: rgba(20,20,24,.75); border: 1px solid rgba(215,226,234,.3);
+  color: var(--mist); font-size: 1.5rem; line-height: 1; font-family: inherit;
+  display: grid; place-items: center; transition: border-color .25s, background .25s;
+}
+.lb__x:hover { border-color: var(--mist); background: rgba(40,40,48,.9); }
+/* The page is deliberately NOT locked while a photograph is open: a scroll is
+   how you dismiss it, and a locked page fires no scroll to listen for. */
+@media (prefers-reduced-motion: reduce) {
+  .lb__veil { transition: none; opacity: 1; }
+}

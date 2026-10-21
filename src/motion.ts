@@ -13,11 +13,15 @@
  * rather than one per effect.
  */
 import './motion.css';
+import { mountReel } from './reel';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) =>
   Array.from(r.querySelectorAll<T>(s));
+
+/* ------------------------------------------------------------ the photo reel */
+mountReel(reduced);
 
 /* ----------------------------------------------------------------- fade in */
 // IntersectionObserver rather than a scroll handler: the browser does the
@@ -129,25 +133,6 @@ if (copy) {
   }
 }
 
-/* --------------------------------------------------------------- the marquee */
-const rows = $$('.marquee__row');
-// Tripled, so the row is wide enough that its ends never come into view while
-// it slides. Clones are hidden from assistive tech: the originals already say
-// everything, three times over would be noise. They share the originals' src,
-// so the browser serves them from cache rather than fetching again.
-for (const row of rows) {
-  const original = Array.from(row.children);
-  for (let pass = 0; pass < 2; pass++) {
-    for (const node of original) {
-      const copy = node.cloneNode(true) as HTMLElement;
-      copy.setAttribute('aria-hidden', 'true');
-      copy.querySelectorAll('img').forEach((i) => i.setAttribute('alt', ''));
-      row.appendChild(copy);
-    }
-  }
-}
-const marqueeSection = $('.marquee');
-
 /* ------------------------------------------------------------ the card stack */
 const cards = $$('.card3');
 
@@ -170,15 +155,6 @@ let ticking = false;
 function frame() {
   ticking = false;
   const vh = window.innerHeight;
-
-  // marquee: offset grows as the section comes up the screen
-  if (marqueeSection && rows.length) {
-    const top = marqueeSection.getBoundingClientRect().top + window.scrollY;
-    const offset = (window.scrollY - top + vh) * 0.3;
-    const shift = offset - 200;
-    rows[0].style.transform = `translate3d(${shift}px,0,0)`;
-    if (rows[1]) rows[1].style.transform = `translate3d(${-shift}px,0,0)`;
-  }
 
   // the paragraph, a character at a time
   if (copy && letters.length && !reduced) {
