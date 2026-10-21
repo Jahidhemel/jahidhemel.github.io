@@ -96,6 +96,16 @@ function magnet(host: HTMLElement, padding = 150, strength = 3) {
 const portrait = $('.hero__portrait');
 if (portrait) magnet(portrait);
 
+// Ping in 3D, over the top of the photograph. Loaded after everything else so
+// the page is usable first, and the photograph stays if it cannot run.
+if (portrait) {
+  void import('./ping3d')
+    .then((m) => m.mountPing3d(portrait))
+    .catch(() => {
+      /* no WebGL, or the chunk failed. The photograph is already there. */
+    });
+}
+
 /* ------------------------------------------------- the about paragraph text */
 // Split once into spans; the scroll loop only writes opacity after that.
 const copy = $('.about__copy');
