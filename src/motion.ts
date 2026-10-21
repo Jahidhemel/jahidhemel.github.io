@@ -107,11 +107,27 @@ function magnet(host: HTMLElement, padding = 150, strength = 3) {
 const portrait = $('.hero__portrait');
 if (portrait) magnet(portrait);
 
-// Ping in 3D, over the top of the photograph. Loaded after everything else so
-// the page is usable first, and the photograph stays if it cannot run.
-if (portrait) {
-  void import('./ping3d')
-    .then((m) => m.mountPing3d(portrait))
+// The hero model, and Ping seeing you out at the end. Both are loaded after
+// everything else so the page is usable first, and the hero's photograph
+// stays put if WebGL is missing or the chunk fails.
+const slots = $$('[data-model]');
+if (slots.length) {
+  void import('./model3d')
+    .then(({ mountModel }) => {
+      for (const slot of slots) {
+        const url = slot.dataset.model!;
+        const isHero = slot.classList.contains('hero__portrait');
+        const isFace = url.includes('hemel');
+        void mountModel(slot, {
+          url,
+          drag: isHero,
+          camera: isHero ? [0, 1.18, 5.9] : [0, 1.0, 6.6],
+          lookAt: isHero ? [0, 0.92, 0] : [0, 0.75, 0],
+          rim: isFace ? [0x8fb6d6, 0.85] : [0x22d3ee, 1.8],
+          fill: isFace ? 0.6 : 0,
+        });
+      }
+    })
     .catch(() => {
       /* no WebGL, or the chunk failed. The photograph is already there. */
     });

@@ -27,7 +27,8 @@
         <h1 class="grad">Hi, i&rsquo;m hemel</h1>
       </div>
 
-      <figure class="hero__portrait fade" style="--fy:30px;--fd:.6s">
+      <!-- Swap data-model to /ping.glb to put the robot back in the hero. -->
+      <figure class="hero__portrait fade" data-model="/hemel.glb" style="--fy:30px;--fd:.6s">
         <div class="magnet">
           <img src="/img/portrait-720.webp" srcset="/img/portrait-360.webp 360w, /img/portrait-720.webp 720w" sizes="(max-width: 640px) 280px, (max-width: 1024px) 430px, 500px" alt="Md. Jahidul Islam Hemel" width="500" height="500" fetchpriority="high" draggable="false" />
         </div>
@@ -397,6 +398,7 @@
     <section class="say" id="say">
       <h2 class="grad fade" style="--fy:40px">Say hello</h2>
       <p class="fade" style="--fd:.1s">Dhaka, Bangladesh &middot; remote &middot; happy on US hours. Email is best, and I reply quickly.</p>
+      <figure class="say__ping" data-model="/ping.glb" aria-hidden="true"></figure>
       <div class="say__links fade" style="--fd:.2s">
         <a class="btn-contact" href="mailto:jahidhemel@gmail.com">Email me</a>
         <a class="btn-ghost" href="https://www.linkedin.com/in/md-jahidul-islam-hemel" target="_blank" rel="noopener">LinkedIn</a>

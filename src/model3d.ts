@@ -1,5 +1,5 @@
 /**
- * Ping, rendered live in the hero.
+ * A glTF model, rendered live in a slot on the page.
  *
  * three.js is imported dynamically, so the rest of the page is interactive
  * before any of it is fetched, and a visitor who never gets this far never
@@ -12,7 +12,24 @@
  * character.
  */
 
-export async function mountPing3d(host: HTMLElement): Promise<void> {
+export interface ModelOpts {
+  /** Which .glb to load. */
+  url: string;
+  /** Camera placement, per model: a head needs a different frame to a robot. */
+  camera?: [number, number, number];
+  lookAt?: [number, number, number];
+  /** Off for a model that is decoration rather than the centrepiece. */
+  drag?: boolean;
+  /**
+   * Rim light, as [colour, intensity]. The strong cyan rim that makes the
+   * robot read against a near-black page turns skin green, so a model with
+   * a face asks for a cooler-but-weaker rim and a little front fill.
+   */
+  rim?: [number, number];
+  fill?: number;
+}
+
+export async function mountModel(host: HTMLElement, opts: ModelOpts): Promise<void> {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // A cheap probe first. Constructing a WebGLRenderer on a machine without a
@@ -26,7 +43,7 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
   const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
 
   const canvas = document.createElement('canvas');
-  canvas.className = 'ping3d';
+  canvas.className = 'model3d';
   canvas.setAttribute('aria-hidden', 'true');
   host.appendChild(canvas);
 
@@ -41,17 +58,25 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-  camera.position.set(0, 1.18, 5.9);
-  camera.lookAt(0, 0.92, 0);
+  const [cxp, cyp, czp] = opts.camera ?? [0, 1.18, 5.9];
+  const [lxp, lyp, lzp] = opts.lookAt ?? [0, 0.92, 0];
+  camera.position.set(cxp, cyp, czp);
+  camera.lookAt(lxp, lyp, lzp);
 
   scene.add(new THREE.HemisphereLight(0xffffff, 0x16202c, 1.15));
   const key = new THREE.DirectionalLight(0xffffff, 2.1);
   key.position.set(3, 5, 4);
   scene.add(key);
-  // A cyan rim from behind, so he reads against a near-black page.
-  const rim = new THREE.DirectionalLight(0x22d3ee, 1.8);
+  // A rim from behind, so the model reads against a near-black page.
+  const [rimColour, rimPower] = opts.rim ?? [0x22d3ee, 1.8];
+  const rim = new THREE.DirectionalLight(rimColour, rimPower);
   rim.position.set(-4, 2, -3);
   scene.add(rim);
+  if (opts.fill) {
+    const fill = new THREE.DirectionalLight(0xffffff, opts.fill);
+    fill.position.set(-2, 1, 5);
+    scene.add(fill);
+  }
 
   const root = new THREE.Group();
   scene.add(root);
@@ -67,7 +92,7 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
   let model: InstanceType<typeof THREE.Object3D> | null = null;
   await new Promise<void>((resolve) => {
     new GLTFLoader().load(
-      '/ping.glb',
+      opts.url,
       (gltf) => {
         model = gltf.scene;
         root.add(model);
@@ -110,11 +135,14 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
     );
   }
 
-  canvas.style.pointerEvents = 'auto';
-  canvas.style.touchAction = 'none';
-  canvas.style.cursor = 'grab';
+  const canDrag = opts.drag !== false;
+  if (canDrag) {
+    canvas.style.pointerEvents = 'auto';
+    canvas.style.touchAction = 'none';
+    canvas.style.cursor = 'grab';
+  }
 
-  canvas.addEventListener('pointerdown', (e) => {
+  if (canDrag) canvas.addEventListener('pointerdown', (e) => {
     dragging = true;
     spinY = 0;
     lastX = e.clientX;
@@ -123,7 +151,7 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
     canvas.setPointerCapture(e.pointerId);
   });
 
-  canvas.addEventListener('pointermove', (e) => {
+  if (canDrag) canvas.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     const dx = e.clientX - lastX;
     const dy = e.clientY - lastY;
@@ -141,8 +169,10 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
     canvas.style.cursor = 'grab';
     if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
   }
-  canvas.addEventListener('pointerup', endDrag);
-  canvas.addEventListener('pointercancel', endDrag);
+  if (canDrag) {
+    canvas.addEventListener('pointerup', endDrag);
+    canvas.addEventListener('pointercancel', endDrag);
+  }
 
   let raf = 0;
   let running = true;
