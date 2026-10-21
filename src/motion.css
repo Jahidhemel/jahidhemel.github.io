@@ -1,0 +1,300 @@
+/* ===========================================================================
+   The motion build.
+
+   A port of the 3D-creator layout onto real content. Written as plain CSS
+   rather than Tailwind utility classes, to match how the rest of this repo
+   is written and so it can be read without a class dictionary.
+   =========================================================================== */
+
+:root {
+  --ink: #0C0C0C;
+  --paper: #FFFFFF;
+  --mist: #D7E2EA;
+  --steel: #646973;
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { margin: 0; padding: 0; background: var(--ink); }
+
+html { scroll-behavior: auto; }
+
+body {
+  font-family: 'Kanit', system-ui, sans-serif;
+  background: var(--ink);
+  color: var(--mist);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { overflow-x: clip; }
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; }
+
+.skip {
+  position: absolute; left: 16px; top: -60px; z-index: 100;
+  background: #15151a; color: var(--mist); padding: 10px 14px;
+  border-radius: 10px; border: 1px solid rgba(215,226,234,.25); text-decoration: none;
+}
+.skip:focus { top: 16px; }
+
+/* The one gradient on the page, used for every display heading. */
+.grad {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Entrances. The class is removed once it has played, so nothing keeps a
+   transform: a transformed ancestor is a containing block for fixed and
+   sticky children, and this page has both. */
+.fade { opacity: 0; transform: translateY(var(--fy, 30px)) translateX(var(--fx, 0)); }
+.fade.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: var(--fd, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fade { opacity: 1; transform: none; }
+}
+
+/* ---------------------------------------------------------------- 1. hero */
+.hero {
+  min-height: 100svh; display: flex; flex-direction: column;
+  overflow-x: clip; position: relative;
+}
+
+.nav {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem; padding: 1.5rem 1.5rem 0;
+  position: relative; z-index: 20;
+}
+@media (min-width: 768px) { .nav { padding: 2rem 2.5rem 0; } }
+.nav a {
+  color: var(--mist); text-decoration: none; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .06em; font-size: .875rem;
+  transition: opacity .2s;
+}
+.nav a:hover { opacity: .7; }
+@media (min-width: 768px) { .nav a { font-size: 1.125rem; } }
+@media (min-width: 1024px) { .nav a { font-size: 1.4rem; } }
+
+.hero__headline { overflow: hidden; position: relative; z-index: 5; }
+.hero__headline h1 {
+  margin: 1.5rem 0 0;
+  font-weight: 900; text-transform: uppercase;
+  letter-spacing: -0.03em; line-height: .82; white-space: nowrap;
+  font-size: 14vw; text-align: center;
+}
+@media (min-width: 640px) { .hero__headline h1 { font-size: 15vw; margin-top: 1rem; } }
+@media (min-width: 768px) { .hero__headline h1 { font-size: 16vw; margin-top: -1.25rem; } }
+@media (min-width: 1024px) { .hero__headline h1 { font-size: 17.5vw; } }
+
+.hero__foot {
+  margin-top: auto;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem;
+  padding: 0 1.5rem 1.75rem;
+  position: relative; z-index: 20;
+}
+@media (min-width: 768px) { .hero__foot { padding: 0 2.5rem 2.5rem; } }
+.hero__line {
+  margin: 0; color: var(--mist); font-weight: 300;
+  text-transform: uppercase; letter-spacing: .03em; line-height: 1.35;
+  font-size: clamp(0.75rem, 1.4vw, 1.5rem); max-width: 160px;
+}
+@media (min-width: 640px) { .hero__line { max-width: 220px; } }
+@media (min-width: 768px) { .hero__line { max-width: 280px; } }
+
+/* The portrait sits over the headline, centred, standing on the bottom edge. */
+.hero__portrait {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  z-index: 10; width: 280px; pointer-events: none;
+  top: 50%; margin-top: -140px;
+}
+@media (min-width: 640px) {
+  .hero__portrait { top: auto; margin-top: 0; bottom: 0; width: 360px; }
+}
+@media (min-width: 768px) { .hero__portrait { width: 430px; } }
+@media (min-width: 1024px) { .hero__portrait { width: 540px; } }
+.hero__portrait .magnet { will-change: transform; pointer-events: auto; }
+.hero__portrait img {
+  width: 100%; height: auto; border-radius: 50%;
+  border: 1px solid rgba(215,226,234,.18);
+  box-shadow: 0 40px 90px rgba(0,0,0,.6);
+}
+
+/* ------------------------------------------------------------- the button */
+.btn-contact {
+  display: inline-block; border: 0; cursor: pointer; text-decoration: none;
+  border-radius: 999px; color: #fff; font-family: inherit;
+  font-weight: 500; text-transform: uppercase; letter-spacing: .12em;
+  padding: .75rem 2rem; font-size: .75rem;
+  background: linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%);
+  box-shadow: 0 4px 4px rgba(181,1,167,.25), 4px 4px 12px #7721B1 inset;
+  outline: 2px solid #fff; outline-offset: -3px;
+  transition: transform .25s var(--ease);
+}
+.btn-contact:hover { transform: translateY(-2px); }
+@media (min-width: 640px) { .btn-contact { padding: .875rem 2.5rem; font-size: .875rem; } }
+@media (min-width: 768px) { .btn-contact { padding: 1rem 3rem; font-size: 1rem; } }
+
+.btn-ghost {
+  display: inline-block; text-decoration: none; border-radius: 999px;
+  border: 2px solid var(--mist); color: var(--mist); font-family: inherit;
+  font-weight: 500; text-transform: uppercase; letter-spacing: .12em;
+  padding: .75rem 2rem; font-size: .875rem; transition: background .25s;
+  white-space: nowrap;
+}
+.btn-ghost:hover { background: rgba(215,226,234,.1); }
+
+/* ------------------------------------------------------------- 2. marquee */
+.marquee { background: var(--ink); padding: 6rem 0 2.5rem; overflow: hidden; }
+@media (min-width: 768px) { .marquee { padding: 10rem 0 2.5rem; } }
+.marquee__row { display: flex; gap: .75rem; will-change: transform; }
+.marquee__row + .marquee__row { margin-top: .75rem; }
+.marquee__row figure { margin: 0; flex: none; }
+.marquee__row img {
+  width: 420px; height: 270px; object-fit: cover; border-radius: 1rem;
+  background: #15151a;
+}
+@media (max-width: 640px) {
+  .marquee__row img { width: 260px; height: 170px; }
+}
+
+/* --------------------------------------------------------------- 3. about */
+.about {
+  min-height: 100svh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 5rem 1.25rem; position: relative; overflow: hidden;
+}
+@media (min-width: 768px) { .about { padding: 5rem 2.5rem; } }
+.about h2, .projects h2, .doing h2 {
+  margin: 0; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -0.03em; line-height: .9;
+  font-size: clamp(3rem, 12vw, 160px);
+}
+.about__copy {
+  margin: 2.5rem 0 0; max-width: 560px; color: var(--mist);
+  font-weight: 500; line-height: 1.65;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+@media (min-width: 768px) { .about__copy { margin-top: 4rem; } }
+.about__copy span { transition: opacity .15s linear; }
+.about .btn-contact { margin-top: 4rem; }
+@media (min-width: 768px) { .about .btn-contact { margin-top: 6rem; } }
+
+/* Four quiet shapes in the corners, drawn rather than fetched. */
+.orb { position: absolute; border-radius: 50%; filter: blur(2px); opacity: .5; }
+.orb--tl { width: 150px; height: 150px; top: 6%; left: 3%;
+  background: radial-gradient(circle at 35% 30%, #BBCCD7, #3a3f49 60%, transparent 72%); }
+.orb--tr { width: 130px; height: 130px; top: 8%; right: 4%;
+  background: radial-gradient(circle at 60% 35%, #B600A8, #4a1050 60%, transparent 72%); }
+.orb--bl { width: 120px; height: 120px; bottom: 10%; left: 7%;
+  background: radial-gradient(circle at 40% 40%, #7621B0, #241038 60%, transparent 72%); }
+.orb--br { width: 160px; height: 160px; bottom: 9%; right: 6%;
+  background: radial-gradient(circle at 55% 30%, #BE4C00, #3a1c06 60%, transparent 72%); }
+@media (max-width: 640px) { .orb { transform: scale(.6); } }
+
+/* ------------------------------------------------- 4. what I do (services) */
+.doing {
+  background: var(--paper); color: var(--ink);
+  border-radius: 40px 40px 0 0;
+  padding: 5rem 1.25rem; position: relative; z-index: 2;
+}
+@media (min-width: 768px) { .doing { border-radius: 60px 60px 0 0; padding: 8rem 2.5rem; } }
+.doing h2 { color: var(--ink); text-align: center; margin-bottom: 4rem; }
+@media (min-width: 768px) { .doing h2 { margin-bottom: 7rem; } }
+.doing__list { max-width: 64rem; margin: 0 auto; }
+.doing__item {
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  padding: 2rem 0; border-top: 1px solid rgba(12,12,12,.15);
+}
+.doing__item:last-child { border-bottom: 1px solid rgba(12,12,12,.15); }
+@media (min-width: 768px) { .doing__item { padding: 3rem 0; gap: 2.5rem; } }
+.doing__n {
+  font-weight: 900; line-height: .8; color: var(--ink); flex: none;
+  font-size: clamp(2.5rem, 10vw, 140px);
+}
+.doing__item h3 {
+  margin: 0 0 .5rem; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .01em; font-size: clamp(1rem, 2.2vw, 2.1rem); line-height: 1.1;
+}
+.doing__item p {
+  margin: 0; font-weight: 300; line-height: 1.6; max-width: 42rem;
+  font-size: clamp(.85rem, 1.6vw, 1.25rem); opacity: .6;
+}
+
+/* ------------------------------------------------------------ 5. projects */
+.projects {
+  background: var(--ink); border-radius: 40px 40px 0 0;
+  margin-top: -2.5rem; position: relative; z-index: 10;
+  padding: 4rem 1.25rem 2rem;
+}
+@media (min-width: 768px) {
+  .projects { border-radius: 60px 60px 0 0; margin-top: -3.5rem; padding: 6rem 2.5rem 2rem; }
+}
+.projects h2 { text-align: center; margin-bottom: 2rem; }
+
+.stack { max-width: 1200px; margin: 0 auto; }
+.stack__slot { height: 85vh; position: relative; }
+.card3 {
+  position: sticky; top: 6rem;
+  border: 2px solid var(--mist); border-radius: 40px; background: var(--ink);
+  padding: 1rem; will-change: transform;
+}
+@media (min-width: 768px) { .card3 { top: 8rem; border-radius: 60px; padding: 2rem; } }
+
+.card3__top {
+  display: flex; flex-wrap: wrap; gap: 1rem 1.5rem;
+  align-items: center; justify-content: space-between; padding: .5rem .75rem 1.25rem;
+}
+.card3__n {
+  font-weight: 900; line-height: .8; color: var(--mist); flex: none;
+  font-size: clamp(2.5rem, 8vw, 110px);
+}
+.card3__who { font-size: .75rem; text-transform: uppercase; letter-spacing: .14em; opacity: .6; margin: 0 0 .25rem; }
+.card3__name { margin: 0; font-weight: 500; text-transform: uppercase; font-size: clamp(1.1rem, 2.4vw, 2rem); line-height: 1.1; }
+
+.card3__grid { display: grid; grid-template-columns: 40% 60%; gap: 1rem; }
+.card3__col { display: grid; gap: 1rem; align-content: start; }
+.card3__grid img { width: 100%; object-fit: cover; border-radius: 28px; background: #15151a; }
+@media (min-width: 768px) { .card3__grid img { border-radius: 44px; } }
+.card3__a { height: clamp(130px, 16vw, 230px); }
+.card3__b { height: clamp(160px, 22vw, 340px); }
+.card3__tall { height: 100%; min-height: clamp(306px, 38vw, 586px); }
+@media (max-width: 640px) {
+  .card3__grid { grid-template-columns: 1fr; }
+  .card3__tall { min-height: 220px; }
+}
+
+/* ------------------------------------------------------------- 6. stories */
+.stories { padding: 5rem 1.25rem; }
+@media (min-width: 768px) { .stories { padding: 7rem 2.5rem; } }
+.stories h2 { text-align: center; margin: 0 0 3rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: -0.03em; font-size: clamp(2.5rem, 9vw, 110px); line-height: .9; }
+.stories__grid { max-width: 1200px; margin: 0 auto; display: grid; gap: 1rem; }
+@media (min-width: 900px) { .stories__grid { grid-template-columns: repeat(3, 1fr); } }
+.story3 {
+  border: 1px solid rgba(215,226,234,.22); border-radius: 28px;
+  padding: 1.75rem; background: #101014;
+}
+.story3 b { display: block; font-weight: 900; font-size: 2rem; line-height: 1; opacity: .35; margin-bottom: .75rem; }
+.story3 h3 { margin: 0 0 .75rem; font-weight: 500; font-size: 1.15rem; line-height: 1.25; }
+.story3 p { margin: 0; font-weight: 300; font-size: .95rem; line-height: 1.6; opacity: .7; }
+.story3 .k { color: #BBCCD7; opacity: 1; font-weight: 500; }
+
+/* -------------------------------------------------------------- 7. contact */
+.say { padding: 5rem 1.25rem 7rem; text-align: center; }
+.say h2 { margin: 0 0 1.5rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -0.03em; font-size: clamp(2.5rem, 10vw, 130px); line-height: .9; }
+.say p { margin: 0 auto 2.5rem; max-width: 46ch; font-weight: 300; opacity: .75; }
+.say__links { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
+
+.foot {
+  border-top: 1px solid rgba(215,226,234,.12); padding: 1.75rem 1.25rem;
+  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;
+  font-size: .8rem; opacity: .6;
+}

@@ -1,857 +1,207 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Md. Jahidul Islam Hemel · Technical Support, Customer Success, Team Lead</title>
-  <meta name="description" content="Senior Technical Support Engineer and Team Lead at Efoli, LLC. I help Shopify merchants get what they came for, and I run the support and QA teams that keep them around." />
-  <meta name="theme-color" content="#0B1020" />
-  <link rel="canonical" href="https://jahidhemel.github.io/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Md. Jahidul Islam Hemel · Technical Support, Customer Success, Team Lead" />
-  <meta property="og:description" content="I help SaaS and Shopify customers succeed, and I lead the team that keeps them happy." />
-  <meta property="og:url" content="https://jahidhemel.github.io/" />
-  <meta property="og:image" content="https://jahidhemel.github.io/img/profile.jpg" />
-  <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Md. Jahidul Islam Hemel &mdash; Support &amp; QA</title>
+  <meta name="description" content="Senior Technical Support Engineer and Team Lead for Shopify apps. Twenty to forty merchant chats a day, a first reply in one to three minutes, and the tools built to keep up." />
+  <meta name="theme-color" content="#0C0C0C" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/styles.css" />
-  <script>
-    // Decide before first paint whether Ping's delivery intro will run, so the
-    // hero doesn't flash its content and then hide it. Mirrors src/intro.ts.
-    try {
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('ping-intro-done') && !sessionStorage.getItem('ping-dismissed') && innerWidth >= 480 && innerHeight >= 520) document.documentElement.classList.add('intro');
-    } catch (e) {}
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <a class="skip" href="#about">Skip to content</a>
-  <div class="progress" id="progress" aria-hidden="true"></div>
-  <div class="cursor" id="cursor" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="orb orb-a" aria-hidden="true"></div>
-  <div class="orb orb-b" aria-hidden="true"></div>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="page">
 
-  <!-- ============ NAV ============ -->
-  <header class="nav" id="nav">
-    <a class="nav__brand" href="#top" aria-label="Back to top">Hemel<span>.</span></a>
-    <nav class="nav__links" id="navLinks" aria-label="Sections">
-      <a href="#about" data-nav="about">About</a>
-      <a href="#skills" data-nav="skills">Skills</a>
-      <a href="#ai" data-nav="ai">AI workflow</a>
-      <a href="#experience" data-nav="experience">Experience</a>
-      <a href="#stories" data-nav="stories">Stories</a>
-      <a href="#recommendations" data-nav="recommendations">Recommendations</a>
-      <a href="#work" data-nav="work">Work</a>
-      <a href="#life" data-nav="life">Beyond</a>
-    </nav>
-    <a class="nav__cta magnetic" href="#contact">Let's talk</a>
-    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
-      <span></span><span></span>
-    </button>
-  </header>
+    <header class="hero" id="main">
+      <nav class="nav fade" style="--fy:-20px" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#doing">What I do</a>
+        <a href="#projects">Projects</a>
+        <a href="#say">Contact</a>
+      </nav>
 
-  <main id="top">
-    <!-- ============ HERO ============ -->
-    <section class="hero" id="hero" data-section="hero">
-      <canvas class="codebg" id="heroCode" aria-hidden="true"></canvas>
-      <canvas class="codebg codebg--field" id="heroField" aria-hidden="true"></canvas>
-      <div class="wrap hero__grid">
-        <div class="hero__copy">
-          <p class="pill" data-deliver="Where he is, first.">
-            <span class="pill__dot"></span> Dhaka, Bangladesh · remote · happy on US hours
-          </p>
-          <h1 class="hero__name" aria-label="Md. Jahidul Islam Hemel">
-            <span class="hero__line" data-deliver="The name. Big one."><span class="split">Md. Jahidul</span></span>
-            <span class="hero__line hero__line--accent" data-deliver="And the other half."><span class="split">Islam Hemel</span></span>
-          </h1>
-          <p class="hero__roles" data-deliver="What he does. All three.">
-            <span>Technical Support</span><i>·</i><span>Customer Success</span><i>·</i><span>Team Lead</span>
-          </p>
-          <p class="hero__tag" data-deliver="In one line.">
-            <span class="type" id="typewriter" aria-live="polite"></span><span class="caret" aria-hidden="true"></span>
-          </p>
-          <div class="hero__chips" data-deliver="How he works.">
-            <span class="chip">Merchant first</span>
-            <span class="chip">Reproduce it before you fix it</span>
-            <span class="chip">AI on, brain on</span>
-          </div>
-          <div class="hero__cta" data-deliver="Buttons. You will want these.">
-            <a class="btn btn--primary magnetic" href="#work">Explore my work <span aria-hidden="true">→</span></a>
-            <a class="btn btn--ghost magnetic" href="/Md.%20Jahidul%20Islam%20Hemel_CV.pdf" download>Download CV</a>
-          </div>
-          <dl class="stats" data-deliver="Numbers. Real ones, I checked.">
-            <div><dt><span class="count" data-count="3">0</span>+</dt><dd>years in SaaS support</dd></div>
-            <div><dt>20<span class="stats__dash">–</span><span class="count" data-count="40">0</span></dt><dd>merchant conversations a day</dd></div>
-            <div><dt><span class="count" data-count="2">0</span></dt><dd>teams I run, Support and QA</dd></div>
-          </dl>
-        </div>
-
-        <div class="hero__visual">
-          <div class="codewin" data-deliver="And his desk. Right, over to you." id="codewin">
-            <div class="codewin__bar">
-              <span></span><span></span><span></span>
-              <em>support.ts</em>
-            </div>
-            <pre class="codewin__body" id="codeType" aria-label="Animated code sample"></pre>
-          </div>
-          <div class="hero__ticket" id="heroTicket" aria-hidden="true">
-            <div class="ticket">
-              <div class="ticket__head"><b>#4821</b><span class="ticket__status" data-status>Open</span></div>
-              <div class="ticket__line"></div>
-              <div class="ticket__line ticket__line--short"></div>
-              <div class="ticket__bar"><i></i></div>
-            </div>
-          </div>
-        </div>
+      <div class="hero__headline fade" style="--fy:40px;--fd:.15s">
+        <h1 class="grad">Hi, i&rsquo;m hemel</h1>
       </div>
-      <a class="scrollhint" href="#about" aria-label="Scroll to About"><span></span></a>
-      <button class="skipintro" id="skipIntro" type="button" hidden>Skip intro</button>
-    </section>
 
-    <!-- ============ ABOUT ============ -->
-    <section class="section" id="about" data-section="about">
-      <div class="wrap about">
-        <div class="about__media reveal" data-reveal>
-          <div class="about__frame">
-            <img src="/img/profile.jpg" alt="Portrait of Md. Jahidul Islam Hemel" width="514" height="494" loading="eager" />
-          </div>
-          <div class="about__badge">
-            <b>Efoli, LLC</b>
-            <span>Sr. Technical Support Engineer · Team Lead</span>
-          </div>
+      <figure class="hero__portrait fade" style="--fy:30px;--fd:.6s">
+        <div class="magnet">
+          <img src="/img/portrait-720.webp" srcset="/img/portrait-360.webp 360w, /img/portrait-720.webp 720w" sizes="(max-width: 640px) 280px, (max-width: 1024px) 430px, 500px" alt="Md. Jahidul Islam Hemel" width="500" height="500" fetchpriority="high" />
         </div>
-        <div class="about__copy">
-          <p class="eyebrow reveal" data-reveal>About</p>
-          <h2 class="h2 reveal" data-reveal>Every customer should leave <em>better off</em> than they arrived.</h2>
-          <p class="lead reveal" data-reveal>
-            I have spent a bit over three years in support for Shopify apps, mostly with merchants in the US, UK and
-            EU. The job is simple to describe and hard to do well: help people get what they came for, and make sure
-            they still like us afterwards.
-          </p>
-          <p class="reveal" data-reveal>
-            Most of my day is live chat and email, with the odd video call. I ask what a merchant is trying to do, work
-            out whether the app can do it, and if it can't, I scope the custom work and we build it for them. I also run
-            the support and QA teams, which means rosters, onboarding new people, and signing off releases. AI helps me
-            with most of it, but I read everything before it goes out.
-          </p>
-          <p class="reveal" data-reveal>
-            When I'm not working I'm usually on a motorbike, somewhere new, or on a cricket pitch.
-          </p>
+      </figure>
 
-          <!-- CS motion graphic: the journey of a ticket -->
-          <div class="journey reveal" data-reveal id="journey" aria-label="How a conversation moves from open to resolved">
-            <div class="journey__track">
-              <div class="journey__stage" data-stage="0"><i></i><span>Open</span></div>
-              <div class="journey__stage" data-stage="1"><i></i><span>Discovery</span></div>
-              <div class="journey__stage" data-stage="2"><i></i><span>Reproduced</span></div>
-              <div class="journey__stage" data-stage="3"><i></i><span>Resolved</span></div>
-              <div class="journey__progress"><i id="journeyBar"></i></div>
-              <div class="journey__card" id="journeyCard">
-                <b>Merchant</b>
-                <span id="journeyText">"My discount isn't applying…"</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="hero__foot">
+        <p class="hero__line fade" style="--fy:20px;--fd:.35s">a support engineer who reproduces the problem before he replies</p>
+        <span class="fade" style="--fy:20px;--fd:.5s"><a class="btn-contact" href="#say">Contact me</a></span>
+      </div>
+    </header>
+
+    <!-- Every tile is his own work or his own photograph. -->
+    <section class="marquee" aria-label="Work and photographs">
+      <div class="marquee__row" data-loop>
+        <figure><img src="/img/marquee/mscc.webp" alt="The Merchant Success Command Center" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/assistant.webp" alt="The eFoli Support Assistant" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/qahelper.webp" alt="The QA Helper" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/snippets.webp" alt="The Shopify Liquid snippets repository" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/qa-free.webp" alt="A bundle that reached checkout priced at zero" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/config.webp" alt="A product configurator built on a merchant's page" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/legal.webp" alt="The Legal Solutions landing page" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/fruit.webp" alt="The Fruit Basket landing page" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/ride.webp" alt="Motorcycles at night" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/boat.webp" alt="A fishing boat at sunset" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/snow.webp" alt="Standing in falling snow at night" width="420" height="270" /></figure>
+      </div>
+      <div class="marquee__row" data-loop>
+        <figure><img src="/img/marquee/qa-jpy.webp" alt="A discount read as a percentage after a currency switch" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/summer.webp" alt="The Summer Sale landing page" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/travel.webp" alt="The Hero Travel landing page" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/beach.webp" alt="Walking along a rocky shoreline" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/moon.webp" alt="A palm tree under a full moon" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/seagull.webp" alt="A seagull over the sea" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/hammock.webp" alt="Working from a hammock" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/ski.webp" alt="On a ski slope" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/hills.webp" alt="A hillside viewpoint" width="420" height="270" /></figure>
+        <figure><img src="/img/marquee/falls.webp" alt="At a waterfall" width="420" height="270" /></figure>
       </div>
     </section>
 
-    <!-- ============ SKILLS ============ -->
-    <section class="section" id="skills" data-section="skills">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Skills</p>
-        <h2 class="h2 reveal" data-reveal>Support skills, with enough <em>engineering</em> to fix things myself.</h2>
-        <div class="grid grid--3 cards" data-stagger>
-          <article class="card">
-            <div class="card__icon">💬</div>
-            <h3>Customer success &amp; support</h3>
-            <p>Onboarding, getting merchants to use what they pay for, and keeping them. Live chat, email, video, tickets.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">🧭</div>
-            <h3>Team leadership</h3>
-            <p>I run the Support and QA teams: shifts, holiday cover, training new people, and checking the quality of what goes out.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">🛍️</div>
-            <h3>Shopify ecosystem</h3>
-            <p>Admin, POS, Checkout, Customer Accounts, Flow, theme app blocks and Liquid. I know where things break.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">⌨️</div>
-            <h3>Technical fluency</h3>
-            <p>HTML, CSS, JavaScript, Liquid, some SQL. Tailwind, Bootstrap and Sass for the front end.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">🤖</div>
-            <h3>AI-powered workflow</h3>
-            <p>Claude Code for building, trained chat threads for replies, MCP for connecting tools, Playwright for QA.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">📚</div>
-            <h3>Docs &amp; enablement</h3>
-            <p>Help centre articles, runbooks and short how-to videos, so the same question doesn't come back twice.</p>
-          </article>
-        </div>
-        <ul class="facts reveal" data-reveal>
-          <li><b>Languages</b> English (fluent) · Bangla (native) · Hindi (conversational)</li>
-          <li><b>Availability</b> Remote. Night shifts on US time are fine with me</li>
-        </ul>
+    <section class="about" id="about">
+      <span class="orb orb--tl" aria-hidden="true"></span>
+      <span class="orb orb--tr" aria-hidden="true"></span>
+      <span class="orb orb--bl" aria-hidden="true"></span>
+      <span class="orb orb--br" aria-hidden="true"></span>
+      <h2 class="grad fade" style="--fy:40px">About me</h2>
+      <p class="about__copy">I lead support and QA for six Shopify apps at eFoli, a team of nine plus two interns and a trainee. Twenty to forty merchant chats a day, a first reply in one to three minutes, and more than seventy five-star reviews from my own conversations. When the app cannot do it, I build the part that is missing.</p>
+      <a class="btn-contact fade" href="#say">Contact me</a>
+    </section>
+
+    <section class="doing" id="doing">
+      <h2 class="fade" style="--fy:40px">What I do</h2>
+      <div class="doing__list">
+        <div class="doing__item fade"><span class="doing__n">01</span><div>
+          <h3>Technical support</h3>
+          <p>Twenty to forty merchant chats a day across six apps, with a first reply in one to three minutes. I reproduce the problem on a test store before I answer it.</p>
+        </div></div>
+        <div class="doing__item fade" style="--fd:.1s"><span class="doing__n">02</span><div>
+          <h3>QA and automation</h3>
+          <p>I built the pipeline the QA team runs on: Claude over MCP to ClickUp, Playwright against a real browser, and a report at the end. One ticket every two days became three or more a day.</p>
+        </div></div>
+        <div class="doing__item fade" style="--fd:.2s"><span class="doing__n">03</span><div>
+          <h3>Leading the team</h3>
+          <p>Nine people, plus two interns and a trainee, across support and QA. Rosters, holiday cover, mentoring, quality review and release sign-off.</p>
+        </div></div>
+        <div class="doing__item fade" style="--fd:.3s"><span class="doing__n">04</span><div>
+          <h3>Shopify customisation</h3>
+          <p>Liquid, theme app blocks, Checkout, Cart Transform and bundles. Paid custom work on merchants' own stores when the app alone cannot cover what they need.</p>
+        </div></div>
+        <div class="doing__item fade" style="--fd:.4s"><span class="doing__n">05</span><div>
+          <h3>Win-back and growth</h3>
+          <p>Finding out why a merchant left, rebuilding their product on a demo store, and showing them it works. One of them came back four days later on two yearly plans.</p>
+        </div></div>
       </div>
     </section>
 
-    <!-- ============ AI WORKFLOW ============ -->
-    <section class="section section--ai" id="ai" data-section="ai">
-      <canvas class="codebg codebg--ai" id="aiCode" aria-hidden="true"></canvas>
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>AI workflow</p>
-        <h2 class="h2 reveal" data-reveal>How I use AI, <em>every day</em>.</h2>
-        <p class="lead reveal" data-reveal>
-          Four things I do with AI most working days. In each case it does the first pass and I check the
-          result before a customer or a report sees it.
-        </p>
-
-        <div class="ai">
-          <div class="ai__steps" data-stagger>
-            <article class="step">
-              <span class="step__n">01</span>
-              <h3>Vibe coding with Claude Code</h3>
-              <p>I build custom store designs, demo stores and quick demos of new features, so a merchant can see the thing working before anyone commits to building it properly.</p>
-            </article>
-            <article class="step">
-              <span class="step__n">02</span>
-              <h3>Trained AI threads for replies</h3>
-              <p>I keep Claude and ChatGPT threads loaded with our product docs. I paste in the customer's message, get a draft back, fix whatever is off, and send it. Gmail's built-in AI covers the quick ones.</p>
-            </article>
-            <article class="step">
-              <span class="step__n">03</span>
-              <h3>AI-assisted issue reproduction</h3>
-              <p>I point AI at the merchant's store while I reproduce the issue. It reads the theme and the page faster than I can, which gets me to the real cause sooner.</p>
-            </article>
-            <article class="step">
-              <span class="step__n">04</span>
-              <h3>MCP + automated QA</h3>
-              <p>ClickUp, Google Drive, Figma and a test store are connected over MCP, and a Playwright and Chromium setup runs most of our test cases. I go through the results, add the manual and edge-case checks, and send the report.</p>
-            </article>
-          </div>
-
-          <!-- CS motion graphic: live support dashboard -->
-          <aside class="dash reveal" data-reveal id="dash" aria-label="Illustrative support dashboard">
-            <div class="dash__head">
-              <span class="dash__live"><i></i> Illustrative</span>
-              <b>A typical week</b>
-            </div>
-            <div class="dash__kpi">
-              <span>Conversations a day</span>
-              <b>20<i> to </i>40</b>
-            </div>
-            <div class="dash__bars" id="dashBars" aria-hidden="true">
-              <div style="--h:.55"><i></i><span>Mon</span></div>
-              <div style="--h:.80"><i></i><span>Tue</span></div>
-              <div style="--h:.68"><i></i><span>Wed</span></div>
-              <div style="--h:.95"><i></i><span>Thu</span></div>
-              <div style="--h:.72"><i></i><span>Fri</span></div>
-              <div style="--h:.50"><i></i><span>Sat</span></div>
-              <div style="--h:.42"><i></i><span>Sun</span></div>
-            </div>
-            <div class="dash__flow" aria-hidden="true">
-              <span class="dash__pill dash__pill--a">First-time user</span>
-              <span class="dash__arrow"><i></i></span>
-              <span class="dash__pill dash__pill--b">Repeat customer</span>
-            </div>
-            <ul class="dash__feed" id="dashFeed" aria-hidden="true">
-              <li><i></i>Needs discovery call booked</li>
-              <li><i></i>Custom function scoped &amp; quoted</li>
-              <li><i></i>Issue reproduced on test store</li>
-              <li><i></i>Help article shipped</li>
-            </ul>
-            <p class="dash__note">The bars are made up. The real numbers are three years and 20 to 40 conversations a day.</p>
-          </aside>
-        </div>
-
-        <div class="apps reveal" data-reveal>
-          <span class="apps__label">Products I support</span>
-          <ul class="apps__list">
-            <li><b>PushBundle</b><span>bundles</span></li>
-            <li><b>MultiVariants</b><span>bulk order · options</span></li>
-            <li><b>DiscountRay</b><span>discounts · B2B pricing</span></li>
-            <li><b>QuotWay</b><span>B2B quotes</span></li>
-            <li><b>OrderRules</b><span>limits · hours · delivery</span></li>
-            <li><b>EmbedUp</b><span>embeds</span></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ EXPERIENCE ============ -->
-    <section class="section" id="experience" data-section="experience">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Experience</p>
-        <h2 class="h2 reveal" data-reveal>Where I have <em>worked</em>.</h2>
-        <ol class="timeline">
-          <li class="tl reveal" data-reveal>
-            <div class="tl__when">Jan 2025 to now</div>
-            <div class="tl__body">
-              <h3>Sr. Technical Support Engineer <span class="tl__tag">Team Lead</span></h3>
-              <p class="tl__org">Efoli, LLC · Dhaka</p>
-              <ul>
-                <li>Lead the Technical Support Engineering team and the QA team. I plan the shifts and holiday rosters and train new joiners.</li>
-                <li>Onboard new merchants and get them using the features they signed up for.</li>
-                <li>Handle 20 to 40 merchant conversations a day. A lot of our reviews and repeat customers come out of those chats.</li>
-                <li>Work out what a merchant needs, then scope and deliver <b>paid custom work</b> on their store when the app alone can't do it.</li>
-                <li>Take the tier-2 troubleshooting, QA each release by hand, and pass what merchants keep asking for back to the product team.</li>
-              </ul>
-            </div>
-          </li>
-          <li class="tl reveal" data-reveal>
-            <div class="tl__when">Apr 2025 to Feb 2026</div>
-            <div class="tl__body">
-              <h3>Support Engineer <span class="tl__tag tl__tag--muted">Part-time · Remote</span></h3>
-              <p class="tl__org">Love Loyalty</p>
-              <ul>
-                <li>Supported a Shopify rewards, VIP tiers and referrals app for US and EU merchants over email and in-app chat.</li>
-                <li>Diagnosed integration issues across Shopify Admin, POS, Checkout, Customer Accounts and Flow.</li>
-                <li>Wrote help articles for the questions that kept coming back, and kept replies quick across time zones.</li>
-              </ul>
-            </div>
-          </li>
-          <li class="tl reveal" data-reveal>
-            <div class="tl__when">Feb 2023 to Dec 2024</div>
-            <div class="tl__body">
-              <h3>Technical Support Engineer</h3>
-              <p class="tl__org">Efoli, LLC · Dhaka</p>
-              <ul>
-                <li>Supported Shopify apps for product customisation and bulk ordering over chat, video, email and tickets.</li>
-                <li>Used HTML, CSS and JavaScript to adjust and install product page interfaces for merchants.</li>
-                <li>Wrote docs and recorded how-to videos for the knowledge base.</li>
-              </ul>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ============ EDUCATION ============ -->
-    <!-- ============ BEYOND THE TICKET ============ -->
-    <section class="section" id="stories" data-section="stories">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Beyond the ticket</p>
-        <h2 class="h2 reveal" data-reveal>A few times the job went <em>past the ticket</em>.</h2>
-        <p class="lead reveal" data-reveal>
-          Three merchants, the real numbers, and the artifacts that go with them.
-          Each one opens if you want the detail.
-        </p>
-
-        <div class="stories" data-stagger>
-
-          <!-- ---------- 01 ---------- -->
-          <article class="card story" id="story-1">
-            <header class="story__head">
-              <span class="story__n" aria-hidden="true">01</span>
+    <section class="projects" id="projects">
+      <h2 class="grad fade" style="--fy:40px">Project</h2>
+      <div class="stack">
+        <div class="stack__slot">
+          <article class="card3">
+            <div class="card3__top">
+              <span class="card3__n">01</span>
               <div>
-                <h3>Won back a merchant who had uninstalled. Four days later she was on two yearly plans.</h3>
-                <p class="story__tags">Customer success · Discovery · Custom work · Upsell</p>
+                <p class="card3__who">Built for my own team</p>
+                <h3 class="card3__name">Merchant Success Command Center</h3>
               </div>
-            </header>
-
-            <p class="story__outcome">
-              Uninstalled on <b>26 September</b>. Back on <b>30 September</b>, on two yearly plans
-              &mdash; about <b>$370 a year</b>.
-            </p>
-
-            <details class="story__full">
-              <summary><span>Read the full story</span></summary>
-
-              <div class="story__body">
-                <h4>The problem</h4>
-                <p>
-                  She uninstalled MultiVariants. She needed something that sounds simple but no single app
-                  did out of the box: cards sold in packs of 10, with any designs mixed together and a volume
-                  price applied in the cart, and without a big pricing table on the product page. She wrote to
-                  us through Google Translate and preferred email to calls.
-                </p>
-
-                <h4>What I did</h4>
-                <ol class="steps">
-                  <li>Had a teammate send a short win-back email asking why she had left. Her reply told us exactly what she needed.</li>
-                  <li>Looked through her store and rebuilt her actual product on my demo store.</li>
-                  <li>Found the app covered about <b>70%</b> of what she needed. I built the other <b>30%</b> with Liquid and JavaScript.</li>
-                  <li>Sent her a short video of <em>her own product</em> working, not a generic demo. Easier to follow than a long English email.</li>
-                  <li>The mix-and-match discount suited our other app, DiscountRay, better, so I demoed that too, using her real prices.</li>
-                  <li>With her permission I set up both apps in her store, then worked through her follow-ups one by one: packs of 10 in the cart, fixed price per tier, button colours, and the module disappearing when the store switched to English. That last one was her product type being translated from French, so the ruleset no longer matched it.</li>
-                </ol>
-
-                <div class="twoup">
-                  <div class="twoup__panel">
-                    <p class="twoup__label">Before <span>redrawn from her note</span></p>
-                    <!-- Her own screenshot of this was a working reference with her
-                         handwriting across it. This is what she described, drawn. -->
-                    <div class="mock" aria-hidden="true">
-                      <p class="mock__name">Sympathy card &mdash; 5&times;7</p>
-                      <p class="mock__price">$2.90</p>
-                      <div class="mock__row"><span>&minus;</span><b>1</b><span>+</span></div>
-                      <p class="mock__cta">Add to Cart</p>
-                    </div>
-                    <p class="twoup__says">
-                      &ldquo;Just had a quantity field and a add to cart button here, like default Shopify.&rdquo;
-                      <span>&mdash; her note on the screenshot she sent</span>
-                    </p>
-                  </div>
-
-                  <div class="twoup__panel">
-                    <p class="twoup__label">After <span>her live product page</span></p>
-                    <img class="twoup__shot" src="/img/story/story1-config-760.webp"
-                      srcset="/img/story/story1-config-380.webp 380w, /img/story/story1-config-760.webp 760w"
-                      sizes="(max-width: 760px) 86vw, 420px"
-                      alt="The finished configurator on her product page: a quantity box showing the price per unit, the front card text, the message inside the card, a back logo upload, and a running total above the add to cart button."
-                      width="760" height="1750" loading="lazy" />
-                  </div>
-                </div>
-
-                <ol class="ticktock">
-                  <li><b>26 Sep</b><span>Uninstalled</span></li>
-                  <li><b>28 Sep</b><span>Custom demo of her own product</span></li>
-                  <li><b>30 Sep</b><span>Reinstalled, both apps set up</span></li>
-                  <li><b>1 Oct</b><span>Five-star reviews, unprompted</span></li>
-                </ol>
-
-                <h4>The result</h4>
-                <ul class="result">
-                  <li>Now on <b>two yearly plans</b>: MultiVariants Pro, the top plan, and DiscountRay Growth. About <b>$370 a year</b> in recurring revenue, after the 30% discount we offered her.</li>
-                  <li><b>Five-star reviews</b> on the Shopify App Store and on Trustpilot, for both apps, unprompted.</li>
-                  <li>Still a customer more than a month later.</li>
-                </ul>
-
-                <figure class="plate">
-                  <img src="/img/story/story1-trustpilot-1040.webp"
-                    srcset="/img/story/story1-trustpilot-520.webp 520w, /img/story/story1-trustpilot-1040.webp 1040w"
-                    sizes="(max-width: 760px) 86vw, 520px"
-                    alt="Her five-star Trustpilot review, titled I'm truly impressed by the customer service."
-                    width="1040" height="657" loading="lazy" />
-                  <figcaption>Her review, left unprompted.</figcaption>
-                </figure>
-
-                <blockquote class="pull">
-                  <p lang="fr">&ldquo;WOW, une expérience incroyable comme j'ai rarement vu&hellip; Je recommande cette application sans hésiter&nbsp;!&rdquo;</p>
-                  <p class="pull__tr">Wow, an incredible experience like I have rarely seen&hellip; I recommend this app without hesitation!</p>
-                  <footer>Studio PixoPaws, on the Shopify App Store</footer>
-                </blockquote>
-
-                <div class="aside-note">
-                  <b>Another one.</b> A merchant left a 1&#9733; review after a chat with a teammate. I emailed
-                  them myself, set up a call, fixed the issue, and went a bit further with some theme and
-                  Liquid changes they had not asked for. They changed the review to 5&#9733;.
-                </div>
+              <a class="btn-ghost" href="https://jahidhemel.github.io/merchant-success-command-center/" target="_blank" rel="noopener">Live project</a>
+            </div>
+            <div class="card3__grid">
+              <div class="card3__col">
+                <img class="card3__a" src="/img/cards/mscc-1.webp" alt="Account health figures across the top of the Command Center" loading="lazy" />
+                <img class="card3__b" src="/img/cards/mscc-2.webp" alt="The queue of accounts needing attention" loading="lazy" />
               </div>
-            </details>
+              <img class="card3__tall" src="/img/cards/mscc-tall.webp" alt="The Merchant Success Command Center in full" loading="lazy" />
+            </div>
           </article>
-
-          <!-- ---------- 02 ---------- -->
-          <article class="card story" id="story-2">
-            <header class="story__head">
-              <span class="story__n" aria-hidden="true">02</span>
+        </div>
+        <div class="stack__slot">
+          <article class="card3">
+            <div class="card3__top">
+              <span class="card3__n">02</span>
               <div>
-                <h3>The data was not missing. Shopify was hiding it.</h3>
-                <p class="story__tags">Technical troubleshooting · Shopify internals · Liquid · Product feedback</p>
+                <p class="card3__who">Rule based, not a model</p>
+                <h3 class="card3__name">eFoli Support Assistant</h3>
               </div>
-            </header>
-
-            <p class="story__outcome">
-              The cause was <b>one line of debug output</b>. A same-day fix for the merchant,
-              and the permanent one handed to the product team.
-            </p>
-
-            <details class="story__full">
-              <summary><span>Read the full story</span></summary>
-
-              <div class="story__body">
-                <h4>The problem</h4>
-                <p>
-                  A gift-box brand using PushBundle's Build-Your-Own-Box sells personalised sets. Their
-                  warehouse works from printed packing slips and CSV exports. The customer's choices and form
-                  answers &mdash; the name, the address, the gift details &mdash; showed on the admin order page
-                  but <em>not</em> on the packing slip or in the CSV, so the warehouse was packing blind.
-                  Everyone assumed the app was not saving the data.
-                </p>
-
-                <h4>What I did</h4>
-                <ol class="steps">
-                  <li>Built the same bundle on a test store and read the cart. The app <em>was</em> writing everything: one cart line, 11 properties.</li>
-                  <li>Placed the order. At checkout, Shopify's native bundle expansion replaced that one line with 7 component lines. The original line, and its properties, no longer existed as a line item.</li>
-                  <li>Wrote Liquid debug probes into the packing-slip template. They printed <code class="mono">[p:0 g:1]</code>: zero properties on the lines, one bundle group. The data lives on a line item group, and Shopify only lets packing-slip Liquid read a group's title.</li>
-                  <li>Confirmed it against Shopify's own documentation and developer forum, and checked the CSV route too. The native export has no properties column, and export apps read the empty component lines.</li>
-                </ol>
-
-                <figure class="probe">
-                  <figcaption class="probe__label mono">packing slip, debug output</figcaption>
-                  <pre class="probe__out mono">[p:0 g:1]</pre>
-                  <p class="probe__note">Zero properties. One group. That one line was the whole answer.</p>
-                </figure>
-
-                <figure class="diagram" id="story2Diagram" data-fallback="At checkout Shopify replaces the single bundle line, which carries all eleven answers, with seven component lines. The answers move to a line item group that packing-slip Liquid cannot read.">
-                  <figcaption class="diagram__cap">
-                    One cart line becomes seven at checkout, and the answers end up where the packing slip cannot reach.
-                    <button class="diagram__fix" type="button" id="story2Fix" aria-pressed="false">Apply the fix</button>
-                  </figcaption>
-                </figure>
-
-                <h4>The fix, in two layers</h4>
-                <ul class="result">
-                  <li><b>Same day, for the merchant:</b> a packing-slip template that carries the answers through order-level cart attributes, which bundle expansion does not touch. The answers printed on the slip again.</li>
-                  <li><b>Properly, in the product:</b> a change handed to the PushBundle team. When the bundle expands, write the answers onto the first component line using Shopify's Cart Transform attributes, available since API 2024-04. That one change fixes the packing slip, the CSV exports and any warehouse integration in one go.</li>
-                </ul>
-
-                <h4>The result</h4>
-                <ul class="result">
-                  <li>The fix went live on the client's store, and <b>the client confirmed it worked</b>.</li>
-                  <li>It closed a blind spot that affected <b>every</b> PushBundle merchant using native bundles.</li>
-                </ul>
-
-                <div class="aside-note">
-                  The client was happy enough to ask us to build a whole product-customiser app for their
-                  engraving products. <b>I advised against it.</b> A custom app that size would have cost them
-                  far more than an existing customiser app from the Shopify App Store, so I pointed them to
-                  those instead. The right answer is not always the one that bills more.
-                </div>
+              <a class="btn-ghost" href="https://jahidhemel.github.io/support-ticket-triage/" target="_blank" rel="noopener">Live project</a>
+            </div>
+            <div class="card3__grid">
+              <div class="card3__col">
+                <img class="card3__a" src="/img/cards/assistant-1.webp" alt="The assistant's chat panel" loading="lazy" />
+                <img class="card3__b" src="/img/cards/assistant-2.webp" alt="The questions a merchant can ask" loading="lazy" />
               </div>
-            </details>
+              <img class="card3__tall" src="/img/cards/assistant-tall.webp" alt="The eFoli Support Assistant in full, with its reasoning beside the chat" loading="lazy" />
+            </div>
           </article>
-
-          <!-- ---------- 03 ---------- -->
-          <article class="card story" id="story-3">
-            <header class="story__head">
-              <span class="story__n" aria-hidden="true">03</span>
+        </div>
+        <div class="stack__slot">
+          <article class="card3">
+            <div class="card3__top">
+              <span class="card3__n">03</span>
               <div>
-                <h3>Development got faster with AI. Testing did not. So I fixed testing.</h3>
-                <p class="story__tags">Team leadership · QA · Automation · Built with AI</p>
+                <p class="card3__who">Built before the QA Suite</p>
+                <h3 class="card3__name">QA Helper</h3>
               </div>
-            </header>
-
-            <p class="story__outcome">
-              One ticket every two days became <b>three or more a day</b>, for the whole QA team,
-              across <b>100+ tickets</b>.
-            </p>
-
-            <details class="story__full">
-              <summary><span>Read the full story</span></summary>
-
-              <div class="story__body">
-                <h4>The problem</h4>
-                <p>
-                  We wrote every test case by hand, tested by hand and wrote every report by hand. One ticket
-                  took about <b>two days</b>, and grey areas still went untested. Once the dev team moved to AI,
-                  features arrived faster than we could check them. QA became the bottleneck for the whole company.
-                </p>
-
-                <h4>What I did</h4>
-                <p>
-                  I looked into how Claude could connect to the tools we already use. I connected it over MCP to
-                  ClickUp, Playwright with Chromium, and our demo store. Then I built the Shopify QA Suite myself
-                  with vibe coding. People only handle the small part that needs human judgment.
-                </p>
-
-                <ol class="pipeline">
-                  <li><b>Ticket</b><span>Reads the ClickUp ticket, the design and the requirements doc</span></li>
-                  <li><b>Test sheet</b><span>Writes the cases into a sheet, grouped by area</span></li>
-                  <li><b>Real browser</b><span>Runs them against the live app and the storefront</span></li>
-                  <li><b>Report</b><span>Results, plus an issues doc with repro steps and screenshots</span></li>
-                </ol>
-
-                <h4>The result</h4>
-                <ul class="result">
-                  <li>Two days per ticket became <b>three or more tickets a day</b>.</li>
-                  <li>Used by the <b>whole QA team</b>. More than <b>100 tickets</b> tested so far.</li>
-                  <li>More cases per ticket. About <b>125 cases across 16 areas</b> for one PushBundle pricing ticket, and <b>135 across 17</b> for a DiscountRay one.</li>
-                  <li>Real bugs caught <b>before</b> merchants saw them.</li>
-                </ul>
-
-                <div class="finds">
-                  <figure class="plate">
-                    <img src="/img/qa/qa-free-checkout.webp"
-                      alt="A checkout summary showing a bundle priced FREE, with a zero subtotal and a total equal to the shipping cost."
-                      width="1100" height="562" loading="lazy" />
-                    <figcaption>A set-price bundle that reached checkout at zero. The customer would have paid the shipping and nothing else.</figcaption>
-                  </figure>
-                  <figure class="plate">
-                    <img src="/img/qa/qa-jpy-rounding.webp"
-                      alt="A storefront product page in yen: the price shows 100 yen struck through and 31 yen, while the first bulk discount tier reads a 69 yen discount."
-                      width="1100" height="520" loading="lazy" />
-                    <figcaption>A fixed discount read as a percentage once the store switched currency: 69% off instead of &yen;69 off.</figcaption>
-                  </figure>
-                </div>
-
-                <p class="note-small">
-                  The tool itself is not public. The screenshots above are from real runs, with the store
-                  domain and the internal fixture names taken out.
-                </p>
-              </div>
-            </details>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--tight" id="education" data-section="education">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Education</p>
-        <div class="grid grid--2 cards" data-stagger>
-          <article class="card card--row">
-            <div class="card__icon">🎓</div>
-            <div>
-              <h3>B.Sc. in Electronics &amp; Telecommunication Engineering</h3>
-              <p>Daffodil International University, Dhaka · 2015 – 2019</p>
-              <p class="card__meta">CGPA 3.56 / 4.00</p>
+              <a class="btn-ghost" href="https://jahidhemel.github.io/qa-test-helper/" target="_blank" rel="noopener">Live project</a>
             </div>
-          </article>
-          <article class="card card--row">
-            <div class="card__icon">📘</div>
-            <div>
-              <h3>Higher Secondary Certificate (HSC)</h3>
-              <p>Amritalal Dey College, Barishal · 2011 – 2013</p>
-              <p class="card__meta">CGPA 4.20 / 5.00</p>
+            <div class="card3__grid">
+              <div class="card3__col">
+                <img class="card3__a" src="/img/cards/qahelper-1.webp" alt="A feature description typed into the QA Helper" loading="lazy" />
+                <img class="card3__b" src="/img/cards/qahelper-2.webp" alt="The generated test cases" loading="lazy" />
+              </div>
+              <img class="card3__tall" src="/img/cards/qahelper-tall.webp" alt="The QA Helper in full" loading="lazy" />
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ RECOMMENDATIONS ============ -->
-    <section class="section" id="recommendations" data-section="recommendations">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Recommendations</p>
-        <h2 class="h2 reveal" data-reveal>What people I work with <em>say</em>.</h2>
-        <div class="recs" id="recs">
-          <div class="recs__track" id="recsTrack" role="list" aria-label="Recommendations from people I work with">
-            <figure class="quote">
-              <blockquote>
-                <p>I had the pleasure of working with Jahidul Islam Hemel as a colleague, and he is one of the most friendly, kind, and supportive people I have worked with. He is always willing to help others and share his knowledge whenever needed.</p>
-                <p>Hemel has exceptional technical knowledge and is a true Shopify expert, especially when it comes to SaaS and complex technical solutions. He is also one of the most dedicated and hardworking people I know. His positive attitude, problem-solving skills, and willingness to support the team make him a great person to work with.</p>
-                <p>I would highly recommend Hemel to any team or organisation looking for someone who is technically strong, reliable, and genuinely supportive.</p>
-              </blockquote>
-              <figcaption>
-                <b>Jesun Uddin Mazumder</b>
-                <span>Lead, Technical Experience · Retail Sales · Shopify · SaaS</span>
-                <em>Same team</em>
-              </figcaption>
-            </figure>
-  <figure class="quote">
-              <blockquote>
-                <p>I've had the opportunity to work closely with Jahidul Islam Hemel at eFoli, LLC, as part of the same Technical Support Engineering and QA team. He is the Team Lead of both our Technical Support Engineering and QA teams, and I've always appreciated his strong sense of ownership, technical knowledge, and problem-solving ability.</p>
-                <p>What stands out most about Jahidul is his out-of-the-box thinking. Since we work with Shopify SaaS products, merchants often have very different business requirements that cannot always be solved with existing features. Jahidul has a great ability to understand the actual problem and come up with creative, practical solutions. I've seen his approach help turn challenging merchant requirements into workable solutions and even bring merchants back to our products after they had previously left.</p>
-                <p>His merchant-focused mindset is equally valuable in QA — he often looks at a feature from the merchant's perspective and identifies edge cases or missing scenarios that might otherwise be overlooked. He is a responsible team lead, a creative problem solver, and someone I genuinely enjoy working with.</p>
-              </blockquote>
-              <figcaption>
-                <b>Tanjim Tabassum</b>
-                <span>Sr. Technical Support Engineer · SaaS Product QA · Business Analyst</span>
-                <em>Same team</em>
-              </figcaption>
-            </figure>
-  <figure class="quote">
-              <blockquote>
-                <p>I've had the pleasure of working with Hemel as a Technical Support Engineer, and he has consistently been a reliable and knowledgeable teammate. Hemel has a strong ability to troubleshoot technical issues efficiently and provide practical solutions while maintaining a customer-first approach. His technical expertise, combined with his patience and clear communication, helps ensure that customers receive timely and effective support.</p>
-                <p>Beyond his technical skills, Hemel is always willing to support the team, share knowledge, and contribute to a positive work environment. His problem-solving mindset and commitment to continuous learning make him a valuable asset to any organization. I highly recommend Hemel to any team looking for a skilled, dependable, and collaborative Technical Support Engineer.</p>
-              </blockquote>
-              <figcaption>
-                <b>Israt Eva</b>
-                <span>Partnership Manager · Shopify App Ecosystem · Sr. Technical Support Engineer</span>
-                <em>Same team</em>
-              </figcaption>
-            </figure>
-  <figure class="quote">
-              <blockquote>
-                <p>I've really enjoyed working with him at eFoli. He has been a great senior to work with, and I've learned a lot from him. He has a solid understanding of technical support, Shopify apps, and theme customization. He's good at troubleshooting issues, identifying root causes, and finding practical solutions. Whenever a challenging issue comes up, he approaches it patiently and focuses on resolving it effectively.</p>
-                <p>One thing I really appreciate about him is his willingness to help others and share his knowledge. He's supportive of his teammates, communicates clearly, and always keeps the customer experience in mind. I'd definitely recommend him to any team looking for someone with strong technical skills, a helpful attitude, and a collaborative mindset.</p>
-              </blockquote>
-              <figcaption>
-                <b>Iftakher Mahmud</b>
-                <span>Technical Support Engineer · Shopify App &amp; SaaS Support · MERN Developer</span>
-                <em>Reported to Hemel</em>
-              </figcaption>
-            </figure>
-          </div>
-          <button class="recs__btn recs__btn--prev" type="button" aria-label="Previous recommendation">‹</button>
-          <button class="recs__btn recs__btn--next" type="button" aria-label="Next recommendation">›</button>
-        </div>
-        <p class="reveal center" data-reveal>
-          <a class="link" href="https://www.linkedin.com/in/md-jahidul-islam-hemel/details/recommendations/" target="_blank" rel="noopener">Read them on LinkedIn ↗</a>
-        </p>
+    <section class="stories" id="stories">
+      <h2 class="grad fade" style="--fy:40px">Beyond the ticket</h2>
+      <div class="stories__grid">
+        <article class="story3 fade">
+          <b>01</b>
+          <h3>Won back a merchant who had uninstalled</h3>
+          <p>She left, so I rebuilt her product on a demo store and built the 30% the app could not do. <span class="k">Four days later she was on two yearly plans, about $370 a year.</span></p>
+        </article>
+        <article class="story3 fade" style="--fd:.1s">
+          <b>02</b>
+          <h3>The data was not missing. Shopify was hiding it.</h3>
+          <p>Form answers vanished from the packing slip. Liquid debug probes printed <span class="k">[p:0 g:1]</span> &mdash; the answers had moved to a line item group the slip cannot read. Same-day fix, then a permanent one for the product team.</p>
+        </article>
+        <article class="story3 fade" style="--fd:.2s">
+          <b>03</b>
+          <h3>Development got faster with AI. Testing did not.</h3>
+          <p>So I built the QA Suite. <span class="k">One ticket every two days became three or more a day</span>, for the whole team, across 100+ tickets.</p>
+        </article>
       </div>
     </section>
 
-    <!-- ============ WORK ============ -->
-    <section class="section" id="work" data-section="work">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Work</p>
-        <h2 class="h2 reveal" data-reveal>Things I have <em>built</em>, mostly to make support easier.</h2>
-        <div class="cards projects projects--cols" data-stagger>
-          <article class="card card--hero project">
-            <div class="hero-proj">
-              <div class="hero-proj__main">
-                <span class="project__tag">Featured · customer success · React</span>
-                <figure class="project__shot">
-              <img src="/img/built/mscc-960.webp" srcset="/img/built/mscc-480.webp 480w, /img/built/mscc-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The Merchant Success Command Center: account health scores across the top, a queue of who needs attention today, and the accounts at risk beside it." width="960" height="600" loading="lazy" />
-            </figure>
-            <h3>Merchant Success Command Center</h3>
-                <p>The view I wanted as a lead. Every merchant's health in one place, a queue of who needs me today, the features they pay for and have not switched on, and a check-in brief I can copy. It opens on sample accounts, and you can import your own from a CSV and use it for real, kept in your own browser.</p>
-                <div class="project__links">
-                  <a class="btn btn--small btn--primary magnetic" href="https://jahidhemel.github.io/merchant-success-command-center/" target="_blank" rel="noopener">Open the tool ↗</a>
-                  <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/merchant-success-command-center" target="_blank" rel="noopener">Code</a>
-                </div>
-              </div>
-              <ul class="hero-proj__points">
-                <li><b>Health, with the working shown</b><span>Four weighted signals, each with the sentence behind it, so the score can be argued with.</span></li>
-                <li><b>A queue, not a task list</b><span>Renewals, health drops, stalled onboarding and silent accounts, worked out from the data.</span></li>
-                <li><b>Adoption per app</b><span>What they pay for against what is actually switched on.</span></li>
-                <li><b>A check-in brief you can copy</b><span>Assembled from the record, so it is accurate. Not a model.</span></li>
-              </ul>
-            </div>
-          </article>
-          <div class="projects__col">
-            <article class="card card--featured project">
-              <div class="project__top">
-                <span class="project__tag">Featured · rule based · built with AI</span>
-              </div>
-              <figure class="project__shot">
-                <img src="/img/built/assistant-960.webp" srcset="/img/built/assistant-480.webp 480w, /img/built/assistant-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The eFoli Support Assistant: a merchant chat on the left, and the reasoning it used for each reply on the right." width="960" height="600" loading="lazy" />
-              </figure>
-              <h3>Efoli Support Assistant</h3>
-              <p>A support chat that works out which of our apps a merchant is asking about, answers from a sample knowledge base built from the public docs, asks a follow-up when it needs one, and hands off to the right person. Its reasoning and the JSON it produces sit beside the chat.</p>
-              <div class="project__links">
-                <a class="btn btn--small btn--primary magnetic" href="https://jahidhemel.github.io/support-ticket-triage/" target="_blank" rel="noopener">Live demo ↗</a>
-                <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/support-ticket-triage" target="_blank" rel="noopener">Code</a>
-              </div>
-            </article>
-            <article class="card card--featured project">
-              <div class="project__top">
-                <span class="project__tag">Featured · Liquid · 14 snippets from real tickets</span>
-              </div>
-              <figure class="project__shot">
-                <img src="/img/built/snippets-960.webp" srcset="/img/built/snippets-480.webp 480w, /img/built/snippets-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The shopify-liquid-snippets repository on GitHub." width="960" height="600" loading="lazy" />
-              </figure>
-              <h3>Shopify Liquid snippets</h3>
-              <p>Four plain theme fixes and ten customisations merchants asked for around MultiVariants, PushBundle and DiscountRay: conditional option fields, cart quantity guards on Dawn and Horizon, a volume pricing matrix, bundle thumbnails in the cart, discount tiers in the cart. Store details removed, settings pulled out, and each one comes with the ask, what breaks, and what to test before going live. About 4,800 lines in total.</p>
-              <div class="project__links">
-                <a class="btn btn--small btn--primary magnetic" href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener">Browse the snippets ↗</a>
-                <a class="btn btn--small btn--ghost magnetic" href="https://github.com/Jahidhemel/shopify-liquid-snippets/blob/main/PATTERNS.md" target="_blank" rel="noopener">What they taught me</a>
-              </div>
-            </article>
-          </div>
-          <div class="projects__col">
-            <article class="card project">
-              <span class="project__tag">Rule based · QA · support</span>
-              <figure class="project__shot">
-                <img src="/img/built/qahelper-960.webp" srcset="/img/built/qahelper-480.webp 480w, /img/built/qahelper-960.webp 960w" sizes="(max-width: 640px) 90vw, (max-width: 960px) 44vw, 30vw" alt="The QA Helper: a feature description typed on the left, and the generated test cases on the right." width="960" height="600" loading="lazy" />
-              </figure>
-              <h3>QA Helper</h3>
-              <p>Give it a feature description and it writes a test plan. Give it messy notes and it turns them into a bug report with steps, severity and what to check.</p>
-              <div class="project__links">
-                <a class="link" href="https://jahidhemel.github.io/qa-test-helper/" target="_blank" rel="noopener">Live demo ↗</a>
-                <a class="link" href="https://github.com/Jahidhemel/qa-test-helper" target="_blank" rel="noopener">Code</a>
-              </div>
-            </article>
-            <article class="card project project--pages">
-              <span class="project__tag">Practice builds · HTML · CSS · JS</span>
-              <h3>Four landing pages</h3>
-              <p>Earlier front-end practice, each one built to learn a different tool: Sass and BEM, Tailwind, Bootstrap, then plain CSS. All four are still live.</p>
-              <ul class="pages__grid">
-                  <li>
-                    <a href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
-                      <img src="/img/pages/legal-960.webp" srcset="/img/pages/legal-480.webp 480w, /img/pages/legal-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Justice Legal Solutions landing page: a dark hero over a gavel photograph with a service search." width="960" height="507" loading="lazy" />
-                      <b>Legal Solutions</b><span>Sass &middot; BEM</span>
-                    </a>
-                    <a class="link pages__code" href="https://github.com/Jahidhemel/legal-solutions" target="_blank" rel="noopener">Code</a>
-                  </li>
-                  <li>
-                    <a href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">
-                      <img src="/img/pages/fruit-960.webp" srcset="/img/pages/fruit-480.webp 480w, /img/pages/fruit-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Fruit Basket landing page." width="960" height="507" loading="lazy" />
-                      <b>Fruit Basket</b><span>Tailwind CSS</span>
-                    </a>
-                    <a class="link pages__code" href="https://github.com/Jahidhemel/fruit-basket" target="_blank" rel="noopener">Code</a>
-                  </li>
-                  <li>
-                    <a href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">
-                      <img src="/img/pages/summer-960.webp" srcset="/img/pages/summer-480.webp 480w, /img/pages/summer-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Summer Sale landing page." width="960" height="507" loading="lazy" />
-                      <b>Summer Sale</b><span>Bootstrap 5</span>
-                    </a>
-                    <a class="link pages__code" href="https://github.com/Jahidhemel/Summer-sale" target="_blank" rel="noopener">Code</a>
-                  </li>
-                  <li>
-                    <a href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">
-                      <img src="/img/pages/travel-960.webp" srcset="/img/pages/travel-480.webp 480w, /img/pages/travel-960.webp 960w" sizes="(max-width: 640px) 86vw, 240px" alt="The Hero Travel landing page, with destinations and tour packages." width="960" height="507" loading="lazy" />
-                      <b>Hero Travel</b><span>HTML &middot; CSS &middot; JS</span>
-                    </a>
-                    <a class="link pages__code" href="https://github.com/Jahidhemel/Travel-Website" target="_blank" rel="noopener">Code</a>
-                  </li>
-              </ul>
-            </article>
-          </div>
-        </div>
-        <p class="internal reveal" data-reveal>
-          <b>Not public:</b> a team management web app we use every day, and the Playwright and MCP based QA setup that runs most of our release tests.
-        </p>
+    <section class="say" id="say">
+      <h2 class="grad fade" style="--fy:40px">Say hello</h2>
+      <p class="fade" style="--fd:.1s">Dhaka, Bangladesh &middot; remote &middot; happy on US hours. Email is best, and I reply quickly.</p>
+      <div class="say__links fade" style="--fd:.2s">
+        <a class="btn-contact" href="mailto:jahidhemel@gmail.com">Email me</a>
+        <a class="btn-ghost" href="https://www.linkedin.com/in/md-jahidul-islam-hemel" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn-ghost" href="https://github.com/Jahidhemel" target="_blank" rel="noopener">GitHub</a>
       </div>
     </section>
 
-    <!-- ============ BEYOND WORK ============ -->
-    <section class="section" id="life" data-section="life">
-      <div class="wrap">
-        <p class="eyebrow reveal" data-reveal>Beyond work</p>
-        <h2 class="h2 reveal" data-reveal>Bikes, roads and the odd <em>cricket match</em>.</h2>
-        <p class="lead reveal" data-reveal>I ride, I travel when I can, and I have played cricket at divisional, district and school level.</p>
-        <ul class="gallery" data-stagger>
-          <li class="g-tall"><figure><img src="/img/boat-sunset.jpg" alt="A fishing boat with flags at sunset" loading="lazy" width="733" height="1100" /><figcaption>Sunset from the shore</figcaption></figure></li>
-          <li class="g-wide"><figure><img src="/img/seagull.jpg" alt="A seagull over the sea with hills behind" loading="lazy" width="1100" height="733" /><figcaption>Out on the water</figcaption></figure></li>
-          <li><figure><img src="/img/beyond3.jpg" alt="Motorcycles at night" loading="lazy" width="720" height="900" /><figcaption>On two wheels</figcaption></figure></li>
-          <li class="g-tall"><figure><img src="/img/beyond1.jpg" alt="Working from a hammock" loading="lazy" width="672" height="900" style="object-position: 50% 12%" /><figcaption>Works from anywhere</figcaption></figure></li>
-          <li><figure><img src="/img/snow-night.jpg" style="object-position: 50% 35%" alt="Standing in falling snow at night" loading="lazy" width="825" height="1100" /><figcaption>First snowfall</figcaption></figure></li>
-          <li><figure><img src="/img/beyond2.jpg" alt="On a ski slope" loading="lazy" width="897" height="900" /><figcaption>On the slopes</figcaption></figure></li>
-          <li><figure><img src="/img/beach-walk.jpg" style="object-position: 60% 40%" alt="Walking along a rocky shoreline" loading="lazy" width="899" height="1100" /><figcaption>Low tide</figcaption></figure></li>
-          <li class="g-wide"><figure><img src="/img/beyond5.jpg" alt="In the mountains" loading="lazy" width="900" height="675" /><figcaption>In the mountains</figcaption></figure></li>
-          <li><figure><img src="/img/beyond4.jpg" alt="At a waterfall" loading="lazy" width="675" height="900" /><figcaption>Chasing waterfalls</figcaption></figure></li>
-          <li><figure><img src="/img/moon-palm.jpg" style="object-position: 50% 30%" alt="A palm tree under a full moon by the sea" loading="lazy" width="825" height="1100" /><figcaption>Full moon on the beach</figcaption></figure></li>
-          <li class="g-wide"><figure><img src="/img/beyond6.jpg" alt="A hillside viewpoint" style="object-position: 50% 40%" loading="lazy" width="675" height="900" /><figcaption>A good view</figcaption></figure></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ============ CONTACT ============ -->
-    <section class="section section--contact" id="contact" data-section="contact">
-      <div class="wrap contact">
-        <div class="contact__copy">
-          <p class="eyebrow reveal" data-reveal>Contact</p>
-          <h2 class="h2 reveal" data-reveal>Say <em>hello</em>.</h2>
-          <p class="lead reveal" data-reveal>I am open to technical support, customer success and team lead roles, remote or hybrid. US hours are not a problem.</p>
-          <div class="hero__cta reveal" data-reveal>
-            <a class="btn btn--primary magnetic" href="mailto:jahidhemel@gmail.com">Email me</a>
-            <a class="btn btn--ghost magnetic" href="/Md.%20Jahidul%20Islam%20Hemel_CV.pdf" download>Download CV</a>
-          </div>
-        </div>
-        <ul class="contact__list reveal" data-reveal>
-          <li><span>Email</span><a href="mailto:jahidhemel@gmail.com">jahidhemel@gmail.com</a></li>
-          <li><span>Phone</span><a href="tel:+8801731290737">+880 1731 290737</a></li>
-          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/md-jahidul-islam-hemel/" target="_blank" rel="noopener">in/md-jahidul-islam-hemel</a></li>
-          <li><span>GitHub</span><a href="https://github.com/Jahidhemel" target="_blank" rel="noopener">github.com/Jahidhemel</a></li>
-          <li><span>Location</span><b>Mirpur-12, Dhaka, Bangladesh</b></li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="footer__line" aria-hidden="true"></div>
-    <div class="wrap footer__row">
-      <span>© <span id="year"></span> Md. Jahidul Islam Hemel</span>
-      <a href="#top" class="link">Back to top ↑</a>
-    </div>
-  </footer>
-
-  <!-- ============ GUIDE CHARACTER (mounted by src/guide.ts) ============ -->
-  <div id="guideRoot"></div>
-
-  <script type="module" src="/src/main.ts"></script>
+    <footer class="foot">
+      <span>&copy; <span id="year"></span> Md. Jahidul Islam Hemel</span>
+      <a href="#main">Back to top &uarr;</a>
+    </footer>
+  </div>
+  <script type="module" src="/src/motion.ts"></script>
 </body>
 </html>
