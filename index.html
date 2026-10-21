@@ -17,8 +17,9 @@
     <header class="hero" id="main">
       <nav class="nav fade" style="--fy:-20px" aria-label="Sections">
         <a href="#about">About</a>
-        <a href="#doing">What I do</a>
+        <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
+        <a href="#stories">Stories</a>
         <a href="#say">Contact</a>
       </nav>
 
@@ -28,7 +29,7 @@
 
       <figure class="hero__portrait fade" style="--fy:30px;--fd:.6s">
         <div class="magnet">
-          <img src="/img/portrait-720.webp" srcset="/img/portrait-360.webp 360w, /img/portrait-720.webp 720w" sizes="(max-width: 640px) 280px, (max-width: 1024px) 430px, 500px" alt="Md. Jahidul Islam Hemel" width="500" height="500" fetchpriority="high" />
+          <img src="/img/portrait-720.webp" srcset="/img/portrait-360.webp 360w, /img/portrait-720.webp 720w" sizes="(max-width: 640px) 280px, (max-width: 1024px) 430px, 500px" alt="Md. Jahidul Islam Hemel" width="500" height="500" fetchpriority="high" draggable="false" />
         </div>
       </figure>
 
@@ -38,32 +39,41 @@
       </div>
     </header>
 
-    <!-- Every tile is his own work or his own photograph. -->
-    <section class="marquee" aria-label="Work and photographs">
+    <!-- Every tile is his own work or his own photograph, and every one says
+         what it is and goes somewhere. -->
+    <section class="marquee" id="shipped" aria-labelledby="shipped-h">
+      <p class="marquee__eyebrow" id="shipped-h">Some of it &mdash; drag a card or follow it anywhere</p>
       <div class="marquee__row" data-loop>
-        <figure><img src="/img/marquee/mscc.webp" alt="The Merchant Success Command Center" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/assistant.webp" alt="The eFoli Support Assistant" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/qahelper.webp" alt="The QA Helper" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/snippets.webp" alt="The Shopify Liquid snippets repository" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/qa-free.webp" alt="A bundle that reached checkout priced at zero" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/config.webp" alt="A product configurator built on a merchant's page" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/legal.webp" alt="The Legal Solutions landing page" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/fruit.webp" alt="The Fruit Basket landing page" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/ride.webp" alt="Motorcycles at night" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/boat.webp" alt="A fishing boat at sunset" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/snow.webp" alt="Standing in falling snow at night" width="420" height="270" /></figure>
+        <figure><a href="https://jahidhemel.github.io/merchant-success-command-center/" target="_blank" rel="noopener"><img src="/img/marquee/mscc.webp" alt="The Merchant Success Command Center" width="420" height="270" /><figcaption><b>Command Center</b><span>The tool</span></figcaption></a></figure>
+        <figure><a href="https://jahidhemel.github.io/support-ticket-triage/" target="_blank" rel="noopener"><img src="/img/marquee/assistant.webp" alt="The eFoli Support Assistant" width="420" height="270" /><figcaption><b>Support Assistant</b><span>The tool</span></figcaption></a></figure>
+        <figure><a href="https://jahidhemel.github.io/qa-test-helper/" target="_blank" rel="noopener"><img src="/img/marquee/qahelper.webp" alt="The QA Helper" width="420" height="270" /><figcaption><b>QA Helper</b><span>The tool</span></figcaption></a></figure>
+        <figure><a href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener"><img src="/img/marquee/snippets.webp" alt="The Shopify Liquid snippets repository" width="420" height="270" /><figcaption><b>Liquid snippets</b><span>The repo</span></figcaption></a></figure>
+        <figure><a href="#stories"><img src="/img/marquee/qa-free.webp" alt="A bundle that reached checkout priced at zero" width="420" height="270" /><figcaption><b>Priced at zero</b><span>A bug I caught</span></figcaption></a></figure>
+        <figure><a href="#stories"><img src="/img/marquee/config.webp" alt="A product configurator built on a merchant's page" width="420" height="270" /><figcaption><b>Built for a merchant</b><span>Custom work</span></figcaption></a></figure>
+        <figure><a href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener"><img src="/img/marquee/legal.webp" alt="The Legal Solutions landing page" width="420" height="270" /><figcaption><b>Legal Solutions</b><span>Landing page</span></figcaption></a></figure>
+        <figure><a href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener"><img src="/img/marquee/fruit.webp" alt="The Fruit Basket landing page" width="420" height="270" /><figcaption><b>Fruit Basket</b><span>Landing page</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/ride.webp" alt="Motorcycles at night" width="420" height="270" /><figcaption><b>On two wheels</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/boat.webp" alt="A fishing boat at sunset" width="420" height="270" /><figcaption><b>Sunset from the shore</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/snow.webp" alt="Standing in falling snow at night" width="420" height="270" /><figcaption><b>First snowfall</b><span>Away from the desk</span></figcaption></a></figure>
       </div>
       <div class="marquee__row" data-loop>
-        <figure><img src="/img/marquee/qa-jpy.webp" alt="A discount read as a percentage after a currency switch" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/summer.webp" alt="The Summer Sale landing page" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/travel.webp" alt="The Hero Travel landing page" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/beach.webp" alt="Walking along a rocky shoreline" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/moon.webp" alt="A palm tree under a full moon" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/seagull.webp" alt="A seagull over the sea" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/hammock.webp" alt="Working from a hammock" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/ski.webp" alt="On a ski slope" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/hills.webp" alt="A hillside viewpoint" width="420" height="270" /></figure>
-        <figure><img src="/img/marquee/falls.webp" alt="At a waterfall" width="420" height="270" /></figure>
+        <figure><a href="#stories"><img src="/img/marquee/qa-jpy.webp" alt="A discount read as a percentage after a currency switch" width="420" height="270" /><figcaption><b>A discount misread</b><span>A bug I caught</span></figcaption></a></figure>
+        <figure><a href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener"><img src="/img/marquee/summer.webp" alt="The Summer Sale landing page" width="420" height="270" /><figcaption><b>Summer Sale</b><span>Landing page</span></figcaption></a></figure>
+        <figure><a href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener"><img src="/img/marquee/travel.webp" alt="The Hero Travel landing page" width="420" height="270" /><figcaption><b>Hero Travel</b><span>Landing page</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/beach.webp" alt="Walking along a rocky shoreline" width="420" height="270" /><figcaption><b>Low tide</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/moon.webp" alt="A palm tree under a full moon" width="420" height="270" /><figcaption><b>Full moon</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/seagull.webp" alt="A seagull over the sea" width="420" height="270" /><figcaption><b>Out on the water</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/hammock.webp" alt="Working from a hammock" width="420" height="270" /><figcaption><b>Works from anywhere</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/ski.webp" alt="On a ski slope" width="420" height="270" /><figcaption><b>On the slopes</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/hills.webp" alt="A hillside viewpoint" width="420" height="270" /><figcaption><b>A good view</b><span>Away from the desk</span></figcaption></a></figure>
+        <figure><a href="#beyond"><img src="/img/marquee/falls.webp" alt="At a waterfall" width="420" height="270" /><figcaption><b>Chasing waterfalls</b><span>Away from the desk</span></figcaption></a></figure>
+      </div>
+    </section>
+
+    <!-- the six apps he answers for -->
+    <section class="apps" aria-label="The apps I support">
+      <div class="apps__track">
+        <span>PushBundle</span><i>&middot;</i><span>MultiVariants</span><i>&middot;</i><span>DiscountRay</span><i>&middot;</i><span>QuotWay</span><i>&middot;</i><span>OrderRules</span><i>&middot;</i><span>EmbedUp</span><i>&middot;</i>
       </div>
     </section>
 
@@ -100,6 +110,61 @@
           <h3>Win-back and growth</h3>
           <p>Finding out why a merchant left, rebuilding their product on a demo store, and showing them it works. One of them came back four days later on two yearly plans.</p>
         </div></div>
+      </div>
+    </section>
+
+    <section class="rail" id="experience">
+      <h2 class="grad fade" style="--fy:40px">Where I have worked</h2>
+      <div class="rail__list">
+        <span class="rail__line" aria-hidden="true"><i></i></span>
+
+        <article class="role fade">
+          <p class="role__when">Jan 2025 &mdash; now &middot; Dhaka</p>
+          <h3>Senior Technical Support Engineer &amp; Team Lead <span>eFoli, LLC</span></h3>
+          <ul>
+            <li>Lead a team of <b>9, plus 2 interns and a trainee</b>, across Technical Support and QA: rosters, holiday cover, onboarding and release sign-off.</li>
+            <li>Earned <b>70+ reviews from my own conversations</b>, all 5&#9733; but one, handling 20&ndash;40 merchant chats a day with a <b>1&ndash;3 minute</b> first reply.</li>
+            <li>Cut the reply time on complex customisation requests from <b>up to 12 hours to under 2</b>, using AI to read themes and draft fixes, then checking everything myself.</li>
+            <li>Raised QA throughput from <b>one ticket every two days to three or more a day</b> by building the test pipeline the whole team now uses, across 100+ tickets.</li>
+            <li>Win back and grow accounts: scoping and delivering <b>paid custom work</b> when the app alone cannot do it.</li>
+          </ul>
+        </article>
+
+        <article class="role fade" style="--fd:.1s">
+          <p class="role__when">Apr 2025 &mdash; Feb 2026 &middot; remote, alongside eFoli</p>
+          <h3>Support Engineer <span>Love Loyalty</span></h3>
+          <ul>
+            <li>Supported a Shopify rewards, VIP tiers and referrals app for US and EU merchants over email and in-app chat.</li>
+            <li>Diagnosed integration issues across Shopify Admin, POS, Checkout, Customer Accounts and Flow.</li>
+            <li>Wrote help articles for the questions that kept coming back.</li>
+          </ul>
+        </article>
+
+        <article class="role fade" style="--fd:.2s">
+          <p class="role__when">Feb 2023 &mdash; Dec 2024 &middot; Dhaka</p>
+          <h3>Technical Support Engineer <span>eFoli, LLC</span></h3>
+          <ul>
+            <li>Supported product-customisation and bulk-ordering apps over chat, video, email and tickets.</li>
+            <li>Adjusted and installed product page interfaces for merchants with HTML, CSS and JavaScript.</li>
+            <li>Wrote docs and recorded how-to videos for the knowledge base.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="edu">
+        <h3 class="fade">Education</h3>
+        <div class="edu__grid">
+          <div class="edu__item fade">
+            <b>B.Sc. in Electronics &amp; Telecommunication Engineering</b>
+            <span>Daffodil International University, Dhaka &middot; 2015&ndash;2019</span>
+            <span class="edu__g">CGPA 3.56 / 4.00</span>
+          </div>
+          <div class="edu__item fade" style="--fd:.1s">
+            <b>Higher Secondary Certificate</b>
+            <span>Amritalal Dey College, Barishal &middot; 2011&ndash;2013</span>
+            <span class="edu__g">CGPA 4.20 / 5.00</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -166,24 +231,168 @@
       </div>
     </section>
 
+    <!-- Columns drift at different speeds as you pass them. -->
+    <section class="drift" id="pages">
+      <h2 class="grad fade" style="--fy:40px">Snippets &amp; pages</h2>
+      <p class="drift__lede fade" style="--fd:.1s">
+        Fourteen Liquid snippets written for real merchant questions, and four landing
+        pages built to learn a different tool each time. All of them are still live.
+      </p>
+
+      <div class="drift__grid">
+        <div class="drift__col" data-drift="-0.06">
+          <a class="drift__card" href="https://github.com/Jahidhemel/shopify-liquid-snippets" target="_blank" rel="noopener">
+            <img src="/img/marquee/snippets.webp" alt="The shopify-liquid-snippets repository on GitHub" width="420" height="270" loading="lazy" />
+            <b>Shopify Liquid snippets</b><span>14 snippets &middot; about 4,800 lines</span>
+          </a>
+          <a class="drift__card" href="https://jahidhemel.github.io/legal-solutions/" target="_blank" rel="noopener">
+            <img src="/img/pages/legal-960.webp" alt="The Justice Legal Solutions landing page" width="960" height="507" loading="lazy" />
+            <b>Legal Solutions</b><span>Sass &middot; BEM</span>
+          </a>
+        </div>
+
+        <div class="drift__col" data-drift="0.08">
+          <a class="drift__card" href="https://jahidhemel.github.io/fruit-basket/" target="_blank" rel="noopener">
+            <img src="/img/pages/fruit-960.webp" alt="The Fruit Basket landing page" width="960" height="507" loading="lazy" />
+            <b>Fruit Basket</b><span>Tailwind CSS</span>
+          </a>
+          <a class="drift__card" href="https://jahidhemel.github.io/Summer-sale/" target="_blank" rel="noopener">
+            <img src="/img/pages/summer-960.webp" alt="The Summer Sale landing page" width="960" height="507" loading="lazy" />
+            <b>Summer Sale</b><span>Bootstrap 5</span>
+          </a>
+        </div>
+
+        <div class="drift__col" data-drift="-0.1">
+          <a class="drift__card" href="https://jahidhemel.github.io/Travel-Website/" target="_blank" rel="noopener">
+            <img src="/img/pages/travel-960.webp" alt="The Hero Travel landing page" width="960" height="507" loading="lazy" />
+            <b>Hero Travel</b><span>HTML &middot; CSS &middot; JS</span>
+          </a>
+          <a class="drift__card" href="https://github.com/Jahidhemel/shopify-liquid-snippets/blob/main/PATTERNS.md" target="_blank" rel="noopener">
+            <img src="/img/marquee/config.webp" alt="A product configurator built on a merchant's product page" width="420" height="270" loading="lazy" />
+            <b>What they taught me</b><span>Patterns from the tickets</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section class="stories" id="stories">
       <h2 class="grad fade" style="--fy:40px">Beyond the ticket</h2>
+      <p class="drift__lede fade" style="--fd:.1s">Three merchants, the real numbers, and what it took. Open one for the whole thing.</p>
       <div class="stories__grid">
+
         <article class="story3 fade">
           <b>01</b>
           <h3>Won back a merchant who had uninstalled</h3>
           <p>She left, so I rebuilt her product on a demo store and built the 30% the app could not do. <span class="k">Four days later she was on two yearly plans, about $370 a year.</span></p>
+          <details class="more">
+            <summary><span>Read the whole story</span></summary>
+            <div class="more__body">
+              <h4>The problem</h4>
+              <p>She uninstalled MultiVariants. She needed something that sounds simple but no single app did out of the box: cards sold in packs of 10, any designs mixed together, a volume price applied in the cart, and no big pricing table on the product page. She wrote to us through Google Translate and preferred email to calls.</p>
+              <h4>What I did</h4>
+              <ol>
+                <li>Had a teammate send a short win-back email asking why she had left. Her reply told us exactly what she needed.</li>
+                <li>Looked through her store and rebuilt her actual product on my demo store.</li>
+                <li>Found the app covered about <b>70%</b>. I built the other <b>30%</b> with Liquid and JavaScript.</li>
+                <li>Sent her a short video of <em>her own product</em> working, not a generic demo.</li>
+                <li>The mix-and-match discount suited DiscountRay better, so I demoed that too, with her real prices.</li>
+                <li>Set up both apps in her store, then worked through her follow-ups one by one &mdash; including the module vanishing when the store switched to English, which was her product type being translated from French so the ruleset no longer matched.</li>
+              </ol>
+              <h4>The result</h4>
+              <ul>
+                <li>Uninstalled <b>26 September</b>, reinstalled <b>30 September</b>.</li>
+                <li>Two yearly plans: MultiVariants Pro, the top plan, and DiscountRay Growth. About <b>$370 a year</b>.</li>
+                <li><b>Five-star reviews</b> on the Shopify App Store and Trustpilot, for both apps, unprompted.</li>
+              </ul>
+              <blockquote>&ldquo;WOW, une exp&eacute;rience incroyable comme j&rsquo;ai rarement vu&hellip;&rdquo;<cite>Studio PixoPaws, on the Shopify App Store</cite></blockquote>
+            </div>
+          </details>
         </article>
+
         <article class="story3 fade" style="--fd:.1s">
           <b>02</b>
           <h3>The data was not missing. Shopify was hiding it.</h3>
-          <p>Form answers vanished from the packing slip. Liquid debug probes printed <span class="k">[p:0 g:1]</span> &mdash; the answers had moved to a line item group the slip cannot read. Same-day fix, then a permanent one for the product team.</p>
+          <p>Form answers vanished from the packing slip. Liquid debug probes printed <span class="k">[p:0 g:1]</span> &mdash; the answers had moved to a line item group the slip cannot read.</p>
+          <details class="more">
+            <summary><span>Read the whole story</span></summary>
+            <div class="more__body">
+              <h4>The problem</h4>
+              <p>A gift-box brand using PushBundle&rsquo;s Build-Your-Own-Box sells personalised sets. Their warehouse works from printed packing slips and CSV exports. The customer&rsquo;s choices showed on the admin order page but <em>not</em> on the slip or in the CSV, so the warehouse was packing blind. Everyone assumed the app was not saving the data.</p>
+              <h4>What I did</h4>
+              <ol>
+                <li>Built the same bundle on a test store and read the cart. The app <em>was</em> writing everything: one cart line, 11 properties.</li>
+                <li>Placed the order. At checkout, Shopify&rsquo;s native bundle expansion replaced that one line with 7 component lines. The original line, and its properties, no longer existed as a line item.</li>
+                <li>Wrote Liquid debug probes into the packing-slip template. They printed <code>[p:0 g:1]</code>: zero properties on the lines, one bundle group. Shopify only lets packing-slip Liquid read a group&rsquo;s title.</li>
+                <li>Confirmed it against Shopify&rsquo;s own documentation and developer forum, and checked the CSV route too.</li>
+              </ol>
+              <h4>The fix, in two layers</h4>
+              <ul>
+                <li><b>Same day:</b> a packing-slip template carrying the answers through order-level cart attributes, which bundle expansion does not touch.</li>
+                <li><b>Properly:</b> a change handed to the PushBundle team &mdash; write the answers onto the first component line using Cart Transform attributes. That fixes the slip, the CSV exports and any warehouse integration at once.</li>
+              </ul>
+              <p class="more__note">The client then asked us to build a whole product-customiser app. <b>I advised against it</b> &mdash; an existing app from the App Store would cost them far less. The right answer is not always the one that bills more.</p>
+            </div>
+          </details>
         </article>
+
         <article class="story3 fade" style="--fd:.2s">
           <b>03</b>
           <h3>Development got faster with AI. Testing did not.</h3>
           <p>So I built the QA Suite. <span class="k">One ticket every two days became three or more a day</span>, for the whole team, across 100+ tickets.</p>
+          <details class="more">
+            <summary><span>Read the whole story</span></summary>
+            <div class="more__body">
+              <h4>The problem</h4>
+              <p>We wrote every test case by hand, tested by hand and wrote every report by hand. One ticket took about <b>two days</b>, and grey areas still went untested. Once the dev team moved to AI, features arrived faster than we could check them. QA became the bottleneck for the whole company.</p>
+              <h4>What I did</h4>
+              <p>I connected Claude over MCP to ClickUp, Playwright with Chromium, and our demo store, then built the Shopify QA Suite. It reads the ticket, writes the cases into a sheet, runs them against the live app and the storefront, and produces the report with repro steps and screenshots. People only handle the part that needs human judgment.</p>
+              <h4>The result</h4>
+              <ul>
+                <li>Two days per ticket became <b>three or more tickets a day</b>.</li>
+                <li>Used by the <b>whole QA team</b>, more than <b>100 tickets</b> so far.</li>
+                <li>About <b>125 cases across 16 areas</b> for one PushBundle pricing ticket, and <b>135 across 17</b> for a DiscountRay one.</li>
+                <li>Real bugs caught <b>before</b> merchants saw them &mdash; a bundle that reached checkout at zero, and a fixed discount read as a percentage after a currency switch.</li>
+              </ul>
+            </div>
+          </details>
         </article>
+
+      </div>
+    </section>
+
+    <section class="words" id="words">
+      <h2 class="grad fade" style="--fy:40px">Kind words</h2>
+      <div class="words__grid">
+        <article class="word fade">
+          <p>&ldquo;What stands out most is his out-of-the-box thinking&hellip; I&rsquo;ve seen his approach turn challenging merchant requirements into workable solutions and even bring merchants back to our products after they had previously left.&rdquo;</p>
+          <footer><b>Tanjim Tabassum</b><span>Sr. Technical Support Engineer &middot; QA &middot; same team</span></footer>
+        </article>
+        <article class="word fade" style="--fd:.08s">
+          <p>&ldquo;Hemel has exceptional technical knowledge and is a true Shopify expert, especially when it comes to SaaS and complex technical solutions&hellip; technically strong, reliable, and genuinely supportive.&rdquo;</p>
+          <footer><b>Jesun Uddin Mazumder</b><span>Lead, Technical Experience &middot; Shopify &middot; same team</span></footer>
+        </article>
+        <article class="word fade" style="--fd:.16s">
+          <p>&ldquo;His technical expertise, combined with his patience and clear communication, helps ensure that customers receive timely and effective support.&rdquo;</p>
+          <footer><b>Israt Eva</b><span>Partnership Manager &middot; Shopify App Ecosystem</span></footer>
+        </article>
+        <article class="word fade" style="--fd:.24s">
+          <p>&ldquo;He has been a great senior to work with, and I&rsquo;ve learned a lot from him&hellip; good at troubleshooting issues, identifying root causes, and finding practical solutions.&rdquo;</p>
+          <footer><b>Iftakher Mahmud</b><span>Technical Support Engineer &middot; reported to Hemel</span></footer>
+        </article>
+      </div>
+      <p class="words__more fade"><a class="btn-ghost" href="https://www.linkedin.com/in/md-jahidul-islam-hemel" target="_blank" rel="noopener">Read them on LinkedIn</a></p>
+    </section>
+
+    <section class="beyond" id="beyond">
+      <h2 class="grad fade" style="--fy:40px">Beyond work</h2>
+      <p class="drift__lede fade" style="--fd:.1s">Bikes, roads and the odd cricket match.</p>
+      <div class="beyond__grid">
+        <figure class="fade"><img src="/img/marquee/ride.webp" alt="Motorcycles at night" width="420" height="270" loading="lazy" /><figcaption>On two wheels</figcaption></figure>
+        <figure class="fade" style="--fd:.06s"><img src="/img/marquee/boat.webp" alt="A fishing boat at sunset" width="420" height="270" loading="lazy" /><figcaption>Sunset from the shore</figcaption></figure>
+        <figure class="fade" style="--fd:.12s"><img src="/img/marquee/snow.webp" alt="Standing in falling snow at night" width="420" height="270" loading="lazy" /><figcaption>First snowfall</figcaption></figure>
+        <figure class="fade" style="--fd:.18s"><img src="/img/marquee/hills.webp" alt="A hillside viewpoint" width="420" height="270" loading="lazy" /><figcaption>A good view</figcaption></figure>
+        <figure class="fade" style="--fd:.24s"><img src="/img/marquee/hammock.webp" alt="Working from a hammock" width="420" height="270" loading="lazy" /><figcaption>Works from anywhere</figcaption></figure>
+        <figure class="fade" style="--fd:.3s"><img src="/img/marquee/falls.webp" alt="At a waterfall" width="420" height="270" loading="lazy" /><figcaption>Chasing waterfalls</figcaption></figure>
       </div>
     </section>
 

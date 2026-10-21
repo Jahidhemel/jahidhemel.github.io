@@ -87,8 +87,18 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
   host.classList.add('is-3d');
   size();
 
+  // Two inputs, added together: a base you set by dragging him, and a small
+  // lean towards the pointer on top. Drag alone would freeze him; follow
+  // alone would undo every drag the moment you let go.
   let aimX = 0;
   let aimY = 0;
+  let baseY = 0;
+  let baseX = 0;
+  let spinY = 0; // carried velocity, so a flick keeps turning
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+
   if (!reduced) {
     window.addEventListener(
       'pointermove',
@@ -100,6 +110,40 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
     );
   }
 
+  canvas.style.pointerEvents = 'auto';
+  canvas.style.touchAction = 'none';
+  canvas.style.cursor = 'grab';
+
+  canvas.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    spinY = 0;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    canvas.style.cursor = 'grabbing';
+    canvas.setPointerCapture(e.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    baseY += dx * 0.01;
+    // Clamped, or he tips over and you are looking at the inside of his head.
+    baseX = Math.max(-0.6, Math.min(0.6, baseX + dy * 0.006));
+    spinY = dx * 0.01;
+  });
+
+  function endDrag(e: PointerEvent) {
+    if (!dragging) return;
+    dragging = false;
+    canvas.style.cursor = 'grab';
+    if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+  }
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+
   let raf = 0;
   let running = true;
   const start = performance.now();
@@ -107,9 +151,17 @@ export async function mountPing3d(host: HTMLElement): Promise<void> {
   function frame(now: number) {
     if (!running) return;
     const t = (now - start) / 1000;
+    if (!dragging) {
+      // A flick keeps turning, then settles.
+      baseY += spinY;
+      spinY *= 0.94;
+      if (Math.abs(spinY) < 0.0002) spinY = 0;
+    }
     // Chase the pointer rather than snapping to it, and breathe a little.
-    root.rotation.y += (aimX * 0.5 - root.rotation.y) * 0.06;
-    root.rotation.x += (aimY * 0.28 - root.rotation.x) * 0.06;
+    const wantY = baseY + aimX * 0.32;
+    const wantX = baseX + aimY * 0.18;
+    root.rotation.y += (wantY - root.rotation.y) * (dragging ? 0.5 : 0.08);
+    root.rotation.x += (wantX - root.rotation.x) * (dragging ? 0.5 : 0.08);
     root.position.y = Math.sin(t * 1.1) * 0.06;
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);

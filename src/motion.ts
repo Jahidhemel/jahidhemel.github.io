@@ -69,6 +69,13 @@ function magnet(host: HTMLElement, padding = 150, strength = 3) {
     'pointermove',
     (e) => {
       if (e.pointerType !== 'mouse') return;
+      // Once the model is up it owns the pointer: it has its own drag, and
+      // two things leaning the same element in different directions is one
+      // too many. It also leaves the hidden photograph where it belongs.
+      if (host.classList.contains('is-3d')) {
+        if (inner.style.transform) inner.style.transform = '';
+        return;
+      }
       const r = host.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
@@ -144,6 +151,19 @@ const marqueeSection = $('.marquee');
 /* ------------------------------------------------------------ the card stack */
 const cards = $$('.card3');
 
+/* ------------------------------------------- the drifting snippet columns -- */
+const driftCols = $$('[data-drift]');
+
+/* -------------------------------------------------- the experience rail ---- */
+const railList = $('.rail__list');
+const railFill = $('.rail__line i');
+const roles = $$('.role');
+
+/* -------------------------------------- opening a story moves everything --- */
+// Positions are read from the layout on every frame, so a disclosure opening
+// needs no special handling beyond a repaint on the next scroll.
+$$('details.more').forEach((d) => d.addEventListener('toggle', () => onScroll()));
+
 /* ------------------------------------------------------------- one rAF loop */
 let ticking = false;
 
@@ -171,6 +191,28 @@ function frame() {
     const lit = progress * letters.length;
     for (let i = 0; i < letters.length; i++) {
       letters[i].style.opacity = String(i < lit ? 1 : 0.2);
+    }
+  }
+
+  // the snippet columns drift past each other
+  if (driftCols.length && !reduced) {
+    for (const col of driftCols) {
+      const rate = Number(col.dataset.drift) || 0;
+      const r = col.getBoundingClientRect();
+      // 0 when the column is entering, 1 once it has left the top
+      const seen = (vh - r.top) / (vh + r.height);
+      col.style.transform = `translate3d(0, ${(seen - 0.5) * rate * 420}px, 0)`;
+    }
+  }
+
+  // the experience rail draws itself, and each role lights as it is reached
+  if (railList && railFill) {
+    const r = railList.getBoundingClientRect();
+    const p = (vh * 0.72 - r.top) / Math.max(1, r.height);
+    railFill.style.setProperty('--draw', String(Math.min(1, Math.max(0, p))));
+    for (const role of roles) {
+      const rr = role.getBoundingClientRect();
+      role.classList.toggle('lit', rr.top < vh * 0.74);
     }
   }
 
